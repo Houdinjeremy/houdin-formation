@@ -31,5 +31,20 @@ cat > dist/_headers <<'HDR'
   X-Robots-Tag: noindex, nofollow
 HDR
 
+# 4. Purge des images qu'aucune page n'appelle. `cp -R assets` prend le dossier
+#    entier, or l'ancien picto n'est plus référencé nulle part depuis le
+#    changement de logo : inutile de le mettre en ligne.
+for img in dist/assets/img/*; do
+  name=$(basename "$img")
+  if ! grep -rq "$name" dist/*.html dist/css dist/js; then
+    rm "$img"; echo "purgé (non référencé) : $name"
+  fi
+done
+
+# 5. Archive, pour un dépôt manuel (Netlify Drop, envoi au client, sauvegarde).
+rm -f houdin-formation-demo.zip
+( cd dist && zip -rq ../houdin-formation-demo.zip . -x ".DS_Store" )
+
 echo "dist/ prêt — $(find dist -type f | wc -l | tr -d ' ') fichiers, $(du -sh dist | cut -f1)"
 grep -L 'noindex' dist/*.html && echo "⚠ page sans noindex ci-dessus" || echo "noindex présent sur les 5 pages"
+echo "archive : houdin-formation-demo.zip ($(du -h houdin-formation-demo.zip | cut -f1))"

@@ -17,3 +17,4 @@ documentation/transcription/session-brute.jsonl.gz
 
 # Dossier de publication, reconstruit par scripts/build-demo.sh
 dist/
+houdin-formation-demo.zip
