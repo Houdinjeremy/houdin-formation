@@ -178,6 +178,20 @@ verticale fluide, arbitrage Anton vs Inter sur les h3.
 
 ---
 
+## Reprise après redémarrage
+
+Le serveur local ne survit pas à une extinction. Pour repartir :
+
+```
+cd ~/Documents/ClaudeCode/JeremyHoudin
+python3 -m http.server 8099        # puis http://localhost:8099/
+```
+
+État au 2026-08-08 : dépôt git propre, trois commits, phases 1 à 3 livrées.
+Le prochain sujet dépend des réponses du client (`05-message-client.md`).
+
+---
+
 ## Méthode de vérification
 
 `resize_window` ne change pas le viewport dans cet environnement. Pour tester le mobile :
