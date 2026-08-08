@@ -14,3 +14,6 @@ documentation/transcription/session-brute.jsonl.gz
 
 # Skills installées localement (paquets tiers, pas du code projet)
 .claude/skills/
+
+# Dossier de publication, reconstruit par scripts/build-demo.sh
+dist/
