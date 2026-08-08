@@ -43,6 +43,21 @@
 
   --shadow-card:0 1px 2px rgba(10,24,38,.06), 0 12px 28px -14px rgba(10,24,38,.22);
   --shadow-lift:0 2px 4px rgba(10,24,38,.10), 0 24px 48px -18px rgba(10,24,38,.35);
+
+  /* ----- mouvement -----
+     Trois courbes, jamais de `linear`. `--ease-out` décélère franchement : c'est
+     la courbe par défaut de tout ce qui entre à l'écran. `--ease-out-back`
+     dépasse très légèrement la cible (1.34) : réservé aux objets qu'on veut
+     sentir « se poser ». `--ease-in-out` pour ce qui fait l'aller-retour
+     (survols, ouvertures/fermetures). */
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --ease-out-back:cubic-bezier(.34,1.28,.64,1);
+  --ease-in-out:cubic-bezier(.65,0,.35,1);
+
+  --dur-fast:180ms;    /* accusé de réception : survol, focus */
+  --dur-base:280ms;    /* micro-interaction standard */
+  --dur-slow:420ms;    /* changement d'état d'un bloc entier */
+  --dur-reveal:560ms;  /* apparition au défilement — plafond fixé à 800ms */
 }
 
 /* ---------- reset ---------- */
@@ -82,11 +97,20 @@ input, textarea{ font:inherit; }
    laissait des écrans entiers vides pendant la lecture. */
 [data-reveal]{
   opacity:0;
-  transform:translateY(10px);
-  transition:opacity .35s ease-out, transform .35s ease-out;
+  transform:translateY(14px);
+  transition:opacity var(--dur-reveal) var(--ease-out),
+             transform var(--dur-reveal) var(--ease-out);
 }
 [data-reveal].is-visible{ opacity:1; transform:none; }
-[data-reveal-group] > *{ transition-delay:calc(var(--i, 0) * 45ms); }
+[data-reveal-group] > *{ transition-delay:calc(var(--i, 0) * 60ms); }
+
+/* Variantes directionnelles : la valeur de l'attribut donne la provenance.
+   Utile pour faire converger deux colonnes l'une vers l'autre plutôt que de
+   faire monter toute la page en bloc. */
+[data-reveal="left"]{  transform:translateX(-22px); }
+[data-reveal="right"]{ transform:translateX(22px); }
+[data-reveal="scale"]{ transform:scale(.96); }
+[data-reveal="fade"]{  transform:none; }
 /* Un titre de section est un repère de lecture : il ne s'anime jamais. */
 .section-head[data-reveal]{ opacity:1; transform:none; }
 
@@ -160,10 +184,13 @@ h3, .h3{
   font-weight:700;
   font-size:15px;
   letter-spacing:.01em;
-  transition:transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
+  transition:transform var(--dur-base) var(--ease-out-back),
+              box-shadow var(--dur-base) var(--ease-out),
+              background var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
   white-space:nowrap;
 }
-.btn svg{ width:16px; height:16px; flex:none; transition:transform .25s ease; }
+.btn svg{ width:16px; height:16px; flex:none; transition:transform var(--dur-base) var(--ease-out-back); }
 /* Navy sur orange (5,98:1) et non blanc sur orange (3,00:1) : c'est à la fois
    la mise en conformité AA et le vrai code de la signalisation industrielle. */
 .btn-primary{ background:var(--spark-500); color:var(--on-spark); box-shadow:0 10px 24px -10px rgba(238,113,17,.55); }
@@ -176,7 +203,9 @@ h3, .h3{
 .hero .btn-outline:hover{ box-shadow:inset 0 0 0 1.5px #fff; }
 .btn-small{ padding:10px 18px; font-size:13px; }
 .btn-block{ width:100%; justify-content:center; }
-.btn:hover svg{ transform:translateX(3px); }
+.btn:hover svg{ transform:translateX(4px); }
+/* Le clic doit s'ancrer : le bouton redescend sous le doigt, plus vite qu'il n'est monté. */
+.btn:active{ transform:translateY(0) scale(.985); transition-duration:90ms; }
 
 /* ---------- header : barre flottante en pilule ---------- */
 .site-header{
@@ -184,7 +213,7 @@ h3, .h3{
   padding:14px 24px 0;
   background:transparent;
   border-bottom:0;
-  transition:padding .3s ease;
+  transition:padding var(--dur-slow) var(--ease-out);
 }
 /* Rétraction au défilement : la pilule se resserre et se pose. */
 .site-header.is-scrolled{ padding-top:8px; }
@@ -201,7 +230,9 @@ h3, .h3{
   border:1px solid rgba(255,255,255,.55);
   border-radius:16px;
   box-shadow:0 10px 34px -14px rgba(6,14,24,.45);
-  transition:padding .3s ease, border-radius .3s ease, box-shadow .3s ease;
+  transition:padding var(--dur-slow) var(--ease-out),
+              border-radius var(--dur-slow) var(--ease-out),
+              box-shadow var(--dur-slow) var(--ease-out);
 }
 .site-header.is-scrolled .header-inner{
   padding-top:6px; padding-bottom:6px;
@@ -210,21 +241,22 @@ h3, .h3{
 }
 .site-header.is-scrolled .brand img{ height:32px; }
 .brand{ display:flex; align-items:center; gap:12px; flex:none; }
-.brand img{ height:38px; width:auto; transition:height .3s ease; }
+.brand img{ height:38px; width:auto; transition:height var(--dur-slow) var(--ease-out); }
 .main-nav{ display:flex; align-items:center; gap:30px; }
 .nav-link{
   font-size:14.5px; font-weight:600; color:var(--ink-soft);
-  position:relative; padding:6px 0; transition:color .2s ease;
+  position:relative; padding:6px 0; transition:color var(--dur-fast) var(--ease-out);
 }
 .nav-link::after{
   content:""; position:absolute; left:0; right:100%; bottom:0; height:2px;
-  background:var(--spark-500); transition:right .25s ease;
+  background:var(--spark-500); transition:right var(--dur-base) var(--ease-out);
 }
 .nav-link:hover, .nav-link[aria-current="page"]{ color:var(--navy-900); }
 .nav-link:hover::after, .nav-link[aria-current="page"]::after{ right:0; }
 .header-cta{ display:flex; align-items:center; gap:14px; flex:none; }
 .burger{ display:none; flex-direction:column; gap:5px; padding:6px; }
-.burger span{ width:22px; height:2px; background:var(--navy-900); transition:transform .25s ease, opacity .25s ease; }
+.burger span{ width:22px; height:2px; background:var(--navy-900);
+  transition:transform var(--dur-base) var(--ease-in-out), opacity var(--dur-fast) var(--ease-in-out); }
 .mobile-nav{ display:none; }
 
 @media (max-width: 880px){
@@ -232,7 +264,12 @@ h3, .h3{
      à l'ouverture de l'overlay casse le contexte du sticky et fait remonter la
      pilule hors de l'écran — le burger devenait alors inatteignable. */
   .site-header{ position:fixed; top:0; left:0; right:0; }
-  .hero, .page-hero{ margin-top:0; }
+  /* Le header passant hors du flux, la remontée de -82px du héros n'a plus
+     rien à compenser : le texte remontait sous la pilule. Le sélecteur est
+     préfixé par `body` pour l'emporter en spécificité (0,1,1 contre 0,1,0) —
+     la règle `.hero{ margin-top:-82px }` est déclarée PLUS BAS dans la
+     feuille, une media query ne suffit donc pas à la neutraliser. */
+  body .hero, body .page-hero{ margin-top:0; }
   .main-nav{ display:none; }
   .header-cta .btn-small{ display:none; }
   .burger{ display:flex; }
@@ -244,7 +281,7 @@ h3, .h3{
     background:var(--navy-990);
     padding:110px 28px 48px;
     opacity:0; visibility:hidden;
-    transition:opacity .3s ease-out, visibility .3s;
+    transition:opacity var(--dur-slow) var(--ease-out), visibility var(--dur-slow);
   }
   .mobile-nav.is-open{ opacity:1; visibility:visible; }
   .mobile-nav a{
@@ -472,10 +509,12 @@ h3, .h3{
   padding:28px;
   display:flex; flex-direction:column; gap:14px;
   box-shadow:var(--shadow-card);
-  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  transition:transform var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out);
   position:relative;
 }
-.reco-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-lift); border-color:var(--navy-700); border-left-color:var(--spark-500); }
+.reco-card:hover{ transform:translateY(-5px); box-shadow:var(--shadow-lift); border-color:var(--navy-700); border-left-color:var(--spark-500); }
 .reco-card.accent{ border-left-color:var(--spark-500); }
 .reco-code{
   align-self:flex-start;
@@ -491,8 +530,8 @@ h3, .h3{
 .reco-meta{ display:flex; flex-direction:column; gap:6px; font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint); border-top:1px dashed var(--line); padding-top:14px; }
 .reco-meta span b{ color:var(--ink); font-weight:600; }
 .reco-link{ display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:14px; color:var(--navy-900); margin-top:4px; }
-.reco-link svg{ width:14px; height:14px; transition:transform .2s ease; }
-.reco-card:hover .reco-link svg{ transform:translateX(3px); }
+.reco-link svg{ width:14px; height:14px; transition:transform var(--dur-fast) var(--ease-out-back); }
+.reco-card:hover .reco-link svg{ transform:translateX(4px); }
 
 /* ---------- vitrine 3D (embed Sketchfab piloté au défilement) ---------- */
 .showcase-3d{ background:var(--navy-990); padding:88px 0; position:relative; overflow:hidden; }
@@ -569,7 +608,7 @@ h3, .h3{
 .contact-card{
   display:flex; align-items:center; gap:16px; padding:22px;
   background:var(--white); border:1px solid var(--line); border-radius:var(--radius-m);
-  transition:transform .25s ease, box-shadow .25s ease;
+  transition:transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
 }
 .contact-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-card); }
 .contact-card .ci{ width:44px; height:44px; flex:none; border-radius:10px; background:var(--navy-950); color:var(--spark-500); display:flex; align-items:center; justify-content:center; }
@@ -585,7 +624,8 @@ h3, .h3{
 .field label{ font-size:13px; font-weight:700; color:var(--ink); }
 .field input, .field select, .field textarea{
   padding:13px 14px; border:1.5px solid var(--line); border-radius:var(--radius-s);
-  background:var(--paper); color:var(--ink); transition:border-color .2s ease, background .2s ease;
+  background:var(--paper); color:var(--ink);
+  transition:border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
 }
 .field input:focus, .field select:focus, .field textarea:focus{
   outline:none; border-color:var(--navy-700); background:#fff;
@@ -667,3 +707,108 @@ h3, .h3{
 .page-hero .lede{ margin-top:16px; }
 .breadcrumb{ font-family:var(--font-mono); font-size:12px; color:#8FA0AF; margin-bottom:18px; letter-spacing:.04em; }
 .breadcrumb a:hover{ color:#fff; }
+
+/* ==========================================================================
+   PHASE 3 — mouvement
+   Règles suivies partout ici : on n'anime que `transform` et `opacity`,
+   jamais `width`/`height`/`top`/`left` (celles-ci déclenchent un recalcul de
+   mise en page à chaque image). Durées : 180-420 ms pour les micro-interactions,
+   560 ms pour les apparitions, 800 ms de plafond absolu. Aucune courbe `linear`.
+   Le bloc `prefers-reduced-motion` en fin de section neutralise l'ensemble.
+   ========================================================================== */
+
+/* ---------- entrée du héros ----------
+   Le héros est au-dessus de la ligne de flottaison : il ne peut pas être révélé
+   au défilement, il s'anime au chargement. La cascade suit l'ordre de lecture. */
+@keyframes rise-in{
+  from{ opacity:0; transform:translateY(16px); }
+  to  { opacity:1; transform:none; }
+}
+@keyframes plate-in{
+  from{ opacity:0; transform:translateY(24px) scale(.985); }
+  to  { opacity:1; transform:none; }
+}
+
+.hero-inner > div > .eyebrow,
+.hero-inner > div > h1,
+.hero-inner > div > .lede,
+.hero-inner > div > .hero-cta{
+  animation:rise-in 620ms var(--ease-out) backwards;
+}
+.hero-inner > div > .eyebrow  { animation-delay:60ms; }
+.hero-inner > div > h1        { animation-delay:140ms; }
+.hero-inner > div > .lede     { animation-delay:240ms; }
+.hero-inner > div > .hero-cta { animation-delay:340ms; }
+
+/* La plaque arrive après le texte : c'est l'objet, pas le message. */
+.machine-plate{ animation:plate-in 640ms var(--ease-out) 200ms backwards; }
+/* `nth-of-type` compte les <div> frères, pas les `.plate-row` : `.plate-head`
+   occupe la position 1. Les cinq lignes sont donc en positions 2 à 6. */
+.plate-row{ animation:rise-in 440ms var(--ease-out) backwards; }
+.plate-row:nth-of-type(2){ animation-delay:400ms; }
+.plate-row:nth-of-type(3){ animation-delay:440ms; }
+.plate-row:nth-of-type(4){ animation-delay:480ms; }
+.plate-row:nth-of-type(5){ animation-delay:520ms; }
+.plate-row:nth-of-type(6){ animation-delay:560ms; }
+.plate-foot{ animation:rise-in 440ms var(--ease-out) 620ms backwards; }
+
+/* Survol d'une ligne de plaque : le repère s'allume, la ligne avance d'un cran.
+   `padding-left` serait une animation de mise en page — on décale en transform. */
+.plate-row{
+  transition:transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.machine-plate:hover .plate-row{ opacity:.62; transition:opacity var(--dur-base) var(--ease-out); }
+.machine-plate .plate-row:hover{ opacity:1; transform:translateX(4px); }
+.plate-row b{ transition:color var(--dur-fast) var(--ease-out); }
+.plate-row:hover b{ color:var(--spark-500); }
+
+/* ---------- barre de progression de lecture ----------
+   Injectée par le script, jamais dans le HTML : cinq pages à maintenir.
+   `scaleX` sur une barre de largeur fixe — aucun recalcul de mise en page. */
+.read-progress{
+  position:fixed; top:0; left:0; right:0; height:3px;
+  z-index:101;                 /* au-dessus du header (100) */
+  pointer-events:none;
+  background:rgba(255,255,255,.06);
+  opacity:0; transition:opacity var(--dur-slow) var(--ease-out);
+}
+.read-progress.is-active{ opacity:1; }
+.read-progress > span{
+  display:block; height:100%; transform-origin:0 50%;
+  transform:scaleX(var(--p, 0));
+  background:linear-gradient(90deg, var(--spark-600), var(--spark-500));
+}
+/* Pendant l'overlay mobile, la page ne défile plus : la barre n'a plus de sens. */
+body.nav-is-open .read-progress{ opacity:0; }
+
+/* ---------- compteurs ----------
+   Chiffres à chasse fixe : sans cela, la largeur du nombre saute à chaque
+   image pendant le décompte et fait tressauter tout le bandeau. */
+.stat-num{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+
+/* ---------- transitions de page ----------
+   Amélioration progressive : les navigateurs sans View Transitions ignorent
+   simplement ces règles et naviguent normalement. */
+@view-transition{ navigation:auto; }
+::view-transition-old(root){ animation:vt-out 200ms var(--ease-in-out) both; }
+::view-transition-new(root){ animation:vt-in  320ms var(--ease-out) both; }
+@keyframes vt-out{ to  { opacity:0; transform:translateY(-8px); } }
+@keyframes vt-in { from{ opacity:0; transform:translateY(10px); } }
+/* Le header ne doit pas participer au fondu : il est identique d'une page à
+   l'autre, le voir clignoter à chaque navigation trahit le rechargement. */
+.site-header{ view-transition-name:site-header; }
+::view-transition-group(site-header){ animation-duration:0ms; }
+
+/* ---------- garde-fou d'accessibilité ----------
+   Le reset global (`transition-duration:.001ms`) ne couvre pas les
+   `animation-delay` : une cascade de 840 ms resterait invisible aussi longtemps.
+   On remet tout à zéro explicitement. */
+@media (prefers-reduced-motion: reduce){
+  .hero-inner > div > *,
+  .machine-plate, .plate-row, .plate-foot{
+    animation:none !important; opacity:1 !important; transform:none !important;
+  }
+  .machine-plate:hover .plate-row{ opacity:1; }
+  .read-progress{ display:none; }
+  @view-transition{ navigation:none; }
+}

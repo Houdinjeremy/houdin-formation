@@ -87,6 +87,46 @@ par `aspect-ratio`, repli statique, `prefers-reduced-motion` respecté, attribut
 > l'auteur est utilisé. Pour s'affranchir de Sketchfab, il faudra un modèle CC BY hébergé
 > en propre, ou l'achat d'une licence.
 
+### Phase 3 — mouvement (2026-08-08)
+
+Trois courbes et quatre durées posées en variables CSS (`--ease-out`,
+`--ease-out-back`, `--ease-in-out` ; `--dur-fast/base/slow/reveal`). Toutes les
+transitions du site sont recâblées dessus : plus une seule valeur en dur, plus
+une seule courbe `linear`.
+
+- **Entrée du héros** : cascade au chargement (accroche → titre → texte → CTA →
+  plaque → lignes de plaque → puces), dernier élément posé à 1,06 s.
+- **Plaque constructeur** : au survol, les lignes non pointées s'estompent et la
+  ligne visée avance de 4 px, son repère passe à l'orange.
+- **Reveals au défilement** : 560 ms sur `--ease-out`, décalage porté à 60 ms,
+  et quatre variantes directionnelles (`data-reveal="left|right|scale|fade"`).
+- **Barre de progression de lecture** : injectée par le script (pas dans les cinq
+  pages), `scaleX` seul, masquée quand l'overlay mobile est ouvert, absente si la
+  page est trop courte pour que la progression ait un sens.
+- **Compteurs** : le bandeau de chiffres décompte à l'entrée dans le viewport,
+  sortie cubique, 800 ms. Seules les valeurs numériques sont animées — « FR »
+  reste « FR », le suffixe (`%`) est conservé.
+- **Transitions de page** : View Transitions API en amélioration progressive, le
+  header exclu du fondu pour ne pas clignoter d'une page à l'autre.
+
+Le reset global `prefers-reduced-motion` ne couvrait pas les `animation-delay` :
+un bloc dédié annule explicitement cascade, compteurs et barre de progression.
+
+> ⚠️ **Les chiffres du bandeau ne sont pas arbitrés.** Le compteur anime « 25 ans
+> d'expérience », chiffre contredit par LinkedIn (20 ans industrie + 8 ans
+> formation). Animer un nombre, c'est y attirer l'œil : à trancher avant mise en
+> ligne. Voir `04-questions-client.md`.
+
+### Correctif au passage — chevauchement mobile
+
+Sous 880 px, le texte du héros remontait **sous la pilule de navigation**. Le
+header passe en `position:fixed` à ce palier, donc hors du flux, mais la remontée
+`margin-top:-82px` du héros — qui n'a plus rien à compenser — restait appliquée :
+la règle `.hero{ margin-top:-82px }` est déclarée plus bas dans la feuille que la
+media query censée l'annuler, et une media query n'ajoute aucune spécificité.
+Corrigé en préfixant le sélecteur par `body` (0,1,1 contre 0,1,0). Bug antérieur
+à la Phase 3, présent sur les cinq pages.
+
 ---
 
 ## Pièges techniques du projet — à ne pas réintroduire
@@ -114,13 +154,22 @@ l'annuler. `grep -n 'style="[^"]*grid-template' *.html` doit rester vide.
 **5. `IntersectionObserver` doit être stocké dans une variable**, sinon il peut être
 collecté avant de se déclencher.
 
+**6. Une media query n'ajoute aucune spécificité.** Annuler une règle de base
+depuis un `@media` ne marche que si le `@media` est déclaré **après** elle dans la
+feuille. Sinon il faut monter en spécificité (`body .hero`) — jamais `!important`.
+
+**7. Le rendu headless de Chrome fige l'horloge des animations.**
+`--virtual-time-budget` n'avance ni les `requestAnimationFrame` ni les animations
+CSS : toutes les captures reviennent au même instant, quel que soit le budget.
+Pour vérifier un **état final**, capturer avec `--force-prefers-reduced-motion`.
+Et `--window-size` ne change pas la largeur de mise en page — pour un vrai 390 px,
+passer par l'enveloppe iframe décrite plus bas.
+
 ---
 
 ## Reste à faire
 
-**Phase 3 — animations** (non commencée) : micro-interactions, compteurs animés (bloqués
-par les chiffres réels), barre de progression de lecture, transitions de page via View
-Transitions API.
+**Phase 3 — faite**, sauf l'arbitrage des chiffres du bandeau (voir ci-dessus).
 
 **Depuis l'audit** : barre de recommandations collante sur `formations.html`, échelle
 verticale fluide, arbitrage Anton vs Inter sur les h3.

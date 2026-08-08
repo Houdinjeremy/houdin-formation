@@ -10,6 +10,7 @@
       burger.setAttribute("aria-expanded", open ? "true" : "false");
       // L'overlay couvre l'écran : on gèle le défilement de la page dessous.
       document.body.style.overflow = open ? "hidden" : "";
+      document.body.classList.toggle("nav-is-open", open);
     };
     burger.addEventListener("click", function(){
       setNav(!mobileNav.classList.contains("is-open"));
@@ -149,6 +150,78 @@
     }, { rootMargin: "300px 0px" });
     io3d.observe(frame3d);
   }
+
+  // ----- Phase 3 : mouvement -----
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Barre de progression de lecture.
+  // Injectée ici plutôt que dans les cinq pages HTML, et seulement si la page
+  // est assez longue pour que la notion de progression ait un sens.
+  (function(){
+    if (reduceMotion.matches) return;
+    var docH = function(){ return document.documentElement.scrollHeight - window.innerHeight; };
+    if (docH() < window.innerHeight * 0.6) return;
+
+    var bar = document.createElement("div");
+    bar.className = "read-progress";
+    bar.setAttribute("aria-hidden", "true");   // information purement décorative
+    bar.appendChild(document.createElement("span"));
+    document.body.appendChild(bar);
+
+    var fill = bar.firstChild, pending = false;
+    var apply = function(){
+      pending = false;
+      var max = docH();
+      var p = max > 0 ? window.scrollY / max : 0;
+      p = p < 0 ? 0 : (p > 1 ? 1 : p);
+      fill.style.setProperty("--p", p.toFixed(4));
+      bar.classList.toggle("is-active", window.scrollY > 40);
+    };
+    document.addEventListener("scroll", function(){
+      if (!pending) { pending = true; requestAnimationFrame(apply); }
+    }, { passive:true });
+    window.addEventListener("resize", apply, { passive:true });
+    apply();
+  })();
+
+  // Compteurs du bandeau de chiffres.
+  // On ne touche qu'aux valeurs numériques : « FR » reste « FR ».
+  // Le suffixe (%, +, ...) est conservé tel quel.
+  (function(){
+    var nums = document.querySelectorAll(".stat-num");
+    if (!nums.length || !("IntersectionObserver" in window) || reduceMotion.matches) return;
+
+    var animate = function(el, target, suffix){
+      var t0 = null, dur = 800;   // plafond fixé pour les révélations
+      var step = function(ts){
+        if (t0 === null) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);   // sortie cubique — jamais linéaire
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    var ioNum = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        ioNum.unobserve(el);
+        var raw = el.textContent.trim();
+        var m = raw.match(/^(\d+)(\D*)$/);
+        if (!m) return;
+        var target = parseInt(m[1], 10);
+        if (target < 2) return;   // compter jusqu'à 1 n'anime rien
+        // `.stat-num` est un bloc qui occupe déjà toute la colonne : le
+        // décompte ne provoque aucun réajustement de la grille.
+        el.textContent = "0" + m[2];
+        animate(el, target, m[2]);
+      });
+    }, { threshold: 0.6 });
+
+    nums.forEach(function(el){ ioNum.observe(el); });
+  })();
 
   // Footer year
   var yearEl = document.getElementById("year");

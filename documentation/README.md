@@ -1,6 +1,6 @@
 # Documentation — site Houdin Formation
 
-Archive de travail au 2026-08-07.
+Archive de travail au 2026-08-08.
 
 | Fichier | Contenu |
 |---|---|
@@ -26,5 +26,6 @@ Archive de travail au 2026-08-07.
 - `sauvegarde-avant-refonte-20260807-1436/` — état juste avant la Phase 2
 - `sauvegarde/` — version antérieure (dossier au nom comportant une espace finale)
 
-Le projet **n'est pas sous git**. C'est la principale fragilité de l'organisation
-actuelle : un `git init` est vivement recommandé avant la Phase 3.
+Le projet est **sous git** depuis le 2026-08-08 (`main`). Les deux dossiers
+`sauvegarde*/` restent sur le disque mais ne sont pas versionnés : c'est git qui
+tient l'historique à partir de là.
