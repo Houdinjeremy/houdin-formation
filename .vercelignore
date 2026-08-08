@@ -1,0 +1,9 @@
+# Ce qui n'a rien à faire en ligne. `dist/` n'y figure surtout pas :
+# c'est le dossier servi (voir outputDirectory dans vercel.json).
+.claude
+documentation
+scripts
+sauvegarde
+sauvegarde-avant-refonte-*
+*.zip
+.DS_Store
