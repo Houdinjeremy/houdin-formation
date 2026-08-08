@@ -73,3 +73,37 @@ Il a indiqué avoir l'accord des clients, mais **aucun fichier n'a été transmi
 
 - Les titres de niveau 3 passent-ils d'Anton capitales à Inter 800 ? Gain de lisibilité
   sur les cartes, perte d'uniformité graphique. Seul point réellement subjectif de l'audit.
+
+---
+
+## 8. Mentions légales — bloquant, ajouté le 2026-08-08
+
+Les pages `mentions-legales.html` et `confidentialite.html` existent désormais.
+Sept informations y sont signalées en orange (« À COMPLÉTER ») et le script de
+publication les recompte à chaque construction. Elles ne peuvent pas être
+inventées :
+
+- **Adresse complète du siège** (seule la commune, Gisors, est connue)
+- **SIRET**
+- **Numéro de TVA intracommunautaire**, ou mention de franchise en base
+- **Numéro de déclaration d'activité** de formation, enregistré auprès du préfet
+  de région — obligatoire dès qu'une activité de formation continue est exercée
+  (art. L.6351-1 du code du travail), avec la mention « cet enregistrement ne
+  vaut pas agrément de l'État »
+- **Certificat Qualiopi** : numéro, organisme certificateur, date d'échéance
+- **Référent handicap** : nom, courriel, téléphone (art. L.6112-3 et indicateur
+  26 du référentiel Qualiopi)
+- **Médiateur de la consommation** : obligatoire uniquement si des prestations
+  sont vendues à des particuliers. À supprimer si l'activité est strictement
+  inter-entreprises — c'est la question à poser.
+
+## 9. Catégories réellement couvertes — corrigé mais à confirmer
+
+Le site affichait des catégories fausses, corrigées le 2026-08-08 (voir le
+journal). Il annonce maintenant les catégories **réglementaires** de chaque
+recommandation. Reste à savoir lesquelles Jérémy Houdin **couvre réellement** :
+ses publications ne mentionnent que A, B1 et F en R482. Annoncer les onze
+catégories est une promesse à tenir devant un client.
+
+- Quelles catégories est-il habilité et équipé à former, par recommandation ?
+- Sur quel matériel : le sien, celui du client, ou les deux ?

@@ -12,7 +12,7 @@ cd "$(dirname "$0")/.."
 
 rm -rf dist && mkdir -p dist
 cp -R css js assets dist/
-cp index.html formations.html a-propos.html blog.html contact.html dist/
+cp *.html dist/
 
 # 1. Balise noindex, insérée juste après la déclaration d'encodage.
 for f in dist/*.html; do
@@ -47,4 +47,13 @@ rm -f houdin-formation-demo.zip
 
 echo "dist/ prêt — $(find dist -type f | wc -l | tr -d ' ') fichiers, $(du -sh dist | cut -f1)"
 grep -L 'noindex' dist/*.html && echo "⚠ page sans noindex ci-dessus" || echo "noindex présent sur les 5 pages"
+# Alerte sur les mentions légales incomplètes. On ne bloque pas la publication
+# — une démo doit pouvoir partir — mais rien ne doit sortir en ligne sans que
+# ce décompte ait été lu et assumé.
+TODO=$(grep -o 'class="todo"' dist/*.html | wc -l | tr -d ' ')
+if [ "$TODO" -gt 0 ]; then
+  echo "⚠  $TODO information(s) légale(s) manquante(s) — visibles en orange sur le site :"
+  grep -l 'class="todo"' dist/*.html | sed 's|^|     |'
+fi
+
 echo "archive : houdin-formation-demo.zip ($(du -h houdin-formation-demo.zip | cut -f1))"

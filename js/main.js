@@ -223,6 +223,68 @@
     nums.forEach(function(el){ ioNum.observe(el); });
   })();
 
+  // Champ de parallaxe.
+  // Une seule variable CSS (`--sy`) mise à jour par image ; c'est la feuille de
+  // style qui répartit le mouvement entre les objets. Les positions sont tirées
+  // d'un générateur à graine fixe : elles sont pseudo-aléatoires mais
+  // identiques d'un chargement à l'autre — un fond qui se recompose à chaque
+  // visite se remarque, et pas en bien.
+  (function(){
+    var sections = document.querySelectorAll(".hero, .page-hero, .showcase-3d");
+    if (!sections.length) return;
+
+    var seed = 20260808;
+    var rnd = function(){            // générateur congruentiel linéaire
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed / 0x7fffffff;
+    };
+
+    sections.forEach(function(section){
+      if (section.querySelector(".parallax-field")) return;
+      var field = document.createElement("div");
+      field.className = "parallax-field";
+      field.setAttribute("aria-hidden", "true");
+
+      for (var i = 0; i < 7; i++) {
+        var el = document.createElement("div");
+        var spark = i % 4 === 3;               // une étincelle sur quatre
+        el.className = "px-shape " + (spark ? "px-spark"
+                                            : "px-plate" + (i % 3 ? "" : " solid"));
+        var size = spark ? 12 + rnd() * 16 : 60 + rnd() * 150;
+        // Répartition stratifiée plutôt que purement aléatoire : chaque objet
+        // occupe sa propre bande verticale, sinon le tirage les agglutine et
+        // laisse des zones vides. Et on écarte l'axe central, là où vit le
+        // texte — une étincelle isolée sous un bouton se lit comme un défaut
+        // d'affichage, pas comme un parti pris.
+        var band = (i + rnd() * 0.85) / 7;          // 0 → 1, une bande par objet
+        var side = i % 2 ? 60 + rnd() * 36 : rnd() * 26;   // gauche / droite
+        el.style.cssText =
+          "--x:" + side.toFixed(1) + "%;" +
+          "--y:" + (band * 104 - 6).toFixed(1) + "%;" +
+          "--s:" + size.toFixed(0) + "px;" +
+          "--o:" + (spark ? .30 + rnd() * .35 : .20 + rnd() * .35).toFixed(2) + ";" +
+          "--r:" + (rnd() * 24 - 12).toFixed(1) + "deg;" +
+          // Coefficient de dérive : plus l'objet est petit, plus il file vite.
+          // C'est l'écart entre les coefficients qui fabrique la profondeur.
+          "--k:" + (spark ? .10 + rnd() * .14 : .03 + rnd() * .09).toFixed(3) + ";";
+        field.appendChild(el);
+      }
+      section.insertBefore(field, section.firstChild);
+    });
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var root = document.documentElement, pending = false;
+    var apply = function(){
+      pending = false;
+      root.style.setProperty("--sy", Math.round(window.scrollY));
+    };
+    document.addEventListener("scroll", function(){
+      if (!pending) { pending = true; requestAnimationFrame(apply); }
+    }, { passive:true });
+    apply();
+  })();
+
   // Footer year
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();

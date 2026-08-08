@@ -301,7 +301,7 @@ h3, .h3{
 
 /* ---------- footer ---------- */
 .site-footer{ background:var(--navy-950); color:#B9C4CF; }
-.footer-top{ padding:64px 0 40px; display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:40px; }
+.footer-top{ padding:64px 0 40px; display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr 1fr; gap:40px; }
 .footer-brand img{ height:40px; margin-bottom:14px; }
 .footer-brand p{ font-size:14px; line-height:1.7; max-width:34ch; color:#8FA0AF; }
 .footer-col h4{
@@ -811,4 +811,133 @@ body.nav-is-open .read-progress{ opacity:0; }
   .machine-plate:hover .plate-row{ opacity:1; }
   .read-progress{ display:none; }
   @view-transition{ navigation:none; }
+}
+
+/* ==========================================================================
+   PHASE 4 — champ de parallaxe
+   Des objets dérivent vers le haut à mesure qu'on descend, à des vitesses
+   différentes : c'est ce décalage qui crée la profondeur, pas le mouvement
+   lui-même. Le vocabulaire est celui de la marque — plaques chanfreinées
+   reprises du logo, et l'étincelle à quatre branches — jamais des formes
+   décoratives génériques : sur un site d'expertise industrielle, des bulles
+   floues sonneraient faux.
+
+   Tout repose sur une seule variable, `--sy` (défilement en pixels), posée une
+   fois par image sur <html>. Chaque objet la multiplie par son propre
+   coefficient. Aucun calcul par objet en JS, et rien d'autre que `transform`.
+   ========================================================================== */
+
+.parallax-field{
+  position:absolute; inset:0; z-index:0;
+  overflow:hidden; pointer-events:none;
+  /* Isole le repeindre des objets du reste de la section. */
+  contain:paint;
+}
+/* Les contenus doivent rester au-dessus du champ. */
+.hero > .wrap, .page-hero > .wrap, .showcase-3d > .wrap{ position:relative; z-index:1; }
+
+.px-shape{
+  position:absolute;
+  top:var(--y); left:var(--x);
+  width:var(--s); height:var(--s);
+  opacity:var(--o);
+  /* translate3d, et non translateY : force la composition sur le GPU, le
+     défilement reste fluide même avec plusieurs objets par section. */
+  transform:translate3d(0, calc(var(--sy, 0) * var(--k) * -1px), 0) rotate(var(--r));
+}
+
+/* Plaque : le chanfrein supérieur gauche du logo, repris à l'identique. */
+.px-plate{
+  border:1.5px solid rgba(255,255,255,.20);
+  border-radius:2px;
+  clip-path:polygon(34% 0, 100% 0, 100% 100%, 0 100%, 0 22%);
+  background:linear-gradient(150deg, rgba(255,255,255,.05), transparent 70%);
+}
+.px-plate.solid{ background:rgba(255,255,255,.035); border-color:rgba(255,255,255,.13); }
+
+/* Étincelle à quatre branches, l'accent du logo. */
+.px-spark{
+  background:var(--spark-500);
+  clip-path:polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+}
+
+/* Le champ n'a de sens que sur les fonds sombres : sur le papier clair, ces
+   objets deviendraient des taches. */
+.on-light .parallax-field{ display:none; }
+
+@media (prefers-reduced-motion: reduce){
+  /* On ne masque pas le champ — il fait partie de la composition. On fige
+     seulement la dérive : les objets restent à leur position de repos. */
+  .px-shape{ transform:rotate(var(--r)) !important; }
+}
+/* Sous 700 px la profondeur ne se lit plus, et chaque objet coûte une couche
+   de composition sur un processeur mobile. */
+@media (max-width: 700px){
+  .parallax-field{ display:none; }
+}
+
+/* ==========================================================================
+   PAGES JURIDIQUES
+   Colonne étroite : ces textes se lisent, ils ne se survolent pas.
+   ========================================================================== */
+/* `.wrap` centre son contenu ; en réduisant seulement max-width, la colonne
+   juridique se serait recentrée au milieu de la page, désalignée du titre et
+   de tout le reste du site. On la recale sur le bord gauche de la grille. */
+.legal{ max-width:74ch; margin-left:0; }
+.legal h2{
+  font-size:22px; margin-top:52px; padding-top:22px;
+  border-top:1px solid var(--line);
+}
+.legal h2:first-child{ margin-top:0; padding-top:0; border-top:0; }
+.legal p{ margin-top:14px; color:var(--ink-soft); }
+.legal a{ color:var(--spark-700); text-decoration:underline; text-underline-offset:3px; }
+.legal a:hover{ color:var(--spark-600); }
+
+.legal-list{ margin:18px 0 0; display:grid; grid-template-columns:minmax(190px,auto) 1fr; gap:2px 28px; }
+.legal-list dt{
+  font-family:var(--font-mono); font-size:12px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-faint); padding:12px 0;
+  border-top:1px solid var(--line);
+}
+.legal-list dd{ margin:0; padding:12px 0; border-top:1px solid var(--line); }
+@media (max-width:640px){
+  .legal-list{ grid-template-columns:1fr; gap:0; }
+  .legal-list dd{ border-top:0; padding-top:0; padding-bottom:16px; }
+}
+
+.legal-table{ width:100%; border-collapse:collapse; margin-top:18px; font-size:14.5px; }
+.legal-table th, .legal-table td{
+  text-align:left; vertical-align:top; padding:12px 14px 12px 0;
+  border-bottom:1px solid var(--line);
+}
+.legal-table th{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-faint); font-weight:500;
+}
+.legal-table td{ color:var(--ink-soft); }
+/* Un tableau ne doit jamais élargir la page : il défile dans sa propre boîte. */
+.legal-table{ display:block; overflow-x:auto; }
+
+.legal-bullets{ margin-top:14px; display:grid; gap:12px; }
+.legal-bullets li{
+  padding-left:18px; position:relative; color:var(--ink-soft); font-size:15px;
+}
+.legal-bullets li::before{
+  content:""; position:absolute; left:0; top:9px;
+  width:6px; height:6px; background:var(--spark-500); border-radius:1px;
+}
+.legal-note{
+  display:block; margin-top:8px; font-size:13.5px; line-height:1.6;
+  color:var(--ink-faint); font-style:italic;
+}
+
+/* Marqueur d'information manquante.
+   Volontairement voyant : une mention légale incomplète mise en ligne sans
+   qu'on s'en aperçoive est pire que pas de page du tout. Le script de
+   publication compte ces marqueurs et le signale. */
+.todo{
+  background:var(--spark-100); color:var(--spark-700);
+  font-family:var(--font-mono); font-size:12px; letter-spacing:.04em;
+  text-transform:uppercase; padding:3px 8px; border-radius:4px;
+  border:1px dashed var(--spark-600); white-space:nowrap;
 }
