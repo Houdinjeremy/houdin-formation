@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+._*
+
+# Sauvegardes manuelles antérieures à la mise sous git.
+# Elles restent sur le disque, elles ne sont simplement pas versionnées :
+# c'est git qui tient l'historique à partir d'ici.
+sauvegarde/
+sauvegarde */
+sauvegarde-avant-refonte-*/
+
+# Transcription brute de session (7 Mo, binaire)
+documentation/transcription/session-brute.jsonl.gz
+
+# Skills installées localement (paquets tiers, pas du code projet)
+.claude/skills/
