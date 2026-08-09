@@ -199,3 +199,66 @@ servir une page enveloppe sur un **second port** contenant
 `<iframe src="http://localhost:8099/index.html" style="width:390px;height:844px;border:0">`,
 et piloter depuis la page extérieure. Après toute modification CSS, **rechargement dur
 obligatoire** (`cmd+shift+r`) : le serveur python n'envoie aucun en-tête de cache.
+
+---
+
+## Mise en ligne — état au 2026-08-09
+
+**Hébergement : Vercel**, projet `houdin-formation-demo`, espace `houdin-formation`
+(compte `jeremy-7120`, actuellement en **essai Pro** — noter l'échéance : à la fin
+de l'essai, la protection par mot de passe disparaît et l'usage commercial n'est
+plus couvert par le plan gratuit).
+
+Adresse de secours, à ne jamais rediriger : `houdin-formation-demo.vercel.app`.
+
+### DNS — les quatre domaines sont chez IONOS, en enregistrements A
+
+`houdin-formation.fr` (principal), `.com`, `.store`, `.info` — chacun avec `@` et
+`www` vers **76.76.21.21**.
+
+**Les serveurs de noms restent chez IONOS, et doivent y rester.** Vercel propose
+régulièrement de les reprendre (bandeau orange « Update the nameservers »,
+pastilles « DNS Change Recommended ») : il faut refuser. Les quatre domaines
+portent des enregistrements `MX` vers `mx00/mx01.ionos.fr`, plus SPF, DKIM et
+DMARC. Une bascule des serveurs de noms couperait la messagerie du client, sans
+message d'erreur.
+
+### Deux pièges rencontrés, pour ne pas les redécouvrir
+
+**L'enregistrement `AAAA`.** Chaque zone IONOS en contenait un vers le parking
+IPv6. Changer le `A` sans le supprimer laisse tous les visiteurs en IPv6 — la
+majorité des connexions fibre — sur la page IONOS. En pratique le problème se
+règle seul : modifier le `A` déclenche un écran « Arrêt du service en cours » qui
+désactive d'office les trois enregistrements « Default Site » (`A`, `AAAA`,
+`TXT _dep_ws_mutex`). Les enregistrements « Mail » ne sont pas touchés.
+
+**Le nom d'hôte n'est pas modifiable.** Pour ajouter `www`, il faut passer par
+« Ajouter un enregistrement » ; le crayon d'une ligne existante ne permet que de
+changer la valeur.
+
+### Vérification — deux faux négatifs à connaître
+
+1. **Le cache DNS de macOS** sert longtemps l'ancienne IP IONOS : `curl` tombe
+   alors sur un `404 nginx` qui ressemble à une panne. Tester avec
+   `curl --resolve <nom>:443:76.76.21.21`, ou depuis un téléphone en 4G.
+   Purger : `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`.
+2. **La protection anti-robot de Vercel** se déclenche sur des sondes répétées et
+   renvoie un `403` avec l'en-tête `x-vercel-mitigated: challenge` et un corps
+   « Vercel Security Checkpoint ». Ce n'est ni le mot de passe ni un défaut de
+   configuration. Espacer les tests et utiliser un `User-Agent` de navigateur.
+
+### Reste à faire
+
+**Les sept redirections vers `houdin-formation.fr`**, dans le projet →
+Settings → Domains → Edit sur chaque ligne → *Redirect to* → 308 Permanent.
+Aujourd'hui les six domaines servent le même site en parallèle : c'est du contenu
+dupliqué. Sans conséquence tant que le `noindex` est actif, bloquant le jour de
+la mise en ligne.
+
+**Protection par mot de passe** : Settings → Deployment Protection. Disponible
+pendant l'essai Pro.
+
+**Ne pas diffuser l'adresse** au-delà du client : sept mentions légales encore
+marquées « à compléter », « 25 ans d'expérience » et « France métropolitaine »
+non tranchés, et les catégories CACES corrigées mais dont personne n'a confirmé
+lesquelles sont réellement couvertes.
