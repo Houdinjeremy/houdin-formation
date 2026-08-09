@@ -262,3 +262,99 @@ pendant l'essai Pro.
 marquées « à compléter », « 25 ans d'expérience » et « France métropolitaine »
 non tranchés, et les catégories CACES corrigées mais dont personne n'a confirmé
 lesquelles sont réellement couvertes.
+
+## Schémas techniques animés — 2026-08-09
+
+Deux commits : `3ba0fd7` (bac à sable + correctifs rapides) et `722f618`
+(schémas + refonte de la page formations). **Local, non poussé** — `origin/main`
+est en retard de 2 commits, et pousser déclenche la mise en ligne.
+
+### Le dossier `design/`
+
+Copie de travail complète du site (`*.html`, `css/`, `js/`, `assets/`) où toutes
+les modifications sont faites avant d'être reportées à la racine. L'isolement est
+structurel : `scripts/build-demo.sh` ne copie que `css/`, `js/`, `assets/` et
+`*.html` **de la racine** — il ne voit jamais `design/`.
+
+`design/demo-schemas.html` est la page d'atelier qui montre les dix mécanismes
+d'affilée. Elle reste **volontairement hors de la racine** : le script de
+publication copie tous les `*.html`, elle partirait donc en ligne alors qu'aucune
+navigation n'y mène.
+
+### `js/schemas.js` — dix mécanismes calculés
+
+Un `<svg data-schema="pemp-ciseaux">` vide suffit : le module génère le décor,
+les cotes, le mécanisme et la trajectoire. Échelle commune `ECHELLE = 46 px/m`,
+sol à `y = 280`, donc les cotes réglementaires (1,20 m / 2,50 m) sont à leur
+place réelle.
+
+Les mécanismes sont **calculés, pas dessinés** — c'est ce qui garantit qu'un
+professionnel n'y verra rien de faux :
+
+- **ciseaux** : barres à longueur fixe, donc `W = √(L² − h²)`. Le resserrement en
+  montant est la signature visuelle d'un ciseaux, et c'est ce qu'un rendu
+  approximatif rate ;
+- **PEMP à bras** : cinématique directe à deux segments, panier redessiné
+  horizontal à chaque image (le plancher est asservi sur une vraie machine) ;
+- **mât rétractable** : translation en phase 1, levée en phase 2 — la trajectoire
+  dessine un L, ce qui rend la catégorie 5 évidente ;
+- **pelles R482** : même cycle, même échelle, **même silhouette de 1,75 m** dans
+  les deux cartes. Seul le gabarit change, et c'est le propos : sous 4,5 t
+  l'engin bascule en catégorie A quelle que soit sa fonction ;
+- **zones BT** : entre la DLI (50 m) et la DLVR (0,30 m) le rapport est de 1 à
+  166. Le schéma porte une **rupture d'échelle explicite** plutôt que de fausser
+  les distances en silence ;
+- **symbolique BT** : chaque caractère est posé **sur sa colonne** et non en
+  chaîne centrée — « B0 » n'en a que deux, le troisième repère reste vide.
+
+Coût total : **8,4 Ko compressés**, aucune dépendance, aucune requête réseau.
+`?t=0.62` fige les mécanismes à un instant donné (captures, relecture).
+`prefers-reduced-motion` figé en position déployée.
+
+### Page formations — ce qui a changé
+
+Les quatre `value-card` blancs par recommandation → une `.reco-plate` à chanfrein
+portant une `.reco-specs` (matrice `dl` en mono). Index collant `.reco-index` en
+haut. **Un seul** bouton plein sur la page (R489, la plus demandée) au lieu de
+cinq identiques. Classes `section-grid` et `reco-detail` supprimées : aucune
+règle CSS ne les ciblait depuis l'origine.
+
+### Pièges rencontrés — à ne pas réintroduire
+
+1. **`.schema-strip` avait besoin d'un `color:#fff` explicite.** Sans lui, les
+   `<h3>` des cartes héritaient de l'encre sombre de la section claire et
+   disparaissaient sur le navy. Même famille que les oublis de `.on-dark` déjà
+   documentés : *tout bloc sombre posé dans une section claire doit redéclarer sa
+   couleur de texte*.
+2. **`gap` sur une grille `dl` brise le filet pointillé.** Chaque cellule porte
+   son propre `border-top` ; avec une gouttière, le trait se coupe au milieu. La
+   respiration doit passer par le `padding` du `<dt>`.
+3. **`scroll-margin-top` doit suivre l'index collant** : passé de 110 à 158 px,
+   sinon les ancres `#r482`… atterrissent sous la barre.
+4. **Capture headless et `data-reveal`** : avec une ancre (`#bt`) ou une fenêtre
+   trop courte, l'`IntersectionObserver` ne déclenche pas et la capture revient
+   vide (~5 Ko). Capturer sans ancre, fenêtre assez haute pour que tout soit dans
+   le viewport — ou neutraliser `data-reveal` dans une page de test.
+5. **`timeout` n'existe pas sur ce macOS** (exit 127) ; et Chrome headless ne rend
+   pas la main après l'écriture du fichier — le lancer en arrière-plan puis
+   scruter l'existence du PNG.
+
+### Documents produits
+
+- `documentation/Houdin-Formation-Correctifs-Design-2026-08-09.pdf` — les six
+  correctifs rapides, avec la liste des informations légales à obtenir.
+- Artifact interactif (dix mécanismes animés) :
+  https://claude.ai/code/artifact/30b98288-d5c8-4dd0-99ac-3c8aa1031e0f
+
+### Reste à faire
+
+- **Ne pas pousser** avant d'avoir tranché : les cinq mentions légales
+  obligatoires manquent toujours (SIRET, adresse complète, TVA, n° de déclaration
+  d'activité, référent handicap à confirmer).
+- Le tableau de catégories fourni par le client était en **nomenclature R389,
+  abrogée depuis le 1ᵉʳ janvier 2020** — rien n'en a été repris ; le site publie
+  bien du R489. À signaler au client, c'est son propre domaine d'expertise.
+- Modèles 3D Meshy : en attente des exports GLB. Le « residential electrical
+  panel » est écarté (mauvais registre, et CC BY d'un tiers).
+- Vidéos LinkedIn : demander les fichiers originaux au client plutôt que de
+  tenter une récupération (LinkedIn renvoie un HTTP 999 à tout accès automatisé).
