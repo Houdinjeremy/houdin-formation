@@ -697,10 +697,10 @@ h3, .h3{
 /* Le header reste sticky/fixed par-dessus : sans ça, une ancre comme
    formations.html#r482 arrive avec le badge et le titre masqués dessous. */
 :target,
-#r482, #r485, #r486, #r489, #bt{ scroll-margin-top:110px; }
+#r482, #r485, #r486, #r489, #bt{ scroll-margin-top:158px; }
 @media (max-width:880px){
   :target,
-  #r482, #r485, #r486, #r489, #bt{ scroll-margin-top:96px; }
+  #r482, #r485, #r486, #r489, #bt{ scroll-margin-top:140px; }
 }
 /* La grille vivait dans un style inline sur contact.html, que seul un !important
    pouvait contrer. Elle est ici, donc les media queries fonctionnent normalement. */
@@ -954,3 +954,186 @@ body.nav-is-open .read-progress{ opacity:0; }
   text-transform:uppercase; padding:3px 8px; border-radius:4px;
   border:1px dashed #B7BCC2; white-space:nowrap;
 }
+
+/* ==========================================================================
+   Schémas techniques animés — mécanismes générés par js/schemas.js
+   ========================================================================== */
+
+.schema-section{ background:var(--navy-990); color:#fff; padding:72px 0 84px; position:relative; overflow:hidden; }
+
+.schema-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:44px;
+}
+@media (max-width:900px){ .schema-grid{ grid-template-columns:1fr; gap:22px; } }
+
+/* Le chanfrein haut-gauche est la géométrie du logo, reprise sur la plaque
+   constructeur du hero et sur le cadre du visualiseur. */
+.schema-card{
+  background:linear-gradient(168deg, rgba(30,71,113,.28) 0%, rgba(10,24,38,.5) 70%);
+  border:1px solid var(--line-on-dark);
+  border-radius:24px 8px 8px 8px;
+  padding:22px 22px 26px;
+  position:relative;
+}
+
+.schema-head{ display:flex; align-items:center; gap:12px; margin-bottom:4px; }
+.schema-badge{
+  font-family:var(--font-mono); font-weight:600; font-size:15px;
+  background:var(--spark-500); color:var(--on-spark);
+  width:34px; height:34px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center; flex:none;
+}
+.schema-head h3{ font-size:19px; margin:0; }
+.schema-sub{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--spark-500); margin:2px 0 0;
+}
+
+.schema-figure{
+  margin:16px 0 0; background:rgba(6,14,24,.55);
+  border:1px solid rgba(255,255,255,.07); border-radius:10px;
+  overflow:hidden;
+}
+.schema-figure svg{ display:block; width:100%; height:auto; }
+
+.schema-desc{ color:var(--dark-body); font-size:14.5px; line-height:1.6; margin:16px 0 0; }
+
+/* Matrice de caractéristiques : une grille de données, pas des cartons. */
+.schema-specs{ display:grid; grid-template-columns:minmax(96px,auto) 1fr; gap:0 20px; margin:16px 0 0; }
+.schema-specs dt{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:#8FA0B2;
+  padding:10px 0; border-top:1px dashed rgba(255,255,255,.13);
+}
+.schema-specs dd{
+  margin:0; padding:10px 0; border-top:1px dashed rgba(255,255,255,.13);
+  font-size:14px; color:#E4E9EE;
+}
+@media (max-width:480px){
+  .schema-specs{ grid-template-columns:1fr; }
+  .schema-specs dd{ border-top:0; padding-top:0; padding-bottom:12px; }
+}
+
+.schema-legend{
+  display:flex; gap:20px; flex-wrap:wrap; margin-top:14px;
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:#8FA0B2;
+}
+.schema-legend span{ display:flex; align-items:center; gap:7px; }
+.legend-swatch{ width:20px; height:0; border-top:2px dashed var(--spark-500); flex:none; }
+.legend-swatch.solid{ border-top:2px solid #C4CDD6; }
+
+.schema-note{
+  margin-top:40px; padding:20px 22px;
+  border-left:3px solid var(--spark-500); background:rgba(238,113,17,.07);
+  border-radius:0 8px 8px 0; color:var(--dark-body); font-size:14.5px; line-height:1.65;
+}
+.schema-note strong{ color:#fff; }
+
+.proto-tag{
+  position:absolute; top:14px; right:16px;
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  color:#8FA0B2; border:1px dashed rgba(255,255,255,.22); padding:3px 9px; border-radius:4px;
+}
+
+/* Séparateur de série : repère mono, filet de part et d'autre. */
+.schema-rule{
+  display:flex; align-items:center; gap:16px; margin:52px 0 22px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--spark-500);
+}
+.schema-rule::before, .schema-rule::after{
+  content:""; height:1px; background:var(--line-on-dark); flex:1;
+}
+.schema-rule::before{ flex:0 0 28px; }
+.legend-swatch.pin{
+  width:9px; height:9px; border:0; border-radius:50%;
+  background:#060E18; box-shadow:0 0 0 2px var(--spark-500) inset;
+}
+
+/* Bandeau sombre inséré dans une section claire : les schémas conservent leur
+   fond de « plaque technique » sans qu'on ait à redessiner leurs couleurs. */
+.schema-strip{
+  margin-top:36px; padding:26px 26px 30px;
+  /* color:#fff est indispensable : sans lui les <h3> des cartes héritent de
+     l'encre sombre de la section claire et disparaissent sur le navy. */
+  background:var(--navy-990); color:#fff;
+  border-radius:24px 8px 8px 8px;
+  position:relative; overflow:hidden;
+}
+.schema-strip .schema-grid{ margin-top:20px; }
+.schema-strip-head{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--spark-500); margin:0;
+}
+.schema-strip-lede{
+  color:var(--dark-body); font-size:14.5px; line-height:1.6;
+  margin:8px 0 0; max-width:62ch;
+}
+@media (max-width:640px){ .schema-strip{ padding:20px 16px 24px; } }
+
+/* ==========================================================================
+   Page formations — fiche technique par recommandation
+   Remplace les quatre cartons blancs identiques par une plaque à chanfrein
+   portant une matrice de données : même contenu, registre « constructeur ».
+   ========================================================================== */
+
+/* Index collant : un responsable QSE arrive sur cette page en cherchant UNE
+   recommandation précise, pas les cinq. */
+.reco-index{
+  position:sticky; top:84px; z-index:20;
+  background:rgba(245,242,234,.88);
+  backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid var(--line);
+}
+.reco-index-inner{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; padding:12px 0; }
+.reco-index .n{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-faint); margin-right:4px;
+}
+.reco-index a{
+  font-family:var(--font-mono); font-size:12.5px; font-weight:500;
+  padding:7px 14px; border-radius:999px;
+  border:1px solid var(--line); color:var(--navy-900);
+  transition:background var(--dur-fast) var(--ease-out),
+             color var(--dur-fast) var(--ease-out),
+             border-color var(--dur-fast) var(--ease-out);
+}
+.reco-index a:hover{ background:var(--navy-900); color:var(--white); border-color:var(--navy-900); }
+@media (max-width:880px){ .reco-index{ top:72px; } }
+@media (max-width:560px){ .reco-index .n{ display:none; } }
+
+.reco-plate{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-bottom:3px solid var(--navy-800);   /* le filet épais d'une plaque rivetée */
+  border-radius:26px 6px 6px 6px;            /* chanfrein haut-gauche du logo */
+  padding:28px 30px 24px;
+  box-shadow:var(--shadow-card);
+}
+.reco-plate.is-electric{ border-bottom-color:var(--spark-500); }
+
+/* gap:0 et non gap:0 28px — avec une gouttière, chaque cellule porte son
+   propre filet et la ligne pointillée se brise au milieu. La respiration
+   passe par le padding du <dt>, ce qui garde un trait continu. */
+.reco-specs{ display:grid; grid-template-columns:minmax(140px,auto) 1fr; gap:0; margin:0; }
+.reco-specs dt{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-faint);
+  padding:14px 28px 14px 0; border-top:1px dashed var(--paper-line);
+}
+.reco-specs dd{
+  margin:0; padding:14px 0; border-top:1px dashed var(--paper-line);
+  font-size:15px; line-height:1.55; color:var(--ink);
+}
+.reco-specs dt:first-of-type, .reco-specs dd:first-of-type{ border-top:0; padding-top:0; }
+@media (max-width:640px){
+  .reco-specs{ grid-template-columns:1fr; gap:0; }
+  .reco-specs dt{ padding:14px 0 4px; }
+  .reco-specs dd{ border-top:0; padding-top:0; padding-bottom:16px; }
+  .reco-plate{ padding:22px 20px 18px; }
+}
+
+.reco-note{ margin-top:22px; color:var(--ink-soft); font-size:15px; line-height:1.65; max-width:70ch; }
+.reco-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }

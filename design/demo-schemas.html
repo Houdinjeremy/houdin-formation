@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Houdin Formation — Schémas techniques animés</title>
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<main>
+<section class="schema-section">
+  <div class="blueprint-grid" aria-hidden="true"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+
+    <p class="eyebrow">Comprendre les catégories</p>
+    <h2>La forme de la machine dit la catégorie</h2>
+    <p class="lede" style="margin-top:14px;max-width:64ch;text-wrap:pretty;color:var(--dark-body)">
+      Ce qui sépare deux catégories n'est pas administratif : c'est mécanique, et ça se voit.
+      Le pointillé orange est la trajectoire du plancher ou de la charge.
+    </p>
+
+    <!-- ================= R486 · PEMP ================= -->
+    <p class="schema-rule"><span>R486 · PEMP</span></p>
+    <div class="schema-grid">
+
+      <article class="schema-card">
+        <span class="proto-tag">Groupe A</span>
+        <div class="schema-head">
+          <span class="schema-badge">A</span>
+          <div><h3>Élévation verticale</h3><p class="schema-sub">Nacelle ciseaux</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="pemp-ciseaux" viewBox="0 0 340 300" role="img"
+               aria-label="Nacelle à ciseaux : le plancher s'élève strictement à la verticale le long d'une façade."></svg>
+        </figure>
+        <p class="schema-desc">
+          Le plancher monte à l'aplomb du châssis, sans jamais sortir des lignes de basculement.
+          La machine des travaux le long d'une façade ou sous un plafond, avec une charge et une
+          surface de travail importantes.
+        </p>
+        <dl class="schema-specs">
+          <dt>Mouvement</dt><dd>Vertical strict</dd>
+          <dt>Types</dt><dd>1 et 3</dd>
+          <dt>Terrain</dt><dd>Surface dégagée, sans obstacle à contourner</dd>
+        </dl>
+      </article>
+
+      <article class="schema-card">
+        <span class="proto-tag">Groupe B</span>
+        <div class="schema-head">
+          <span class="schema-badge">B</span>
+          <div><h3>Élévation multidirectionnelle</h3><p class="schema-sub">Bras articulé ou télescopique</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="pemp-bras" viewBox="0 0 340 300" role="img"
+               aria-label="Nacelle à bras articulé : le panier décrit une courbe et franchit un obstacle par-dessus."></svg>
+        </figure>
+        <p class="schema-desc">
+          Le panier sort de l'aplomb du châssis : il franchit un obstacle et va chercher un point
+          que la verticale n'atteint pas. Le plancher reste horizontal quelle que soit la position
+          des bras — la machine des accès contraints.
+        </p>
+        <dl class="schema-specs">
+          <dt>Mouvement</dt><dd>Multidirectionnel</dd>
+          <dt>Types</dt><dd>1 et 3</dd>
+          <dt>Terrain</dt><dd>Obstacle au sol, accès en surplomb</dd>
+        </dl>
+      </article>
+    </div>
+
+    <!-- ================= R485 vs R489 1B ================= -->
+    <p class="schema-rule"><span>R485 ou R489 · où est l'opérateur</span></p>
+    <div class="schema-grid">
+
+      <article class="schema-card">
+        <span class="proto-tag">R485</span>
+        <div class="schema-head">
+          <span class="schema-badge">1</span>
+          <div><h3>Conducteur accompagnant</h3><p class="schema-sub">Gerbeur à timon</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="gerbeur-accompagnant" viewBox="0 0 340 300" role="img"
+               aria-label="Gerbeur à conducteur accompagnant : l'opérateur marche à côté de la machine, main sur le timon."></svg>
+        </figure>
+        <p class="schema-desc">
+          L'opérateur marche à côté et guide la machine au timon. C'est cette position — et non la
+          hauteur — qui range l'engin en R485.
+        </p>
+        <dl class="schema-specs">
+          <dt>Catégorie 1</dt><dd>Levée &gt; 1,20 m et ≤ 2,50 m</dd>
+          <dt>Catégorie 2</dt><dd>Levée &gt; 2,50 m</dd>
+          <dt>Validité</dt><dd>5 ans</dd>
+        </dl>
+      </article>
+
+      <article class="schema-card">
+        <span class="proto-tag">R489</span>
+        <div class="schema-head">
+          <span class="schema-badge">1B</span>
+          <div><h3>Conducteur porté</h3><p class="schema-sub">Gerbeur à plateforme</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="gerbeur-porte" viewBox="0 0 340 300" role="img"
+               aria-label="Gerbeur à conducteur porté : l'opérateur se tient sur une plateforme solidaire de la machine."></svg>
+        </figure>
+        <p class="schema-desc">
+          Même geste, même hauteur — mais l'opérateur est porté par la machine. On bascule dans une
+          recommandation entièrement différente, avec sa propre formation et son propre test.
+        </p>
+        <dl class="schema-specs">
+          <dt>Catégorie 1B</dt><dd>Gerbeur porté, levée &gt; 1,20 m</dd>
+          <dt>Catégorie 1A</dt><dd>Transpalette / préparateur, levée &lt; 1,20 m</dd>
+          <dt>Validité</dt><dd>5 ans</dd>
+        </dl>
+      </article>
+    </div>
+
+    <!-- ================= R489 · frontal vs rétractable ================= -->
+    <p class="schema-rule"><span>R489 · frontal ou rétractable</span></p>
+    <div class="schema-grid">
+
+      <article class="schema-card">
+        <span class="proto-tag">Catégorie 3</span>
+        <div class="schema-head">
+          <span class="schema-badge">3</span>
+          <div><h3>Frontal en porte-à-faux</h3><p class="schema-sub">Le chariot le plus répandu</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="chariot-frontal" viewBox="0 0 340 300" role="img"
+               aria-label="Chariot élévateur frontal : la charge est portée en avant des roues, équilibrée par un contrepoids."></svg>
+        </figure>
+        <p class="schema-desc">
+          La charge est portée en avant des roues : c'est le contrepoids arrière qui tient
+          l'équilibre. Simple et polyvalent, mais il lui faut de l'allée.
+        </p>
+        <dl class="schema-specs">
+          <dt>Catégorie 3</dt><dd>Capacité ≤ 6 t</dd>
+          <dt>Catégorie 4</dt><dd>Capacité &gt; 6 t</dd>
+          <dt>Terrain</dt><dd>Allées larges, quai, extérieur</dd>
+        </dl>
+      </article>
+
+      <article class="schema-card">
+        <span class="proto-tag">Catégorie 5</span>
+        <div class="schema-head">
+          <span class="schema-badge">5</span>
+          <div><h3>Mât rétractable</h3><p class="schema-sub">Le mât avance, puis lève</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="chariot-retractable" viewBox="0 0 340 300" role="img"
+               aria-label="Chariot à mât rétractable : le mât translate vers l'avant sur les longerons avant d'élever la charge."></svg>
+        </figure>
+        <p class="schema-desc">
+          Le mât coulisse sur les longerons avant de lever : la charge revient entre les roues,
+          donc pas de porte-à-faux ni de contrepoids. C'est ce mouvement, et lui seul, qui justifie
+          une catégorie distincte.
+        </p>
+        <dl class="schema-specs">
+          <dt>Catégorie 5</dt><dd>Mât rétractable</dd>
+          <dt>Avantage</dt><dd>Allées étroites, stockage en hauteur</dd>
+          <dt>Terrain</dt><dd>Entrepôt, sol plan</dd>
+        </dl>
+      </article>
+    </div>
+
+    <!-- ================= R482 · la masse, pas la fonction ================= -->
+    <p class="schema-rule"><span>R482 · ce qui compte, c'est la masse</span></p>
+    <div class="schema-grid">
+
+      <article class="schema-card">
+        <span class="proto-tag">Catégorie B1</span>
+        <div class="schema-head">
+          <span class="schema-badge">B1</span>
+          <div><h3>Pelle hydraulique</h3><p class="schema-sub">Déplacement séquentiel</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="pelle-b1" viewBox="0 0 340 300" role="img"
+               aria-label="Pelle hydraulique de plus de 4,5 tonnes : cycle de terrassement, flèche, balancier et godet."></svg>
+        </figure>
+        <p class="schema-desc">
+          L'engin se cale, puis travaille en pivotant sur sa tourelle : il n'avance pas pendant
+          le cycle. C'est ce mode opératoire qu'on appelle <em>déplacement séquentiel</em>.
+        </p>
+        <dl class="schema-specs">
+          <dt>Masse</dt><dd>Plus de 4,5 t</dd>
+          <dt>Exemple</dt><dd>Pelle à chenilles ou à pneus</dd>
+          <dt>Validité</dt><dd>10 ans — la seule recommandation à ce délai</dd>
+        </dl>
+      </article>
+
+      <article class="schema-card">
+        <span class="proto-tag">Catégorie A</span>
+        <div class="schema-head">
+          <span class="schema-badge">A</span>
+          <div><h3>Engin compact</h3><p class="schema-sub">Même geste, autre catégorie</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="pelle-compacte" viewBox="0 0 340 300" role="img"
+               aria-label="Mini-pelle de moins de 4,5 tonnes, dessinée à la même échelle : le cycle est identique, seul le gabarit change."></svg>
+        </figure>
+        <p class="schema-desc">
+          Même cycle, même métier — mais sous 4,5 tonnes l'engin bascule en catégorie A,
+          <strong>quelle que soit sa fonction</strong>. La silhouette de 1,75 m est identique sur
+          les deux schémas : c'est le gabarit de la machine qui change, pas l'échelle du dessin.
+        </p>
+        <dl class="schema-specs">
+          <dt>Masse</dt><dd>Moins de 4,5 t</dd>
+          <dt>Périmètre</dt><dd>Tous les engins compacts, toutes fonctions</dd>
+          <dt>Validité</dt><dd>10 ans</dd>
+        </dl>
+      </article>
+    </div>
+
+    <!-- ================= BT · habilitation électrique ================= -->
+    <p class="schema-rule"><span>Habilitation électrique BT · NF C18-510</span></p>
+    <div class="schema-grid">
+      <article class="schema-card">
+        <span class="proto-tag">Zones</span>
+        <div class="schema-head">
+          <span class="schema-badge">BT</span>
+          <div><h3>Zones d’environnement</h3><p class="schema-sub">Jusqu’où ai-je le droit d’aller</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="bt-zones" viewBox="0 0 340 300" role="img"
+               aria-label="Zones d’environnement électrique en basse tension : hors zone au-delà de 50 mètres, voisinage simple, voisinage renforcé sous 30 centimètres."></svg>
+        </figure>
+        <p class="schema-desc">
+          L’écart entre la DLI (50 m) et la DLVR (0,30 m) est de 1 à 166 : le schéma porte une
+          rupture d’échelle explicite — convention de dessin technique — plutôt que de fausser
+          les distances en silence.
+        </p>
+        <dl class="schema-specs">
+          <dt>Zone 0</dt><dd>Au-delà de 50 m — hors zone</dd>
+          <dt>Zone 1</dt><dd>Voisinage simple</dd>
+          <dt>Zone 4</dt><dd>Voisinage renforcé BT, sous 0,30 m</dd>
+        </dl>
+      </article>
+      <article class="schema-card">
+        <span class="proto-tag">Titre</span>
+        <div class="schema-head">
+          <span class="schema-badge">B</span>
+          <div><h3>Symbolique du titre</h3><p class="schema-sub">B0 · B1V · B2V · BR</p></div>
+        </div>
+        <figure class="schema-figure">
+          <svg data-schema="bt-symbole" viewBox="0 0 340 300" role="img"
+               aria-label="Décomposition d’un titre d’habilitation : domaine de tension, rôle, attribut de voisinage."></svg>
+        </figure>
+        <p class="schema-desc">
+          Chaque caractère répond à une question différente. Les caractères sont posés sur leur
+          colonne : « B0 » n’en a que deux, et le troisième repère reste donc vide.
+        </p>
+        <dl class="schema-specs">
+          <dt>1 · Domaine</dt><dd>B = basse tension</dd>
+          <dt>2 · Rôle</dt><dd>0 non électricien · 1 exécutant · 2 chargé de travaux · R intervention</dd>
+          <dt>3 · Attribut</dt><dd>V = travaux au voisinage</dd>
+        </dl>
+      </article>
+    </div>
+
+    <div class="schema-legend" style="margin-top:26px">
+      <span><i class="legend-swatch solid"></i> Structure</span>
+      <span><i class="legend-swatch"></i> Trajectoire de la charge</span>
+      <span><i class="legend-swatch pin"></i> Axe d'articulation</span>
+    </div>
+
+    <p class="schema-note">
+      <strong>Dix mécanismes, moins de 7 Ko compressés.</strong> Chaque segment est <em>calculé</em>, pas
+      dessiné : le ciseaux se resserre en montant — contrainte réelle de barres à longueur fixe —
+      le panier de PEMP reste horizontal quelle que soit la position des bras, et le mât
+      rétractable translate avant de lever. Les cotes de 1,20 m et 2,50 m sont à leur vraie place
+      sur une échelle commune. Un maillage 3D pèserait plusieurs mégaoctets et resterait
+      « à peu près » juste : c'est précisément ce qu'un formateur-testeur CACES® ne peut pas
+      se permettre d'afficher.
+    </p>
+
+  </div>
+</section>
+</main>
+
+<script src="js/schemas.js"></script>
+</body>
+</html>
