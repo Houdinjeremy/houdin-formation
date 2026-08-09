@@ -165,28 +165,27 @@
   </section>
 
   <!-- VITRINE 3D -->
-  <section class="showcase-3d on-dark">
+  <section class="showcase-3d on-dark" id="visionneuse">
+    <div class="blueprint-grid" aria-hidden="true"></div>
     <div class="wrap">
       <div class="section-head center" data-reveal>
-        <p class="eyebrow" style="justify-content:center;">R482 — Engins de chantier</p>
+        <p class="eyebrow" style="justify-content:center;">La machine avant la manœuvre</p>
         <h2>L'engin, sous tous les angles</h2>
-        <p class="lede" style="margin-top:14px;margin-inline:auto;">Prise de poste, angles morts, stabilité de charge : la formation commence par une connaissance fine de la machine. Faites défiler pour en faire le tour.</p>
+        <p class="lede" style="margin-top:14px;margin-inline:auto;">Prise de poste, angles morts, stabilité de charge : la formation commence par une connaissance fine de la machine. Choisissez un engin et faites-en le tour.</p>
       </div>
 
-      <div class="viewer-frame">
-        <div class="viewer-fallback" id="viewerFallback">
-          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26h8M8 26V14M8 14l14-6M22 8l6 4-5 3"/></svg>
-          <span>Chargement du modèle 3D…</span>
-        </div>
-        <iframe id="viewer3d" title="Modèle 3D — chargeuse sur pneus" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+      <!-- La scène n'a pas de cadre : le modèle se fond dans la page, tenu par
+           la lumière et l'ombre au sol plutôt que par une bordure. -->
+      <div class="stage3d">
+        <div class="stage3d-glow" aria-hidden="true"></div>
+        <div class="stage3d-scene" id="stage3dScene"></div>
+        <div class="stage3d-floor" aria-hidden="true"></div>
       </div>
 
-      <p class="viewer-credit">
-        Modèle&nbsp;3D
-        <a href="https://sketchfab.com/3d-models/loader-2025-0413fc9664f74a0b8bb2922c94524bb0" target="_blank" rel="noopener noreferrer nofollow">Loader 2025</a>
-        par <a href="https://sketchfab.com/extreme3dsmodel" target="_blank" rel="noopener noreferrer nofollow">Extreme 3ds Model</a>
-        sur <a href="https://sketchfab.com" target="_blank" rel="noopener noreferrer nofollow">Sketchfab</a>
-      </p>
+      <p class="stage3d-note" id="stage3dNote" aria-live="polite"></p>
+      <p class="viewer-credit" id="stage3dCredit"></p>
+
+      <div class="model-switch" id="stage3dTabs" role="tablist" aria-label="Choisir un engin"></div>
     </div>
   </section>
 
@@ -304,5 +303,7 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="js/schemas.js"></script>
+<script src="js/viewer3d.js"></script>
 </body>
 </html>

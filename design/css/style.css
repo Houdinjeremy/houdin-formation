@@ -536,34 +536,112 @@ h3, .h3{
 /* ---------- vitrine 3D (embed Sketchfab piloté au défilement) ---------- */
 .showcase-3d{ background:var(--navy-990); padding:88px 0; position:relative; overflow:hidden; }
 .showcase-3d .section-head{ margin-inline:auto; text-align:center; margin-bottom:38px; }
-.viewer-frame{
+/* ---------- scène 3D : le modèle se diffuse dans la page ----------
+   Pas de cadre, pas de fond propre. Ce qui tient l'objet, c'est une lumière
+   rasante derrière lui et une ombre au sol — comme la plaque constructeur du
+   hero, l'objet flotte sur le navy au lieu d'être posé dans une boîte. */
+.stage3d{
   position:relative;
-  width:100%;
-  aspect-ratio:16/10;            /* réserve la place : aucun décalage au chargement */
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:28px 8px 8px 8px;/* même chanfrein que la plaque et le logo */
-  overflow:hidden;
-  background:linear-gradient(150deg, var(--navy-900), var(--navy-990) 75%);
-  box-shadow:0 2px 4px rgba(0,0,0,.25), 0 40px 70px -30px rgba(0,0,0,.8);
+  min-height:clamp(340px, 46vw, 520px);
+  display:grid; place-items:center;
+  margin-top:8px;
 }
-.viewer-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
-.viewer-fallback{
-  position:absolute; inset:0;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
-  color:var(--dark-body);
-  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase;
-  text-align:center; padding:24px;
+.stage3d-glow{
+  position:absolute; inset:-8% -12%;
+  background:
+    radial-gradient(46% 52% at 50% 42%, rgba(120,160,205,.20), transparent 70%),
+    radial-gradient(30% 34% at 62% 30%, rgba(238,113,17,.13), transparent 72%);
+  pointer-events:none;
 }
-.viewer-fallback svg{ width:40px; height:40px; color:var(--spark-500); }
+/* Ombre portée : donne le sol sans dessiner de sol. */
+.stage3d-floor{
+  position:absolute; left:50%; bottom:12%; transform:translateX(-50%);
+  width:min(52%, 470px); height:34px;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,.55), transparent 72%);
+  filter:blur(6px); pointer-events:none;
+}
+.stage3d-scene{
+  position:relative; width:100%; height:100%;
+  display:grid; place-items:center; grid-template-areas:"pile";
+}
+/* Les pièces se superposent dans la même cellule : le fondu enchaîné se joue
+   sans décalage de mise en page. */
+.stage3d-piece{
+  grid-area:pile;
+  width:100%; display:flex; justify-content:center;
+  transition:opacity var(--dur-slow) var(--ease-out),
+             transform var(--dur-slow) var(--ease-out);
+}
+.stage3d-piece.is-entrant{ opacity:0; transform:translateY(10px) scale(.97); }
+.stage3d-piece.is-sortant{ opacity:0; transform:scale(1.03); pointer-events:none; }
+
+.stage3d-piece model-viewer{
+  width:min(100%, 760px);
+  height:clamp(320px, 44vw, 500px);
+  background:transparent;
+  --poster-color:transparent;
+}
+/* Le schéma tient lieu de modèle tant qu'aucun .glb n'est déposé. */
+.stage3d-schema{ width:min(100%, 780px); height:auto; }
+
+/* L'iframe Sketchfab est appelée avec transparent=1 : sans fond propre, elle
+   se fond dans la section au lieu de former une vignette rapportée. */
+.stage3d-piece.is-iframe{ width:100%; }
+.stage3d-piece iframe{
+  width:min(100%, 860px); height:clamp(330px, 46vw, 520px);
+  border:0; display:block; margin-inline:auto; background:transparent;
+}
+
 .viewer-credit{
-  margin-top:16px; text-align:center;
-  font-family:var(--font-mono); font-size:11px; letter-spacing:.03em; color:#8FA0AF;
+  text-align:center; margin:10px 0 0;
+  font-size:12px; color:#8FA0B2; min-height:1em;
 }
 .viewer-credit a{ color:var(--dark-body); text-decoration:underline; text-underline-offset:2px; }
 .viewer-credit a:hover{ color:#fff; }
+
+.stage3d-note{
+  text-align:center; margin:6px 0 0;
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:#8FA0B2;
+}
+
+/* ---------- sélecteur d'engin ---------- */
+.model-switch{
+  display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+  margin-top:26px;
+}
+.model-switch button{
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+  padding:10px 18px;
+  border:1px solid var(--line-on-dark);
+  border-radius:14px 4px 4px 4px;          /* le chanfrein de marque, en petit */
+  color:var(--dark-body);
+  transition:border-color var(--dur-fast) var(--ease-out),
+             background var(--dur-fast) var(--ease-out),
+             color var(--dur-fast) var(--ease-out),
+             transform var(--dur-base) var(--ease-out-back);
+}
+.model-switch button:hover{ border-color:rgba(255,255,255,.34); transform:translateY(-2px); }
+.model-switch .me-code{
+  font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.08em;
+}
+.model-switch .me-nom{ font-size:12.5px; opacity:.72; }
+/* L'engin actif porte l'orange : un seul élément sélectionné à la fois, le
+   signal reste un signal. */
+.model-switch button[aria-selected="true"]{
+  background:var(--spark-500); color:var(--on-spark);
+  border-color:var(--spark-500);
+  box-shadow:0 10px 24px -12px rgba(238,113,17,.6);
+}
+.model-switch button[aria-selected="true"] .me-nom{ opacity:.85; }
+
+@media (max-width:640px){
+  .stage3d{ min-height:300px; }
+  .model-switch button{ padding:9px 14px; }
+  .model-switch .me-nom{ display:none; }   /* le code suffit à choisir */
+}
 @media (max-width:640px){
   .showcase-3d{ padding:64px 0; }
-  .viewer-frame{ aspect-ratio:4/5; border-radius:20px 6px 6px 6px; }
 }
 
 /* ---------- feature grid ---------- */

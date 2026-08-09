@@ -358,3 +358,84 @@ règle CSS ne les ciblait depuis l'origine.
   panel » est écarté (mauvais registre, et CC BY d'un tiers).
 - Vidéos LinkedIn : demander les fichiers originaux au client plutôt que de
   tenter une récupération (LinkedIn renvoie un HTTP 999 à tout accès automatisé).
+
+## Visionneuse 3D remise en scène — 2026-08-09 (fin de journée)
+
+Travail **dans `design/` uniquement** — la racine et la production n'ont pas bougé
+depuis le commit `4084ef8`, qui est en ligne sur GitHub mais **pas déployé sur
+Vercel** (le déploiement a été bloqué côté permissions, voir plus bas).
+
+### Ce qui a été fait
+
+Le modèle Sketchfab est **conservé** ; seule sa mise en scène change. L'erreur de
+départ a été de le supprimer purement et simplement — corrigé, avec restauration
+du crédit d'auteur et des deux mentions légales qui en dépendent.
+
+- **`js/viewer3d.js`** (nouveau) — visionneuse à onglets. Trois sources possibles
+  par engin, dans l'ordre : `sketchfab` (identifiant de modèle), `src` (fichier
+  `.glb` dans `assets/models/`, rendu par `<model-viewer>` auto-hébergé), ou rien
+  → le schéma technique de la machine tient la place et la légende annonce
+  « modèle 3D à venir ». Jamais un trou, jamais un message d'erreur.
+- **Mise en scène `.stage3d`** — plus de cadre à bordure. L'engin flotte sur le
+  navy, tenu par une lumière rasante (`.stage3d-glow`) et une ombre au sol
+  (`.stage3d-floor`). C'est `transparent=1` sur l'URL Sketchfab qui rend l'effet
+  possible : sans lui l'iframe peint son fond et redevient une vignette.
+- **`js/schemas.js`** — expose désormais `window.HFSchemas.rafraichir()`. `vues`
+  est passé au niveau du module et la boucle rAF ne démarre qu'une fois : un
+  schéma injecté après coup rejoint le rendu au lieu d'ouvrir une 2ᵉ boucle. Un
+  schéma retiré du DOM sort du rendu (test `isConnected`).
+- **`js/main.js`** — 87 lignes de chargement Sketchfab retirées, remplacées par
+  le module dédié.
+- **`assets/vendor/model-viewer.min.js`** (933 Ko, 250 Ko gzip) — vendoré, pas
+  de gestionnaire de paquets sur ce projet. **Il n'est téléchargé par le
+  navigateur que si un `src` .glb est effectivement renseigné** ; aujourd'hui
+  aucun ne l'est, la page ne charge donc rien de plus qu'avant.
+
+### Modèles Sketchfab retenus — tous vérifiés en CC BY
+
+| Onglet | Modèle | Auteur | UID |
+|---|---|---|---|
+| R489 | Forklift (animé : fourches, roues) | Ethian74 | `d40cae50e04145dd997cdca415cd72ad` |
+| R486 | Boom Lift (Articulating) | doty_aecom | `aa7ce85ae7194eb2921005ac74a58a78` |
+| R482 | Loader 2025 (celui d'origine) | Extreme 3ds Model | `0413fc9664f74a0b8bb2922c94524bb0` |
+
+CC BY = usage commercial permis **mais attribution obligatoire** : le crédit
+s'affiche sous la scène et change avec l'onglet. Ne pas le retirer.
+
+**R485 sans modèle, volontairement.** Les résultats de recherche renvoyaient soit
+des transpalettes sans mât — qui relèvent de la R489 catégorie 1A et non de la
+R485 —, soit des machines sans rapport (*stacker crane*, *reach stacker*
+portuaire, *stacker reclaimer*). Un candidat était en **CC BY-NC**, disqualifiant
+sur un site commercial. Le schéma technique vaut mieux qu'une machine de la
+mauvaise catégorie sur le site d'un formateur-testeur. C'est le meilleur candidat
+pour un modèle Meshy : un gerbeur à timon est une géométrie simple.
+
+### Pièges rencontrés
+
+1. **`autostart=1` est indispensable en iframe Sketchfab simple.** Sans lui le
+   lecteur reste sur son écran de lancement et la scène paraît vide. L'ancienne
+   implémentation démarrait par l'API JS (`api.start()`), d'où l'oubli facile.
+2. **`scrollwheel=0`** pour que la molette continue de faire défiler la page au
+   lieu d'être capturée par le viewer.
+3. **Le WebGL Sketchfab ne se vérifie pas en capture headless** — trois
+   tentatives revenues vides, y compris avec `--use-gl=swiftshader` et
+   `--virtual-time-budget`. Le rendu 3D doit être contrôlé dans un vrai
+   navigateur, point.
+4. **`ui_watermark=0` n'est honoré que sur les comptes Sketchfab Pro** : le
+   filigrane reste sur un compte gratuit, c'est leur licence.
+
+### Reste à faire
+
+- **Contrôler les trois onglets dans un vrai navigateur** : fond transparent,
+  engin qui flotte, et surtout la géométrie du chariot R489 (mât, tablier,
+  fourches, contrepoids) à l'œil d'un professionnel.
+- **Trouver ou générer un gerbeur R485** à mât et timon.
+- **Reporter `design/` vers la racine** une fois validé (voir la méthode plus
+  haut : copier les fichiers modifiés, `demo-schemas.html` reste hors racine).
+- **Déployer** : `git push` seul ne met PAS le site à jour — `dist/` est
+  gitignoré alors que `vercel.json` déclare `outputDirectory: dist`. Il faut
+  `bash scripts/build-demo.sh` puis `vercel deploy --prod`. Cette dernière
+  commande a été refusée par le garde-fou de Claude Code : la lancer soi-même
+  avec `! vercel deploy --prod --yes`, ou ajouter une règle de permission.
+- Toujours **4 mentions légales obligatoires manquantes** (SIRET, adresse
+  complète, TVA, n° de déclaration d'activité).
