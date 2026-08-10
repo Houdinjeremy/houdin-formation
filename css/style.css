@@ -1389,26 +1389,39 @@ body.nav-is-open .read-progress{ opacity:0; }
    ========================================================================== */
 
 .sommaire{ background:var(--paper); padding:0 0 74px; }
+
+/* Cinq colonnes, pas quatre. Une grille en `auto-fit` laissait la cinquième
+   entrée orpheline sur une seconde ligne, avec un vide large de trois cellules
+   à sa droite. Cinq recommandations, cinq colonnes : le nombre est connu et ne
+   changera pas, autant l'écrire. */
 .som-grid{
   list-style:none; margin:0; padding:0;
-  display:grid; grid-template-columns:repeat(auto-fit, minmax(232px, 1fr));
-  gap:1px;
+  display:grid; grid-template-columns:repeat(5, 1fr); gap:14px;
 }
-/* Le filet est porté par chaque cellule, via une ombre d'un pixel, et non par
-   le fond de la grille : avec cinq éléments dans une grille de quatre colonnes,
-   un fond de grille laissait un aplat vide sur la seconde ligne. Les ombres de
-   cellules voisines se rejoignent dans la gouttière d'un pixel. */
-.som-grid li{
-  background:var(--white);
-  box-shadow:0 0 0 1px var(--paper-line);
-  border-radius:2px;
-}
+@media (max-width:1080px){ .som-grid{ grid-template-columns:repeat(3, 1fr); } }
+@media (max-width:760px){  .som-grid{ grid-template-columns:repeat(2, 1fr); } }
+@media (max-width:460px){  .som-grid{ grid-template-columns:1fr; } }
+
 .som-grid a{
-  display:flex; flex-direction:column; gap:7px; height:100%;
-  padding:22px 22px 24px;
-  transition:background var(--dur-fast) var(--ease-out);
+  display:flex; flex-direction:column; gap:9px; height:100%;
+  padding:20px 18px 22px;
+  background:var(--white);
+  border:1px solid var(--paper-line);
+  border-radius:8px;
+  transition:border-color var(--dur-fast) var(--ease-out),
+             transform var(--dur-fast) var(--ease-out);
 }
-.som-grid a:hover{ background:var(--paper); }
+.som-grid a:hover{ border-color:var(--navy-800); transform:translateY(-2px); }
+
+/* L'icône fait le travail que le texte fait mal : on reconnaît une silhouette
+   d'engin plus vite qu'on ne lit « R486 ». Elle reprend celle de l'accueil,
+   pour que le même engin porte le même signe d'une page à l'autre. */
+.som-icon{
+  width:30px; height:30px; color:var(--navy-800); flex:none;
+  transition:color var(--dur-fast) var(--ease-out);
+}
+.som-grid a:hover .som-icon{ color:var(--spark-600); }
+
 .som-code{
   font-family:var(--font-mono); font-size:11.5px; font-weight:600;
   letter-spacing:.09em; color:var(--spark-700);
@@ -1416,17 +1429,12 @@ body.nav-is-open .read-progress{ opacity:0; }
 .som-code.accent{ color:var(--spark-600); }
 .som-nom{
   font-family:var(--font-display); text-transform:uppercase;
-  font-size:19px; line-height:1.12; color:var(--ink);
+  font-size:17px; line-height:1.15; color:var(--ink);
 }
-.som-note{ font-size:13.5px; line-height:1.5; color:var(--ink-soft); margin-top:2px; }
-/* La flèche n'apparaît qu'au survol : cinq flèches figées feraient du bruit. */
-.som-grid a::after{
-  content:"→"; font-size:15px; color:var(--spark-700);
-  margin-top:auto; padding-top:12px;
-  opacity:0; transform:translateX(-4px);
-  transition:opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+.som-note{
+  font-size:13px; line-height:1.5; color:var(--ink-soft);
+  margin-top:auto; padding-top:8px;
 }
-.som-grid a:hover::after, .som-grid a:focus-visible::after{ opacity:1; transform:none; }
 
 .rail{
   position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:40;
