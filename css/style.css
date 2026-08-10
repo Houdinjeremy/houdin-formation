@@ -467,23 +467,46 @@ h3, .h3{
   .plate-row i{ display:none; }   /* la 3e colonne saute avant de casser la mise en page */
 }
 
-/* ---------- stat / trust band ---------- */
-.stat-band{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line-on-dark); border-top:1px solid var(--line-on-dark); }
-.stat{ background:var(--navy-950); padding:32px 24px; text-align:center; }
-.stat-num{ font-family:var(--font-display); font-size:clamp(28px,3.4vw,40px); color:var(--spark-500); }
-.stat-label{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:#9AA7B2; margin-top:6px; }
-@media (max-width: 720px){ .stat-band{ grid-template-columns:1fr 1fr; } }
-
-/* ---------- barre de conformité ---------- */
-.compliance-bar{ background:var(--navy-900); border-top:1px solid var(--line-on-dark); padding:15px 0; }
-.compliance-inner{
-  display:flex; flex-wrap:wrap; gap:10px 30px; justify-content:center;
-  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.03em; color:#A9B6C2;
+/* ---------- bande de faits ----------
+   Asymétrique à dessein : deux chiffres qui pèsent à gauche, trois faits en
+   appui à droite. Une grille de quatre cellules égales aurait obligé à trouver
+   deux chiffres de plus, et c'est ainsi qu'on invente des « 100 % ». */
+.facts-band{
+  background:var(--navy-950);
+  border-top:1px solid var(--line-on-dark);
+  border-bottom:1px solid var(--line-on-dark);
+  padding:34px 0;
 }
-.compliance-inner span{ display:flex; gap:8px; align-items:baseline; }
-.compliance-inner b{ color:var(--spark-500); font-weight:600; }
-@media (max-width:640px){
-  .compliance-inner{ flex-direction:column; align-items:flex-start; gap:10px; }
+.facts-inner{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:38px; align-items:center;
+}
+.facts-figures{ display:flex; gap:46px; flex-wrap:wrap; }
+.fact{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; max-width:22ch; }
+.fact .stat-num{
+  font-family:var(--font-display);
+  font-size:clamp(38px,4.6vw,58px);
+  line-height:.9; color:var(--spark-500);
+}
+.fact-unit{
+  font-family:var(--font-mono); font-size:14px; font-weight:600;
+  color:var(--spark-500); letter-spacing:.02em;
+}
+.fact-label{
+  flex:1 1 100%; margin-top:8px;
+  font-size:14px; line-height:1.45; color:var(--dark-body);
+}
+/* Filets plutôt que puces : on est dans un registre de fiche technique. */
+.facts-notes{ list-style:none; margin:0; padding:0; }
+.facts-notes li{
+  font-family:var(--font-mono); font-size:12.5px; line-height:1.5;
+  color:#9AA7B2; padding:9px 0; border-top:1px solid var(--line-on-dark);
+}
+.facts-notes li:first-child{ border-top:0; padding-top:0; }
+.facts-notes li:last-child{ padding-bottom:0; }
+@media (max-width: 860px){
+  .facts-inner{ grid-template-columns:1fr; gap:26px; }
+  .facts-figures{ gap:34px; }
 }
 
 /* ---------- cards: formations ----------
@@ -504,7 +527,6 @@ h3, .h3{
 .reco-card{
   background:var(--white);
   border:1px solid var(--line);
-  border-left:3px solid var(--navy-800);   /* onglet d'index technique */
   border-radius:4px;
   padding:28px;
   display:flex; flex-direction:column; gap:14px;
@@ -514,8 +536,11 @@ h3, .h3{
               border-color var(--dur-base) var(--ease-out);
   position:relative;
 }
-.reco-card:hover{ transform:translateY(-5px); box-shadow:var(--shadow-lift); border-color:var(--navy-700); border-left-color:var(--spark-500); }
-.reco-card.accent{ border-left-color:var(--spark-500); }
+.reco-card:hover{ transform:translateY(-5px); box-shadow:var(--shadow-lift); border-color:var(--navy-700); }
+/* La carte « habilitation électrique » se distingue par sa pastille de code,
+   déjà orange, et non plus par un liseré : le trait latéral coloré est le
+   marqueur générique par excellence. */
+.reco-card.accent{ border-color:var(--spark-500); }
 .reco-code{
   align-self:flex-start;
   font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.08em;
@@ -1110,8 +1135,8 @@ body.nav-is-open .read-progress{ opacity:0; }
 
 .schema-note{
   margin-top:40px; padding:20px 22px;
-  border-left:3px solid var(--spark-500); background:rgba(238,113,17,.07);
-  border-radius:0 8px 8px 0; color:var(--dark-body); font-size:14.5px; line-height:1.65;
+  background:rgba(238,113,17,.07); border:1px solid rgba(238,113,17,.28);
+  border-radius:6px; color:var(--dark-body); font-size:14.5px; line-height:1.65;
 }
 .schema-note strong{ color:#fff; }
 
