@@ -787,6 +787,26 @@ h3, .h3{
 .skip-link:focus{ left:0; }
 :focus-visible{ outline:2px solid var(--spark-500); outline-offset:2px; }
 
+/* Anneau bicolore sur les boutons. L'anneau orange par défaut disparaissait sur
+   .btn-primary, qui est lui-même orange : un utilisateur au clavier perdait la
+   trace du focus sur le bouton le plus important du site. Le trait blanc tranche
+   sur l'orange du bouton, le halo navy tranche sur le crème de la page — la paire
+   fonctionne sur les trois fonds du site. */
+.btn:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:0;
+  box-shadow:0 0 0 4px var(--navy-990);
+}
+.on-dark .btn:focus-visible,
+.hero .btn:focus-visible{ box-shadow:0 0 0 4px var(--spark-500); }
+
+/* Huitième état, jusqu'ici absent : le bouton d'envoi n'avait aucune apparence
+   désactivée, et rien n'empêchait un second clic pendant l'ouverture du client
+   de messagerie. */
+.btn:disabled, .btn[aria-disabled="true"]{
+  opacity:.5; cursor:not-allowed; transform:none; box-shadow:none;
+}
+
 .divider-plate{
   height:64px; background:
     repeating-linear-gradient(-45deg, var(--spark-500) 0 8px, transparent 8px 16px);
@@ -825,8 +845,14 @@ h3, .h3{
 }
 .page-hero h1{ font-size:clamp(32px,5vw,52px); }
 .page-hero .lede{ margin-top:16px; }
-.breadcrumb{ font-family:var(--font-mono); font-size:12px; color:#8FA0AF; margin-bottom:18px; letter-spacing:.04em; }
+.breadcrumb{
+  font-family:var(--font-mono); font-size:12px; color:#8FA0AF;
+  margin-bottom:18px; letter-spacing:.04em;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.breadcrumb a{ color:inherit; text-decoration:underline; text-underline-offset:3px; }
 .breadcrumb a:hover{ color:#fff; }
+.breadcrumb [aria-current="page"]{ color:#C4CDD6; }
 
 /* ==========================================================================
    PHASE 3 — mouvement
@@ -1247,3 +1273,35 @@ body.nav-is-open .read-progress{ opacity:0; }
 
 .reco-note{ margin-top:22px; color:var(--ink-soft); font-size:15px; line-height:1.65; max-width:70ch; }
 .reco-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
+
+/* Confirmation d'envoi du formulaire. Masquée tant que rien n'a été soumis :
+   elle n'existe dans le document qu'une fois le message préparé. */
+.form-status{
+  margin-top:16px; padding:14px 16px;
+  background:var(--spark-100); border:1px solid rgba(238,113,17,.35);
+  border-radius:6px; font-size:14.5px; line-height:1.55; color:var(--ink);
+}
+.form-status a{ color:var(--spark-700); font-weight:600; text-decoration:underline; }
+
+/* ---------- rôles typographiques ----------
+   Ces quatre classes remplacent une soixantaine de `style=""` posés au fil des
+   pages, où le même texte d'accompagnement existait en 14, 14.5, 15.5, 16 et
+   16.5 px. Une taille par rôle, décidée ici et nulle part ailleurs : c'est la
+   condition pour que la hiérarchie reste lisible quand une page évolue. */
+.text-soft{
+  margin-top:16px; font-size:16px; line-height:1.7; color:var(--ink-soft);
+}
+.text-sm{
+  font-size:14.5px; line-height:1.6; color:var(--ink-soft);
+}
+.on-dark .text-soft, .on-dark .text-sm{ color:var(--dark-body); }
+
+/* Deux échelons de titre secondaire, pour les colonnes et les blocs internes :
+   un h2 de colonne ne doit pas peser autant qu'un h2 de section pleine. */
+.h2-compact{ font-size:clamp(24px, 2.6vw, 28px); }
+.h3-compact{ font-size:16px; letter-spacing:.02em; }
+
+.footer-logo{ height:52px; width:auto; margin-bottom:14px; }
+/* Chapô de tête de section : plus large que le .lede par défaut, qui est calé
+   sur 56ch pour le confort de lecture d'un paragraphe isolé. */
+.lede-wide{ margin-bottom:32px; max-width:none; }

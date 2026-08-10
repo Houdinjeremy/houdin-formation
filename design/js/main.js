@@ -226,6 +226,34 @@
         "mailto:jeremyhoudin95@gmail.com" +
         "?subject=" + encodeURIComponent(subject) +
         "&body=" + encodeURIComponent(body);
+
+      // Sans ce retour, le formulaire paraît ne rien faire : le client de
+      // messagerie s'ouvre derrière la fenêtre, ou pas du tout s'il n'y en a
+      // aucun de configuré. On le dit, et on donne l'adresse en repli.
+      var bouton = form.querySelector('button[type="submit"]');
+      var note = document.getElementById("formStatus");
+      if (!note) {
+        note = document.createElement("p");
+        note.id = "formStatus";
+        note.className = "form-status";
+        note.setAttribute("role", "status");     // annoncé par les lecteurs d'écran
+        form.appendChild(note);
+      }
+      note.innerHTML =
+        "Message préparé. Si rien ne s'est ouvert, aucun logiciel de messagerie " +
+        "n'est configuré sur cet appareil : écrivez à " +
+        '<a href="mailto:jeremyhoudin95@gmail.com">jeremyhoudin95@gmail.com</a>.';
+      note.classList.add("is-on");
+
+      if (bouton) {
+        var libelle = bouton.innerHTML;
+        bouton.disabled = true;
+        bouton.innerHTML = "<span>Message préparé</span>";
+        setTimeout(function(){
+          bouton.disabled = false;
+          bouton.innerHTML = libelle;
+        }, 5000);
+      }
     });
   }
 })();

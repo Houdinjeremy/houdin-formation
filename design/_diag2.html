@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="UTF-8"><style>
+body{font:12.5px monospace;background:#fff;color:#111;margin:0;padding:12px}
+iframe{width:390px;height:900px;border:0;position:absolute;left:-9999px}
+li{padding:1px 0} b{color:#b00}
+</style></head><body>
+<iframe id="f" src="http://localhost:8211/contact.html"></iframe>
+<h3 id="t">mesure…</h3><ul id="o"></ul>
+<script>
+document.getElementById('f').onload = function(){
+  var d = this.contentDocument, out = [], vus = {};
+  d.querySelectorAll('a, button, input, select, textarea, [role="tab"]').forEach(function(el){
+    var r = el.getBoundingClientRect();
+    if (!r.height) return;                       // masqué (nav mobile fermée)
+    if (r.height < 44) {
+      var cle = el.tagName + '.' + (el.className || '') + '|' + Math.round(r.height);
+      if (vus[cle]) return; vus[cle] = 1;
+      out.push({ t: el.tagName.toLowerCase(), c: (el.className||'').slice(0,38),
+                 h: Math.round(r.height), txt: (el.textContent||'').trim().slice(0,22) });
+    }
+  });
+  document.getElementById('t').textContent = 'Cibles tactiles sous 44 px : ' + out.length + ' (contact.html, 390 px)';
+  document.getElementById('o').innerHTML = out.slice(0,20).map(function(x){
+    return '<li><b>' + x.h + 'px</b> — ' + x.t + '.' + x.c + '  « ' + x.txt + ' »</li>'; }).join('');
+};
+</script></body></html>

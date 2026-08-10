@@ -240,8 +240,8 @@
         form.appendChild(note);
       }
       note.innerHTML =
-        "Message préparé. Si rien ne s'est ouvert, aucun logiciel de messagerie " +
-        "n'est configuré sur cet appareil : écrivez à " +
+        "Votre logiciel de messagerie s'ouvre avec le message déjà rédigé — " +
+        "il vous reste à l'envoyer. S'il ne s'ouvre pas, écrivez directement à " +
         '<a href="mailto:jeremyhoudin95@gmail.com">jeremyhoudin95@gmail.com</a>.';
       note.classList.add("is-on");
 
