@@ -265,10 +265,17 @@
     lien.setAttribute("aria-expanded", "false");
     lien.setAttribute("aria-controls", "megaFormations");
 
+    /* Le voile qui floute la page. Créé une seule fois, réutilisé ensuite ;
+       un clic dessus referme le menu, comme on referme en cliquant à côté. */
+    var voile = document.createElement("div");
+    voile.className = "mm-voile";
+    document.body.appendChild(voile);
+
     var minuteur = null;
     var ouvrir = function(){
       clearTimeout(minuteur);
       hote.classList.add("is-open");
+      document.body.classList.add("mm-open");
       lien.setAttribute("aria-expanded", "true");
     };
     /* Fermeture retardée : la souris doit pouvoir quitter le lien pour
@@ -277,10 +284,12 @@
       clearTimeout(minuteur);
       minuteur = setTimeout(function(){
         hote.classList.remove("is-open");
+        document.body.classList.remove("mm-open");
         lien.setAttribute("aria-expanded", "false");
       }, delai === undefined ? 180 : delai);
     };
 
+    voile.addEventListener("click", function(){ fermer(0); });
     hote.addEventListener("mouseenter", ouvrir);
     hote.addEventListener("mouseleave", function(){ fermer(); });
     lien.addEventListener("focus", ouvrir);
