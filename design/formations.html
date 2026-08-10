@@ -73,15 +73,50 @@
     </div>
   </section>
 
-  <nav class="reco-index" aria-label="Accès direct aux recommandations">
-    <div class="wrap reco-index-inner">
-      <span class="n">Aller à</span>
-      <a href="#r482">R482</a>
-      <a href="#r485">R485</a>
-      <a href="#r486">R486</a>
-      <a href="#r489">R489</a>
-      <a href="#bt">Habilitation BT</a>
+  <!-- Sommaire. Il remplace la barre collante : celle-ci occupait 60 px en
+       permanence, se superposait au contenu et n'était utile qu'une fois, au
+       moment de choisir. Ici on choisit, puis la page rend l'écran au texte. -->
+  <section class="sommaire">
+    <div class="wrap">
+      <ul class="som-grid">
+        <li><a href="#r482">
+          <span class="som-code">R482</span>
+          <span class="som-nom">Engins de chantier</span>
+          <span class="som-note">11 catégories, du compact au porte-engins</span>
+        </a></li>
+        <li><a href="#r485">
+          <span class="som-code">R485</span>
+          <span class="som-nom">Chariots gerbeurs</span>
+          <span class="som-note">Conducteur accompagnant, catégories 1 et 2</span>
+        </a></li>
+        <li><a href="#r486">
+          <span class="som-code">R486</span>
+          <span class="som-nom">PEMP / nacelles</span>
+          <span class="som-note">Groupes A et B, travail en hauteur</span>
+        </a></li>
+        <li><a href="#r489">
+          <span class="som-code">R489</span>
+          <span class="som-nom">Chariots élévateurs</span>
+          <span class="som-note">Conducteur porté, catégories 1A à 7</span>
+        </a></li>
+        <li><a href="#bt">
+          <span class="som-code accent">BT</span>
+          <span class="som-nom">Habilitation électrique</span>
+          <span class="som-note">Basse tension, norme NF C18-510</span>
+        </a></li>
+      </ul>
     </div>
+  </section>
+
+  <!-- Rail de progression. Cinq repères en marge, hors du flux : ils disent où
+       l'on est et permettent de sauter, sans prendre un pixel de hauteur.
+       Masqué sous 1180 px, où la place manque : le sommaire ci-dessus suffit. -->
+  <nav class="rail" aria-label="Progression dans les formations">
+    <a href="#r482"><i></i><b>R482</b></a>
+    <a href="#r485"><i></i><b>R485</b></a>
+    <a href="#r486"><i></i><b>R486</b></a>
+    <a href="#r489"><i></i><b>R489</b></a>
+    <a href="#bt"><i></i><b>BT</b></a>
   </nav>
 
   <!-- R482 -->

@@ -1247,54 +1247,6 @@ body.nav-is-open .read-progress{ opacity:0; }
    portant une matrice de données : même contenu, registre « constructeur ».
    ========================================================================== */
 
-/* Index collant : un responsable QSE arrive sur cette page en cherchant UNE
-   recommandation précise, pas les cinq. */
-.reco-index{
-  position:sticky; top:84px; z-index:20;
-  background:rgba(245,242,234,.88);
-  backdrop-filter:blur(14px) saturate(1.4);
-  -webkit-backdrop-filter:blur(14px) saturate(1.4);
-  border-bottom:1px solid var(--line);
-}
-/* Défilement latéral plutôt que retour à la ligne. Avec `flex-wrap`, les cinq
-   pastilles passaient sur deux lignes en dessous de 560 px : la barre montait à
-   107 px et, ajoutée à l'en-tête, occupait 179 px d'écran en permanence. */
-.reco-index-inner{
-  display:flex; gap:10px; align-items:center; padding-block:12px;
-  overflow-x:auto; overscroll-behavior-x:contain;
-  scrollbar-width:none;                       /* Firefox */
-}
-.reco-index-inner::-webkit-scrollbar{ display:none; }
-/* Sans cette cale, la dernière pastille colle au bord en fin de défilement :
-   le padding-right d'un conteneur défilant n'est pas honoré. */
-.reco-index-inner::after{ content:""; flex:0 0 14px; }
-.reco-index .n{
-  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--ink-faint); margin-right:4px;
-}
-.reco-index a{
-  flex:none;                                   /* jamais compressées */
-  font-family:var(--font-mono); font-size:12.5px; font-weight:500;
-  padding:7px 14px; border-radius:999px;
-  border:1px solid var(--line); color:var(--navy-900);
-  transition:background var(--dur-fast) var(--ease-out),
-             color var(--dur-fast) var(--ease-out),
-             border-color var(--dur-fast) var(--ease-out);
-}
-.reco-index a:hover{ background:var(--navy-900); color:var(--white); border-color:var(--navy-900); }
-
-/* Formation en cours de lecture. Sans ce repère, la barre disait où aller mais
-   jamais où l'on se trouvait — elle servait à naviguer, pas à se situer. */
-.reco-index a[aria-current="true"]{
-  background:var(--spark-500); color:var(--on-spark);
-  border-color:var(--spark-500); font-weight:600;
-}
-@media (max-width:880px){ .reco-index{ top:72px; } }
-@media (max-width:560px){
-  .reco-index .n{ display:none; }
-  .reco-index a{ font-size:12px; padding:7px 12px; }
-}
-
 .reco-plate{
   background:var(--white);
   border:1px solid var(--line);
@@ -1421,3 +1373,92 @@ body.nav-is-open .read-progress{ opacity:0; }
 .reco-visual .schema-specs{ font-size:12px; line-height:1.45; margin-top:12px; }
 .reco-visual .schema-specs dt{ padding-top:7px; }
 .reco-visual .schema-specs dd{ padding-top:7px; }
+
+/* ==========================================================================
+   Page Formations — sommaire et rail
+   --------------------------------------------------------------------------
+   La barre collante « Aller à » est supprimée. Elle occupait 60 px de hauteur
+   en permanence, se superposait au contenu sous l'en-tête, et ne servait qu'une
+   seule fois : au moment de choisir sa formation. Deux objets la remplacent,
+   chacun avec un rôle net.
+
+   1. Le sommaire, en tête de page : on y choisit, puis la page rend tout
+      l'écran au contenu.
+   2. Le rail, en marge : cinq repères hors du flux qui disent où l'on se
+      trouve et permettent de sauter, sans coûter un pixel de hauteur.
+   ========================================================================== */
+
+.sommaire{ background:var(--paper); padding:0 0 74px; }
+.som-grid{
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(232px, 1fr));
+  gap:1px;
+}
+/* Le filet est porté par chaque cellule, via une ombre d'un pixel, et non par
+   le fond de la grille : avec cinq éléments dans une grille de quatre colonnes,
+   un fond de grille laissait un aplat vide sur la seconde ligne. Les ombres de
+   cellules voisines se rejoignent dans la gouttière d'un pixel. */
+.som-grid li{
+  background:var(--white);
+  box-shadow:0 0 0 1px var(--paper-line);
+  border-radius:2px;
+}
+.som-grid a{
+  display:flex; flex-direction:column; gap:7px; height:100%;
+  padding:22px 22px 24px;
+  transition:background var(--dur-fast) var(--ease-out);
+}
+.som-grid a:hover{ background:var(--paper); }
+.som-code{
+  font-family:var(--font-mono); font-size:11.5px; font-weight:600;
+  letter-spacing:.09em; color:var(--spark-700);
+}
+.som-code.accent{ color:var(--spark-600); }
+.som-nom{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:19px; line-height:1.12; color:var(--ink);
+}
+.som-note{ font-size:13.5px; line-height:1.5; color:var(--ink-soft); margin-top:2px; }
+/* La flèche n'apparaît qu'au survol : cinq flèches figées feraient du bruit. */
+.som-grid a::after{
+  content:"→"; font-size:15px; color:var(--spark-700);
+  margin-top:auto; padding-top:12px;
+  opacity:0; transform:translateX(-4px);
+  transition:opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.som-grid a:hover::after, .som-grid a:focus-visible::after{ opacity:1; transform:none; }
+
+.rail{
+  position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:40;
+  display:flex; flex-direction:column; gap:4px;
+  opacity:0; pointer-events:none;
+  transition:opacity .35s var(--ease-out);
+}
+body.rail-on .rail{ opacity:1; pointer-events:auto; }
+.rail a{
+  display:flex; align-items:center; justify-content:flex-end; gap:10px;
+  padding:7px 2px; color:var(--ink-faint);
+}
+.rail i{
+  width:22px; height:2px; background:currentColor; flex:none;
+  transition:width var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out);
+}
+.rail b{
+  font-family:var(--font-mono); font-size:11px; font-weight:600;
+  letter-spacing:.08em; color:var(--ink);
+  opacity:0; transform:translateX(6px);
+  transition:opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.rail a:hover b, .rail a:focus-visible b, .rail a[aria-current="true"] b{
+  opacity:1; transform:none;
+}
+.rail a:hover i{ width:34px; }
+.rail a[aria-current="true"] i{ width:34px; background:var(--spark-500); }
+.rail a[aria-current="true"]{ color:var(--spark-500); }
+
+/* Sous 1180 px, la marge n'existe plus : le rail chevaucherait le texte.
+   Le sommaire en tête de page assure seul la navigation. */
+@media (max-width:1180px){ .rail{ display:none; } }
+@media (prefers-reduced-motion: reduce){
+  .rail, .rail i, .rail b, .som-grid a::after{ transition:none; }
+}

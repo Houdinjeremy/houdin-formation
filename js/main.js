@@ -202,8 +202,20 @@
      Le seuil haut correspond aux deux barres empilées (en-tête + index) : sans
      lui, une section serait dite « active » alors qu'elle est cachée derrière. */
   (function(){
-    var barre = document.querySelector(".reco-index");
+    var barre = document.querySelector(".rail");
     if (!barre || !("IntersectionObserver" in window)) return;
+
+    /* Le rail ne paraît qu'une fois le sommaire dépassé : tant qu'on est en
+       tête de page, il ferait double emploi avec lui. */
+    var sommaire = document.querySelector(".sommaire");
+    if (sommaire) {
+      var jauge = new IntersectionObserver(function(e){
+        document.body.classList.toggle("rail-on", !e[0].isIntersecting);
+      }, { rootMargin: "-40% 0px 0px 0px" });
+      jauge.observe(sommaire);
+    } else {
+      document.body.classList.add("rail-on");
+    }
     var liens = {};
     barre.querySelectorAll("a[href^='#']").forEach(function(a){
       liens[a.getAttribute("href").slice(1)] = a;
