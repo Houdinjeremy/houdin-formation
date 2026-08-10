@@ -30,9 +30,9 @@
 
 <!-- Données structurées schema.org : ce que les moteurs lisent pour savoir
      qu'il s'agit d'un organisme de formation, et non d'un site quelconque.
-     À compléter le jour où les mentions légales le seront : `address`
-     (adresse postale complète) et `vatID` / `taxID` (TVA, SIRET). Ne rien
-     inventer ici : une donnée structurée fausse se propage aux moteurs. -->
+     Adresse, TVA et SIRET renseignés le 2026-08-10 d'après le document fourni
+     par le client. Clé de Luhn du SIRET et clé de TVA vérifiées : toutes deux
+     concordent avec le SIREN 824790240. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -49,6 +49,15 @@
   "description": "Organisme de formation CACES® et habilitation électrique basse tension, intervenant en intra-entreprise partout en France métropolitaine.",
   "email": "jeremyhoudin95@gmail.com",
   "telephone": "+33682999151",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "11 rue du Belloy",
+    "postalCode": "60240",
+    "addressLocality": "Boubiers",
+    "addressCountry": "FR"
+  },
+  "vatID": "FR60824790240",
+  "taxID": "82479024000025",
   "areaServed": {
     "@type": "Country",
     "name": "France"
