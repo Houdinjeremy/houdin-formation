@@ -310,12 +310,15 @@ h3, .h3{
      reste un lien vers la page ; c'est le chevron qui ouvre les catégories.
      Confondre les deux obligerait à choisir entre naviguer et déplier. */
   .mn-groupe{
-    display:flex; align-items:center; gap:12px;
+    display:flex; align-items:center; gap:10px;
     border-bottom:1px solid var(--line-on-dark);
   }
+  /* Sur un écran de 375 px, le titre en Anton et le bouton se disputaient la
+     ligne et le chevron débordait du cadre. Le titre cède la place en premier. */
+  .mn-groupe > a{ min-width:0; overflow-wrap:anywhere; }
   .mn-groupe > a{ flex:1; border-bottom:0 !important; }
   .mn-toggle{
-    flex:none; width:46px; height:46px;
+    flex:none; width:44px; height:44px;
     display:flex; align-items:center; justify-content:center;
     background:transparent; border:1px solid var(--line-on-dark);
     border-radius:50%; color:#fff; cursor:pointer;
@@ -1458,7 +1461,11 @@ body.nav-is-open .read-progress{ opacity:0; }
       trouve et permettent de sauter, sans coûter un pixel de hauteur.
    ========================================================================== */
 
-.sommaire{ background:var(--paper); padding:0 0 74px; }
+/* Le sommaire annonce la première formation : les séparer de 158 px — 74 ici
+   plus 84 de padding du bloc suivant — cassait ce lien et donnait une bande
+   vide au milieu de l'écran. */
+.sommaire{ background:var(--paper); padding:0 0 46px; }
+.sommaire + .reco-block{ padding-top:52px; }
 
 /* Cinq colonnes, pas quatre. Une grille en `auto-fit` laissait la cinquième
    entrée orpheline sur une seconde ligne, avec un vide large de trois cellules
