@@ -301,25 +301,57 @@ h3, .h3{
 
 /* ---------- footer ---------- */
 .site-footer{ background:var(--navy-950); color:#B9C4CF; }
-.footer-top{ padding:64px 0 40px; display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr 1fr; gap:40px; }
+/* Deux zones, et non cinq colonnes rigides. La grille d'origine imposait
+   `1.5fr 1fr 1fr 1fr 1fr` jusqu'à 820 px : à 900 px, cinq colonnes de 121 px
+   devaient afficher « R482 — Engins de chantier », qui se repliait sur trois
+   lignes. Puis la bascule à deux colonnes faisait passer la hauteur de 446 à
+   760 px d'un coup, sans palier intermédiaire.
+   Ici la marque a sa colonne, et les liens forment leur propre grille fluide
+   qui se replie d'elle-même de quatre à une colonne, sans point de rupture. */
+.footer-top{
+  padding:64px 0 40px;
+  display:grid;
+  grid-template-columns:minmax(230px, 1fr) minmax(0, 2.5fr);
+  gap:48px;
+}
+.footer-links{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:34px 30px;
+}
 .footer-brand img{ height:40px; margin-bottom:14px; }
 .footer-brand p{ font-size:14px; line-height:1.7; max-width:34ch; color:#8FA0AF; }
 .footer-col h4{
   font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
   color:var(--spark-500); margin-bottom:16px;
 }
-.footer-col a, .footer-col p{ display:block; font-size:14.5px; color:#C4CDD6; padding:10px 0; }
+/* `jeremyhoudin95@gmail.com` est un mot insécable de près de 180 px : dans une
+   colonne de cette largeur il débordait, quelle que soit la taille d'écran.
+   `anywhere` autorise la coupure — sur une adresse, mieux vaut deux lignes
+   qu'un texte qui sort de sa colonne. */
+.footer-col a, .footer-col p{
+  display:block; font-size:14.5px; color:#C4CDD6; padding:10px 0;
+  overflow-wrap:anywhere;
+}
 .footer-col a:hover{ color:#fff; }
 .footer-bottom{
   border-top:1px solid var(--line-on-dark); padding:22px 0;
   display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
   font-family:var(--font-mono); font-size:12px; color:#8FA0AF;   /* était 4,29:1 */
 }
-@media (max-width: 820px){
-  .footer-top{ grid-template-columns:1fr 1fr; }
+/* Un seul point de rupture, et il ne concerne que la mise en colonne de la
+   marque : passé ce seuil elle passe au-dessus, et les liens récupèrent toute
+   la largeur — ce qui les compacte au lieu de les allonger. */
+@media (max-width: 860px){
+  .footer-top{ grid-template-columns:1fr; gap:40px; }
 }
-@media (max-width: 540px){
-  .footer-top{ grid-template-columns:1fr; }
+/* Sur un téléphone, le pied de page mesurait 1128 px de haut : presque trois
+   écrans. La zone tactile des liens reste à 40 px de haut malgré le padding
+   réduit, grâce à la hauteur de ligne. */
+@media (max-width: 560px){
+  .footer-col a, .footer-col p{ padding:8px 0; }
+  .footer-links{ gap:26px 24px; }
+  .footer-top{ padding:52px 0 32px; }
 }
 
 /* ---------- section shells ---------- */
