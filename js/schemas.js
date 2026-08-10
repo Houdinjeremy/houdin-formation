@@ -523,47 +523,58 @@
     return u*u*(3-2*u);                /* smoothstep : départ et arrivée amortis */
   }
 
-  function init(){
-    var svgs = document.querySelectorAll("svg[data-schema]");
-    if(!svgs.length) return;
+  /* `vues` est au niveau du module et la boucle ne démarre qu'une fois : un
+     schéma injecté après coup (visionneuse 3D) rejoint le rendu existant au
+     lieu d'ouvrir une seconde boucle d'animation. */
+  var vues = [], boucleLancee = false;
 
+  function monte(svg){
+    var nom = svg.getAttribute("data-schema"), meca = MECA[nom];
+    if(!meca || svg.hasAttribute("data-schema-monte")) return null;
+    svg.setAttribute("data-schema-monte", "");
+    if(VUE[nom]) svg.setAttribute("viewBox", VUE[nom]);
+
+    var gDecor = g(svg), gTrace = g(svg), gMeca = g(svg), gTraceHaut = g(svg);
+    meca.decor(gDecor);
+
+    /* Trajectoire précalculée : c'est elle qui rend la catégorie évidente.
+       Tracée par-dessus le mécanisme pour rester lisible. */
+    if(meca.trace){
+      var d = "", N = 48;
+      for(var i=0;i<=N;i++){
+        var pt = meca.trace(i/N);
+        d += (i ? " L" : "M") + pt.x.toFixed(1) + " " + pt.y.toFixed(1);
+      }
+      (meca === pempCiseaux ? gTraceHaut : gTrace).appendChild(el("path",{
+        d:d, fill:"none", stroke:COL.axe, "stroke-width":1.8, "stroke-dasharray":"5 5"
+      }));
+    }
+
+    var vue = { meca:meca, cible:gMeca, svg:svg };
+    vues.push(vue);
+    return vue;
+  }
+
+  function rendu(t){
+    for(var i = vues.length - 1; i >= 0; i--){
+      var v = vues[i];
+      /* un schéma retiré du DOM (changement de modèle) sort du rendu */
+      if(!v.svg.isConnected){ vues.splice(i, 1); continue; }
+      clear(v.cible); v.meca.dessine(v.cible, t);
+    }
+  }
+
+  function demarre(){
     var reduit = window.matchMedia &&
                  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var fige = new URLSearchParams(location.search).get("t");
-
-    var vues = [];
-    Array.prototype.forEach.call(svgs, function(svg){
-      var nom = svg.getAttribute("data-schema"), meca = MECA[nom];
-      if(!meca) return;
-      if(VUE[nom]) svg.setAttribute("viewBox", VUE[nom]);
-
-      var gDecor = g(svg), gTrace = g(svg), gMeca = g(svg), gTraceHaut = g(svg);
-      meca.decor(gDecor);
-
-      /* Trajectoire précalculée : c'est elle qui rend la catégorie évidente.
-         Tracée par-dessus le mécanisme pour rester lisible. */
-      if(meca.trace){
-        var d = "", N = 48;
-        for(var i=0;i<=N;i++){
-          var pt = meca.trace(i/N);
-          d += (i ? " L" : "M") + pt.x.toFixed(1) + " " + pt.y.toFixed(1);
-        }
-        (meca === pempCiseaux ? gTraceHaut : gTrace).appendChild(el("path",{
-          d:d, fill:"none", stroke:COL.axe, "stroke-width":1.8, "stroke-dasharray":"5 5"
-        }));
-      }
-
-      vues.push({ meca:meca, cible:gMeca });
-    });
-
-    function rendu(t){
-      vues.forEach(function(v){ clear(v.cible); v.meca.dessine(v.cible, t); });
-    }
 
     if(reduit || fige !== null){
       rendu(fige === null ? 1 : Math.min(1, Math.max(0, parseFloat(fige) || 0)));
       return;
     }
+    if(boucleLancee) return;
+    boucleLancee = true;
     var t0 = null;
     requestAnimationFrame(function boucle(ts){
       if(t0 === null) t0 = ts;
@@ -572,7 +583,17 @@
     });
   }
 
+  /* Rescanne le document : sert au premier chargement comme après injection. */
+  function rafraichir(){
+    var svgs = document.querySelectorAll("svg[data-schema]:not([data-schema-monte])");
+    if(!svgs.length && !vues.length) return;
+    Array.prototype.forEach.call(svgs, monte);
+    demarre();
+  }
+
+  window.HFSchemas = { rafraichir: rafraichir, monte: monte };
+
   if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", init);
-  }else{ init(); }
+    document.addEventListener("DOMContentLoaded", rafraichir);
+  }else{ rafraichir(); }
 })();
