@@ -1263,6 +1263,7 @@ body.nav-is-open .read-progress{ opacity:0; }
   display:flex; gap:10px; align-items:center; padding-block:12px;
   overflow-x:auto; overscroll-behavior-x:contain;
   scrollbar-width:none;                       /* Firefox */
+  scroll-snap-type:x proximity;
 }
 .reco-index-inner::-webkit-scrollbar{ display:none; }
 /* Sans cette cale, la dernière pastille colle au bord en fin de défilement :
@@ -1273,7 +1274,7 @@ body.nav-is-open .read-progress{ opacity:0; }
   text-transform:uppercase; color:var(--ink-faint); margin-right:4px;
 }
 .reco-index a{
-  flex:none;                                   /* jamais compressées */
+  flex:none; scroll-snap-align:start;          /* jamais compressées */
   font-family:var(--font-mono); font-size:12.5px; font-weight:500;
   padding:7px 14px; border-radius:999px;
   border:1px solid var(--line); color:var(--navy-900);

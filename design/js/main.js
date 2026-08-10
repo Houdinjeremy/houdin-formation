@@ -198,6 +198,33 @@
     apply();
   })();
 
+  /* Formation en cours de lecture, signalée dans la barre d'accès direct.
+     Le seuil haut correspond aux deux barres empilées (en-tête + index) : sans
+     lui, une section serait dite « active » alors qu'elle est cachée derrière. */
+  (function(){
+    var barre = document.querySelector(".reco-index");
+    if (!barre || !("IntersectionObserver" in window)) return;
+    var liens = {};
+    barre.querySelectorAll("a[href^='#']").forEach(function(a){
+      liens[a.getAttribute("href").slice(1)] = a;
+    });
+    var sections = document.querySelectorAll(".reco-block[id]");
+    if (!sections.length) return;
+
+    var vues = {};
+    var io = new IntersectionObserver(function(entrees){
+      entrees.forEach(function(e){ vues[e.target.id] = e.isIntersecting; });
+      var courant = null;
+      sections.forEach(function(s){ if (!courant && vues[s.id]) courant = s.id; });
+      for (var id in liens) {
+        if (id === courant) liens[id].setAttribute("aria-current", "true");
+        else liens[id].removeAttribute("aria-current");
+      }
+    }, { rootMargin: "-150px 0px -55% 0px" });
+
+    sections.forEach(function(s){ io.observe(s); });
+  })();
+
   // Footer year
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();

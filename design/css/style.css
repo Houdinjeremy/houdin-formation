@@ -238,6 +238,10 @@ h3, .h3{
   padding-top:6px; padding-bottom:6px;
   border-radius:13px;
   box-shadow:0 12px 30px -12px rgba(6,14,24,.55);
+  /* 0,82 suffisait au repos, sur le hero. Dès qu'un titre en Anton blanc de
+     42 px passe dessous, il traverse : le flou d'arrière-plan n'efface pas un
+     contraste pareil. La pilule s'opacifie donc une fois le défilement engagé. */
+  background:rgba(245,242,234,.95);
 }
 .site-header.is-scrolled .brand img{ height:32px; }
 .brand{ display:flex; align-items:center; gap:12px; flex:none; }
@@ -308,8 +312,13 @@ h3, .h3{
    760 px d'un coup, sans palier intermédiaire.
    Ici la marque a sa colonne, et les liens forment leur propre grille fluide
    qui se replie d'elle-même de quatre à une colonne, sans point de rupture. */
+/* `padding-block` et non `padding` : ces éléments portent aussi la classe
+   .wrap, dont le `padding:0 24px` serait écrasé par la forme raccourcie. Le
+   contenu du pied de page se collait au bord gauche de l'écran dès que la
+   largeur passait sous 1120 px — invisible en grand écran, où la marge vient du
+   centrage et non du padding. */
 .footer-top{
-  padding:64px 0 40px;
+  padding-block:64px 40px;
   display:grid;
   grid-template-columns:minmax(230px, 1fr) minmax(0, 2.5fr);
   gap:48px;
@@ -335,7 +344,7 @@ h3, .h3{
 }
 .footer-col a:hover{ color:#fff; }
 .footer-bottom{
-  border-top:1px solid var(--line-on-dark); padding:22px 0;
+  border-top:1px solid var(--line-on-dark); padding-block:22px;
   display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
   font-family:var(--font-mono); font-size:12px; color:#8FA0AF;   /* était 4,29:1 */
 }
@@ -351,7 +360,7 @@ h3, .h3{
 @media (max-width: 560px){
   .footer-col a, .footer-col p{ padding:8px 0; }
   .footer-links{ gap:26px 24px; }
-  .footer-top{ padding:52px 0 32px; }
+  .footer-top{ padding-block:52px 32px; }
 }
 
 /* ---------- section shells ---------- */
@@ -643,7 +652,15 @@ h3, .h3{
 
 /* L'iframe Sketchfab est appelée avec transparent=1 : sans fond propre, elle
    se fond dans la section au lieu de former une vignette rapportée. */
-.stage3d-piece.is-iframe{ width:100%; }
+/* Tous les modèles ne se valent pas : `transparent=1` rend le fond du lecteur
+   transparent, mais reste sans effet si l'auteur a posé un plan de fond dans sa
+   propre scène. La chargeuse R482 arrivait ainsi en rectangle noir franc au
+   milieu du navy, là où le chariot R489 flottait librement.
+   Un masque en fondu efface les bords : le rectangle se dissout dans la page au
+   lieu de s'y découper. Sans effet visible sur les modèles déjà transparents. */
+.stage3d-piece.is-iframe{
+  -webkit-mask-image:radial-gradient(closest-side, #000 58%, rgba(0,0,0,.55) 82%, transparent 99%);
+  mask-image:radial-gradient(closest-side, #000 58%, rgba(0,0,0,.55) 82%, transparent 99%); width:100%; }
 .stage3d-piece iframe{
   width:min(100%, 860px); height:clamp(330px, 46vw, 520px);
   border:0; display:block; margin-inline:auto; background:transparent;
@@ -1239,12 +1256,24 @@ body.nav-is-open .read-progress{ opacity:0; }
   -webkit-backdrop-filter:blur(14px) saturate(1.4);
   border-bottom:1px solid var(--line);
 }
-.reco-index-inner{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; padding:12px 0; }
+/* Défilement latéral plutôt que retour à la ligne. Avec `flex-wrap`, les cinq
+   pastilles passaient sur deux lignes en dessous de 560 px : la barre montait à
+   107 px et, ajoutée à l'en-tête, occupait 179 px d'écran en permanence. */
+.reco-index-inner{
+  display:flex; gap:10px; align-items:center; padding-block:12px;
+  overflow-x:auto; overscroll-behavior-x:contain;
+  scrollbar-width:none;                       /* Firefox */
+}
+.reco-index-inner::-webkit-scrollbar{ display:none; }
+/* Sans cette cale, la dernière pastille colle au bord en fin de défilement :
+   le padding-right d'un conteneur défilant n'est pas honoré. */
+.reco-index-inner::after{ content:""; flex:0 0 14px; }
 .reco-index .n{
   font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em;
   text-transform:uppercase; color:var(--ink-faint); margin-right:4px;
 }
 .reco-index a{
+  flex:none;                                   /* jamais compressées */
   font-family:var(--font-mono); font-size:12.5px; font-weight:500;
   padding:7px 14px; border-radius:999px;
   border:1px solid var(--line); color:var(--navy-900);
@@ -1253,8 +1282,18 @@ body.nav-is-open .read-progress{ opacity:0; }
              border-color var(--dur-fast) var(--ease-out);
 }
 .reco-index a:hover{ background:var(--navy-900); color:var(--white); border-color:var(--navy-900); }
+
+/* Formation en cours de lecture. Sans ce repère, la barre disait où aller mais
+   jamais où l'on se trouvait — elle servait à naviguer, pas à se situer. */
+.reco-index a[aria-current="true"]{
+  background:var(--spark-500); color:var(--on-spark);
+  border-color:var(--spark-500); font-weight:600;
+}
 @media (max-width:880px){ .reco-index{ top:72px; } }
-@media (max-width:560px){ .reco-index .n{ display:none; } }
+@media (max-width:560px){
+  .reco-index .n{ display:none; }
+  .reco-index a{ font-size:12px; padding:7px 12px; }
+}
 
 .reco-plate{
   background:var(--white);
