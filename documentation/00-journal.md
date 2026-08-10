@@ -526,3 +526,62 @@ et le `robots.txt` bloquant, qui tombent le jour de la vraie mise en ligne — c
 jour-là, penser à faire sortir `sitemap.xml` vers ce qui est déployé, car
 `build-demo.sh` ne le copie pas. Et la photo de la page À propos, toujours
 remplacée par le picto.
+
+## 2026-08-10 (suite) — Ce que le déploiement faisait vraiment
+
+Deuxième moitié de journée : pied de page, navigation, menu mobile, mentions
+légales. Et une découverte qui invalide plusieurs certitudes des jours passés.
+
+**Vercel publie la RACINE, pas `dist/`.** Vérifié en interrogeant le site lui-même :
+`houdin-formation.fr/design/` et `/design02/` répondaient **200**. Malgré
+`outputDirectory: dist` dans `vercel.json`, le déploiement est déclenché par le
+push GitHub, et `dist/` étant gitignoré, il n'existe pas côté Vercel : le réglage
+pointe vers un dossier absent et Vercel se rabat sur la racine.
+
+Trois conséquences, toutes contraires à ce que je croyais et répétais :
+- `build-demo.sh` n'a **jamais** protégé la production. Ni le `noindex`, ni le
+  `robots.txt`, ni l'exclusion de `demo-schemas.html`. Il reste utile pour
+  fabriquer une archive à envoyer, rien de plus.
+- le seul blocage d'indexation réel est l'en-tête `X-Robots-Tag` de
+  `vercel.json`. Il fonctionne, mais n'empêche pas l'accès direct par URL.
+- `git push` suffit à déployer ; `vercel deploy --prod` faisait double emploi.
+
+`design/`, `design02/` et `dist/` sont désormais dans `.vercelignore`, avec le
+constat écrit en tête du fichier — rien dans la configuration ne le laisse deviner.
+
+**Mentions légales complètes.** SIRET 824 790 240 00025, TVA FR 60 824 790 240,
+NDA 32600427860, siège 11 rue du Belloy, 60240 Boubiers. Vérifiées avant
+inscription plutôt que recopiées : la clé de Luhn du SIRET est valide, et la clé
+de TVA française se déduit du SIREN — elle tombe juste. Une contradiction levée
+au passage : le site annonçait Gisors (27140), dans l'Eure, quand la note du
+client donne un code postal de l'Oise. Question posée avant correction.
+
+**Trois pièges CSS, tous silencieux :**
+- `padding` en raccourci sur un élément portant aussi `.wrap` écrase le
+  `padding-inline` de celui-ci. Le pied de page collait au bord gauche sous
+  1120 px — invisible au-dessus, où la marge vient du centrage. `padding-block`
+  ne touche que le vertical.
+- `scroll-snap-type` sur une barre défilante aligne le premier élément sur le
+  bord du conteneur en auto-défilant, ce qui **annule exactement le padding**.
+- un sélecteur d'enfant direct (`.mobile-nav > a`) cesse de s'appliquer dès
+  qu'on enveloppe l'élément visé — le lien perd sa fonte sans erreur.
+
+Et un piège de sélecteur de frères : `.sommaire + .reco-block` ne s'appliquait
+pas parce que le rail s'intercalait entre les deux. En position fixe, sa place
+dans le flux est indifférente à l'affichage mais rompt l'adjacence.
+
+**Navigation refondue.** La barre collante « Aller à » est supprimée : 60 px de
+hauteur permanents pour un usage unique. Remplacée par un sommaire en tête de
+page (cinq colonnes, une icône par engin) et un rail en marge qui signale la
+section lue sans coûter un pixel. Un panneau déroulant à la manière d'Apple
+s'ouvre au survol de « Nos formations », avec un voile qui floute la page —
+`backdrop-filter` sur un voile, et non `background:rgba()` sur le panneau : la
+première traite ce qui est derrière, la seconde laisse voir au travers.
+
+**Menu mobile** ancré en haut (il était centré, avec 200 px de vide de chaque
+côté), catégories dépliables au chevron, et mise au point sur le choix en cours.
+
+**Reste à faire.** Le `noindex` et l'en-tête `X-Robots-Tag` : plus rien ne s'y
+oppose maintenant que les mentions légales sont complètes, c'est une décision du
+client. `sitemap.xml` est déjà servi en ligne. Et `design02/`, la piste « langage
+Apple », n'a que deux pages sur sept.
