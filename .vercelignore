@@ -1,5 +1,10 @@
-# Ce qui n'a rien à faire en ligne. `dist/` n'y figure surtout pas :
-# c'est le dossier servi (voir outputDirectory dans vercel.json).
+# Ce qui n'a rien à faire en ligne.
+#
+# ATTENTION — vérifié le 2026-08-10 : malgré `outputDirectory: dist` dans
+# vercel.json, Vercel publie la RACINE et non dist/, faute de commande de
+# build. La balise noindex et le robots.txt injectés par build-demo.sh ne sont
+# donc jamais servis ; seul l'en-tête X-Robots-Tag de vercel.json bloque
+# l'indexation. Tout ce qui n'est pas listé ici est public.
 .claude
 documentation
 scripts
@@ -7,3 +12,8 @@ sauvegarde
 sauvegarde-avant-refonte-*
 *.zip
 .DS_Store
+
+# Dossiers de travail : ils étaient en ligne et accessibles par URL directe.
+design
+design02
+dist
