@@ -1344,3 +1344,9 @@ body.nav-is-open .read-progress{ opacity:0; }
   .reco-aside{ position:static; }
   .reco-block{ padding:60px 0; }
 }
+
+/* La BT est la seule formation dont les cartes portent des données sous le
+   schéma : sans resserrement, son bloc dépassait les autres de 40 %. */
+.reco-visual .schema-specs{ font-size:12px; line-height:1.45; margin-top:12px; }
+.reco-visual .schema-specs dt{ padding-top:7px; }
+.reco-visual .schema-specs dd{ padding-top:7px; }
