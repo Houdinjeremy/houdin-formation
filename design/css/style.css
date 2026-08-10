@@ -292,27 +292,69 @@ h3, .h3{
     transition:opacity var(--dur-slow) var(--ease-out), visibility var(--dur-slow);
   }
   .mobile-nav.is-open{ opacity:1; visibility:visible; }
-  .mobile-nav > a{
+  /* Le lien « Nos formations » vit maintenant dans .mn-groupe : sans lui ajouter
+     ce sélecteur, il perdait la fonte et la taille des autres entrées. */
+  .mobile-nav > a,
+  .mn-groupe > a{
     padding:16px 2px;
     font-family:var(--font-display); text-transform:uppercase;
     font-size:clamp(24px, 7vw, 34px); line-height:1.1; color:#fff;
     border-bottom:1px solid var(--line-on-dark);
   }
-  .mobile-nav a[aria-current="page"]{ color:var(--spark-500); }
+  .mobile-nav > a[aria-current="page"],
+  .mn-groupe > a[aria-current="page"]{ color:var(--spark-500); }
   .mobile-nav .btn{ margin-top:26px; border-bottom:0; }
   .mobile-nav .btn-block{ width:100%; font-family:var(--font-body); font-size:15px; }
 
-  /* Les cinq recommandations, sous « Nos formations ». Le menu de bureau les
-     donne toutes ; sans elles, un visiteur sur téléphone devait ouvrir la page
-     puis chercher sa catégorie. */
-  .mn-reco{ display:flex; flex-wrap:wrap; gap:8px; padding:4px 2px 18px; }
-  .mn-reco a{
+  /* « Nos formations » et son bouton de dépliage sur la même ligne. Le lien
+     reste un lien vers la page ; c'est le chevron qui ouvre les catégories.
+     Confondre les deux obligerait à choisir entre naviguer et déplier. */
+  .mn-groupe{
+    display:flex; align-items:center; gap:12px;
+    border-bottom:1px solid var(--line-on-dark);
+  }
+  .mn-groupe > a{ flex:1; border-bottom:0 !important; }
+  .mn-toggle{
+    flex:none; width:46px; height:46px;
+    display:flex; align-items:center; justify-content:center;
+    background:transparent; border:1px solid var(--line-on-dark);
+    border-radius:50%; color:#fff; cursor:pointer;
+    transition:transform var(--dur-base) var(--ease-out),
+               border-color var(--dur-fast) var(--ease-out);
+  }
+  .mn-toggle svg{ width:18px; height:18px; }
+  .mn-toggle[aria-expanded="true"]{ transform:rotate(180deg); border-color:var(--spark-500); }
+
+  /* Repliées par défaut. `grid-template-rows` de 0fr à 1fr anime la hauteur
+     sans avoir à deviner un `max-height` : la valeur s'ajuste au contenu. */
+  .mn-reco{
+    display:grid; grid-template-rows:0fr;
+    opacity:0; overflow:hidden;
+    transition:grid-template-rows var(--dur-base) var(--ease-out),
+               opacity var(--dur-fast) var(--ease-out),
+               padding var(--dur-base) var(--ease-out);
+    padding:0 2px;
+  }
+  .mn-reco > *{ min-height:0; }        /* sans quoi la ligne refuse de se fermer */
+  .mobile-nav.reco-open .mn-reco{
+    grid-template-rows:1fr; opacity:1; padding:14px 2px 18px;
+  }
+
+  /* Mise au point : tout ce qui suit les catégories s'estompe pendant qu'elles
+     sont ouvertes, pour que le regard reste sur le choix en cours. */
+  .mn-reco ~ *{
+    transition:filter var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+  }
+  .mobile-nav.reco-open .mn-reco ~ *{ filter:blur(3px); opacity:.4; }
+
+  .mn-liste{ display:flex; flex-wrap:wrap; gap:8px; }
+  .mn-liste a{
     font-family:var(--font-mono); font-size:12.5px; font-weight:600;
     letter-spacing:.06em; color:#fff;
     padding:8px 14px; border-radius:999px;
     border:1px solid var(--line-on-dark);
   }
-  .mn-reco a:active{ background:var(--spark-500); color:var(--on-spark); }
+  .mn-liste a:active{ background:var(--spark-500); color:var(--on-spark); }
 
   /* Téléphone et courriel à portée de pouce : sur un téléphone, l'appel est
      souvent l'action la plus directe. */

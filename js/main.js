@@ -18,6 +18,25 @@
     mobileNav.querySelectorAll("a").forEach(function(a){
       a.addEventListener("click", function(){ setNav(false); });
     });
+    /* Dépliage des catégories dans le menu mobile. Le chevron seul les ouvre :
+       le lien « Nos formations » continue de mener à la page, sans quoi il
+       faudrait choisir entre naviguer et déplier. */
+    var chevron = mobileNav.querySelector(".mn-toggle");
+    if (chevron) {
+      chevron.addEventListener("click", function(){
+        var ouvert = mobileNav.classList.toggle("reco-open");
+        chevron.setAttribute("aria-expanded", ouvert ? "true" : "false");
+        chevron.setAttribute("aria-label", ouvert ? "Masquer les catégories"
+                                                  : "Afficher les catégories");
+      });
+      /* Le menu se rouvre toujours replié : on ne reprend pas une navigation
+         dans l'état où on l'avait laissée trois pages plus tôt. */
+      burger.addEventListener("click", function(){
+        mobileNav.classList.remove("reco-open");
+        chevron.setAttribute("aria-expanded", "false");
+      });
+    }
+
     // Échap ferme l'overlay, et le focus revient au bouton.
     document.addEventListener("keydown", function(e){
       if (e.key === "Escape" && mobileNav.classList.contains("is-open")) {
