@@ -1189,23 +1189,7 @@ body.nav-is-open .read-progress{ opacity:0; }
 
 /* Bandeau sombre inséré dans une section claire : les schémas conservent leur
    fond de « plaque technique » sans qu'on ait à redessiner leurs couleurs. */
-.schema-strip{
-  margin-top:36px; padding:26px 26px 30px;
-  /* color:#fff est indispensable : sans lui les <h3> des cartes héritent de
-     l'encre sombre de la section claire et disparaissent sur le navy. */
-  background:var(--navy-990); color:#fff;
-  border-radius:24px 8px 8px 8px;
-  position:relative; overflow:hidden;
-}
 .schema-strip .schema-grid{ margin-top:20px; }
-.schema-strip-head{
-  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--spark-500); margin:0;
-}
-.schema-strip-lede{
-  color:var(--dark-body); font-size:14.5px; line-height:1.6;
-  margin:8px 0 0; max-width:62ch;
-}
 @media (max-width:640px){ .schema-strip{ padding:20px 16px 24px; } }
 
 /* ==========================================================================
@@ -1271,8 +1255,6 @@ body.nav-is-open .read-progress{ opacity:0; }
   .reco-plate{ padding:22px 20px 18px; }
 }
 
-.reco-note{ margin-top:22px; color:var(--ink-soft); font-size:15px; line-height:1.65; max-width:70ch; }
-.reco-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
 
 /* Confirmation d'envoi du formulaire. Masquée tant que rien n'a été soumis :
    elle n'existe dans le document qu'une fois le message préparé. */
@@ -1305,3 +1287,60 @@ body.nav-is-open .read-progress{ opacity:0; }
 /* Chapô de tête de section : plus large que le .lede par défaut, qui est calé
    sur 56ch pour le confort de lecture d'un paragraphe isolé. */
 .lede-wide{ margin-bottom:32px; max-width:none; }
+
+/* ---------- page Formations : deux colonnes ----------
+   Le ruban vertical d'origine (titre, fiche pleine largeur, note, bouton, bande
+   sombre traversante, cinq fois de suite) ne donnait au lecteur aucun point
+   d'ancrage, et noyait le bouton entre un paragraphe et un bloc sombre.
+   Deux colonnes aux rôles distincts : à gauche ce qu'on lit pour comprendre,
+   à droite ce qu'on regarde pour décider. */
+.reco-block{ padding:84px 0; }
+.reco-block + .reco-block{ border-top:1px solid var(--paper-line); }
+.reco-title{ margin-bottom:36px; }
+.reco-title h2{ margin-top:14px; }
+.reco-title .lede{ margin-top:14px; max-width:62ch; }
+
+.reco-cols{
+  display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+  gap:44px; align-items:start;
+}
+/* Collante : la fiche et son bouton accompagnent la lecture au lieu de défiler
+   hors de vue. 104px = hauteur de l'en-tête flottant plus une respiration. */
+.reco-aside{ position:sticky; top:104px; }
+
+/* Le bouton fait corps avec la fiche : il en est la conclusion, à la même place
+   pour les cinq formations, et seule action de sa colonne. */
+.reco-cta{ margin-top:22px; }
+.reco-cta .btn{ width:100%; justify-content:center; }
+.reco-cta-note{
+  margin-top:10px; font-family:var(--font-mono); font-size:11.5px;
+  color:var(--ink-faint); text-align:center; letter-spacing:.03em;
+}
+
+/* Le schéma garde le fond sombre dont ses tracés ont besoin, mais borné à sa
+   colonne : la bande qui traversait l'écran cinq fois hachait la lecture. */
+.reco-visual{
+  background:var(--navy-990); color:#fff;
+  border-radius:20px 6px 6px 6px; padding:26px 26px 30px; margin-top:26px;
+}
+.reco-visual h3{ color:#fff; }
+.reco-visual-head{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:19px; letter-spacing:.01em;
+}
+.reco-visual-lede{
+  margin-top:10px; font-size:14.5px; line-height:1.65; color:var(--dark-body);
+}
+.reco-visual .schema-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:18px; margin-top:22px;
+}
+.reco-visual .schema-card{
+  background:rgba(255,255,255,.04); border:1px solid var(--line-on-dark);
+  border-radius:10px; padding:16px;
+}
+@media (max-width: 980px){
+  .reco-cols{ grid-template-columns:1fr; gap:32px; }
+  .reco-aside{ position:static; }
+  .reco-block{ padding:60px 0; }
+}
