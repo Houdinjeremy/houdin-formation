@@ -1470,3 +1470,84 @@ body.rail-on .rail{ opacity:1; pointer-events:auto; }
 @media (prefers-reduced-motion: reduce){
   .rail, .rail i, .rail b, .som-grid a::after{ transition:none; }
 }
+
+/* ==========================================================================
+   Panneau « Nos formations »
+   --------------------------------------------------------------------------
+   Reprend le principe du menu déroulant d'Apple, demandé par le client : au
+   survol d'une entrée de navigation, un panneau descend et donne accès aux cinq
+   recommandations sans quitter la page où l'on se trouve.
+
+   Deux règles tenues :
+     · le lien reste un lien. Sans JavaScript, « Nos formations » mène toujours
+       à la page — le panneau est un raccourci, pas un passage obligé ;
+     · il s'ouvre au survol ET au clavier, et se ferme à Échap. Un menu qui ne
+       répond qu'à la souris exclut la moitié de ses utilisateurs.
+   ========================================================================== */
+
+/* `static` et non `relative` : le panneau doit se centrer sur la barre entière,
+   comme chez Apple, et non sur le lien survolé — sinon il déborde d'un côté.
+   Son ancrage est donc .header-inner, qui est déjà positionné. */
+.nav-drop{ position:static; }
+
+.megamenu{
+  position:absolute; top:calc(100% + 18px); left:50%;
+  width:min(880px, calc(100vw - 48px));
+  transform:translate(-50%, -10px);
+  background:var(--paper);
+  border:1px solid var(--paper-line);
+  border-radius:16px;
+  box-shadow:0 26px 60px -22px rgba(6,14,24,.55);
+  padding:26px;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity var(--dur-base) var(--ease-out),
+             transform var(--dur-base) var(--ease-out),
+             visibility 0s linear var(--dur-base);
+  z-index:120;
+}
+.nav-drop.is-open .megamenu{
+  opacity:1; visibility:visible; pointer-events:auto;
+  transform:translate(-50%, 0);
+  transition-delay:0s;
+}
+
+/* Zone tampon invisible entre le lien et le panneau : sans elle, le menu se
+   referme dès que la souris traverse l'espace qui les sépare. */
+.megamenu::before{
+  content:""; position:absolute; left:0; right:0; top:-20px; height:20px;
+}
+
+.mm-grid{
+  display:grid; grid-template-columns:repeat(5, 1fr); gap:10px;
+}
+.mm-grid a{
+  display:flex; flex-direction:column; gap:8px;
+  padding:16px 14px 18px; border-radius:10px;
+  transition:background var(--dur-fast) var(--ease-out);
+}
+.mm-grid a:hover, .mm-grid a:focus-visible{ background:var(--white); }
+.mm-icon{ width:26px; height:26px; color:var(--navy-800); }
+.mm-grid a:hover .mm-icon{ color:var(--spark-600); }
+.mm-code{
+  font-family:var(--font-mono); font-size:11px; font-weight:600;
+  letter-spacing:.09em; color:var(--spark-700);
+}
+.mm-nom{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:14.5px; line-height:1.2; color:var(--ink);
+  text-wrap:balance;
+}
+.mm-pied{
+  display:flex; justify-content:space-between; align-items:center; gap:16px;
+  margin-top:18px; padding-top:16px; border-top:1px solid var(--paper-line);
+  font-size:13.5px; color:var(--ink-soft); flex-wrap:wrap;
+}
+.mm-pied a{ font-weight:600; color:var(--spark-700); }
+.mm-pied a:hover{ text-decoration:underline; }
+
+/* Le panneau suppose une barre de navigation horizontale : sous 980 px elle
+   laisse place au menu plein écran, qui liste déjà les formations. */
+@media (max-width:980px){ .megamenu{ display:none; } }
+@media (prefers-reduced-motion: reduce){
+  .megamenu{ transition:opacity .01ms, visibility .01ms; transform:translate(-50%, 0); }
+}

@@ -237,6 +237,64 @@
     sections.forEach(function(s){ io.observe(s); });
   })();
 
+
+  /* ---------- panneau « Nos formations » ----------
+     Injecté par script plutôt qu'écrit dans les sept pages : une seule
+     définition, aucune copie à tenir à jour. Sans JavaScript, le lien mène
+     simplement à la page des formations, ce qui reste le comportement juste. */
+  (function(){
+    var lien = document.querySelector('.main-nav a[href="formations.html"]');
+    if (!lien || window.matchMedia("(max-width: 980px)").matches) return;
+
+    var hote = document.createElement("div");
+    hote.className = "nav-drop";
+    lien.parentNode.insertBefore(hote, lien);
+    hote.appendChild(lien);
+
+    var panneau = document.createElement("div");
+    panneau.className = "megamenu";
+    panneau.id = "megaFormations";
+    panneau.innerHTML =
+      '<div class="mm-grid">\n        <a href="formations.html#r482"><svg class="mm-icon" aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26h8M8 26V14M8 14l14-6M22 8l6 4-5 3"/></svg><span class="mm-code">R482</span><span class="mm-nom">Engins de chantier</span></a>\n        <a href="formations.html#r485"><svg class="mm-icon" aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="18" width="8" height="8"/><rect x="6" y="10" width="8" height="6"/><path d="M22 26V10M22 10l-4 4M22 10l4 4"/></svg><span class="mm-code">R485</span><span class="mm-nom">Chariots gerbeurs</span></a>\n        <a href="formations.html#r486"><svg class="mm-icon" aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h20M9 12v10M23 12v10M14 28h4"/><path d="M16 4v6M16 4l-4 4M16 4l4 4"/></svg><span class="mm-code">R486</span><span class="mm-nom">PEMP / nacelles</span></a>\n        <a href="formations.html#r489"><svg class="mm-icon" aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26h4l4-4h4"/><rect x="16" y="16" width="6" height="6"/><path d="M25 8v18M29 8v18M25 8h4"/></svg><span class="mm-code">R489</span><span class="mm-nom">Chariots élévateurs</span></a>\n        <a href="formations.html#bt"><svg class="mm-icon" aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4 8 18h7l-1 10 10-14h-7l1-10z"/></svg><span class="mm-code">BT</span><span class="mm-nom">Habilitation électrique</span></a>\n      </div>' +
+      '<div class="mm-pied">' +
+        '<span>Formation, évaluation et test, en intra-entreprise sur votre matériel.</span>' +
+        '<a href="formations.html">Voir toutes les formations →</a>' +
+      '</div>';
+    hote.appendChild(panneau);
+
+    lien.setAttribute("aria-expanded", "false");
+    lien.setAttribute("aria-controls", "megaFormations");
+
+    var minuteur = null;
+    var ouvrir = function(){
+      clearTimeout(minuteur);
+      hote.classList.add("is-open");
+      lien.setAttribute("aria-expanded", "true");
+    };
+    /* Fermeture retardée : la souris doit pouvoir quitter le lien pour
+       atteindre le panneau sans que tout disparaisse en chemin. */
+    var fermer = function(delai){
+      clearTimeout(minuteur);
+      minuteur = setTimeout(function(){
+        hote.classList.remove("is-open");
+        lien.setAttribute("aria-expanded", "false");
+      }, delai === undefined ? 180 : delai);
+    };
+
+    hote.addEventListener("mouseenter", ouvrir);
+    hote.addEventListener("mouseleave", function(){ fermer(); });
+    lien.addEventListener("focus", ouvrir);
+    hote.addEventListener("focusin", ouvrir);
+    hote.addEventListener("focusout", function(e){
+      if (!hote.contains(e.relatedTarget)) fermer(0);
+    });
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape" && hote.classList.contains("is-open")) {
+        fermer(0); lien.focus();
+      }
+    });
+  })();
+
   // Footer year
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
