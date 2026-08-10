@@ -280,23 +280,51 @@ h3, .h3{
   /* Overlay plein écran : opacity/visibility uniquement, jamais de max-height
      (qui déclencherait un reflow à chaque image). */
   .mobile-nav{
-    display:flex; flex-direction:column; justify-content:center; gap:0;
+    /* `flex-start` et non `center` : centré, le menu laissait deux cents pixels
+       de vide sous la pilule et autant en bas. Il commence maintenant sous
+       l'en-tête, et défile si son contenu dépasse la hauteur d'écran. */
+    display:flex; flex-direction:column; justify-content:flex-start; gap:0;
     position:fixed; inset:0; z-index:1;
     background:var(--navy-990);
-    padding:110px 28px 48px;
+    padding:104px 28px 40px;
+    overflow-y:auto; overscroll-behavior:contain;
     opacity:0; visibility:hidden;
     transition:opacity var(--dur-slow) var(--ease-out), visibility var(--dur-slow);
   }
   .mobile-nav.is-open{ opacity:1; visibility:visible; }
-  .mobile-nav a{
-    padding:18px 2px;
+  .mobile-nav > a{
+    padding:16px 2px;
     font-family:var(--font-display); text-transform:uppercase;
     font-size:clamp(24px, 7vw, 34px); line-height:1.1; color:#fff;
     border-bottom:1px solid var(--line-on-dark);
   }
   .mobile-nav a[aria-current="page"]{ color:var(--spark-500); }
-  .mobile-nav .btn{ margin-top:28px; border-bottom:0; }
+  .mobile-nav .btn{ margin-top:26px; border-bottom:0; }
   .mobile-nav .btn-block{ width:100%; font-family:var(--font-body); font-size:15px; }
+
+  /* Les cinq recommandations, sous « Nos formations ». Le menu de bureau les
+     donne toutes ; sans elles, un visiteur sur téléphone devait ouvrir la page
+     puis chercher sa catégorie. */
+  .mn-reco{ display:flex; flex-wrap:wrap; gap:8px; padding:4px 2px 18px; }
+  .mn-reco a{
+    font-family:var(--font-mono); font-size:12.5px; font-weight:600;
+    letter-spacing:.06em; color:#fff;
+    padding:8px 14px; border-radius:999px;
+    border:1px solid var(--line-on-dark);
+  }
+  .mn-reco a:active{ background:var(--spark-500); color:var(--on-spark); }
+
+  /* Téléphone et courriel à portée de pouce : sur un téléphone, l'appel est
+     souvent l'action la plus directe. */
+  .mn-contact{
+    display:flex; flex-direction:column; gap:10px;
+    margin-top:26px; padding-top:20px;
+    border-top:1px solid var(--line-on-dark);
+  }
+  .mn-contact a{
+    font-family:var(--font-mono); font-size:14px; color:#C4CDD6;
+    overflow-wrap:anywhere;
+  }
   /* Croix quand le menu est ouvert. */
   .burger[aria-expanded="true"] span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
   .burger[aria-expanded="true"] span:nth-child(2){ opacity:0; }
