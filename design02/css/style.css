@@ -200,13 +200,12 @@ a{ color:inherit; text-decoration:none; }
   border-bottom:1px solid rgba(255,255,255,.09);
 }
 .nav-inner{ display:flex; align-items:center; justify-content:space-between; gap:20px; }
-/* Le mot-symbole est un PNG en navy : sur fond sombre, tout filtre qui
-   l'éclaircit peint aussi son fond et le transforme en rectangle plein.
-   On l'écrit donc, dans la police du logo. */
-.nav-brand{
-  font-family:var(--font-display); text-transform:uppercase;
-  font-size:16px; letter-spacing:.02em; color:#fff;
-}
+/* Le mot-symbole n'est pas un lettrage mais une plaque : badge crème, contour,
+   mot en navy à l'intérieur. Il se pose donc tel quel sur le fond sombre, sans
+   aucun filtre — `brightness(0) invert(1)` peindrait la plaque entière en blanc
+   et la réduirait à un rectangle. */
+.nav-brand{ display:flex; align-items:center; }
+.nav-brand img{ height:26px; width:auto; }
 .nav-links{ display:flex; gap:34px; }
 .nav-links a{
   font-size:13px; color:rgba(255,255,255,.82);
@@ -239,12 +238,15 @@ a{ color:inherit; text-decoration:none; }
 }
 .hero > *{ position:relative; z-index:1; }
 
+/* Le filet appartient aux cellules, pas au conteneur : posé sur le conteneur,
+   il traversait toute la largeur et laissait deux cases vides sur les côtés. */
 .hero-codes{
   display:flex; gap:0; justify-content:center; flex-wrap:wrap;
-  margin-top:64px; border-top:1px solid rgba(255,255,255,.12);
+  margin-top:64px; width:fit-content; margin-inline:auto;
 }
 .hero-code{
   padding:22px 30px;
+  border-top:1px solid rgba(255,255,255,.12);
   border-right:1px solid rgba(255,255,255,.12);
   font-family:var(--font-mono); font-size:13px; font-weight:600;
   color:#fff; letter-spacing:.06em;
@@ -445,4 +447,64 @@ a{ color:inherit; text-decoration:none; }
     animation-duration:.01ms !important; transition-duration:.01ms !important;
   }
   [data-appear]{ opacity:1; transform:none; }
+}
+
+/* --------------------------------------------------------------------------
+   Rythme vertical
+   Aucune marge n'est écrite dans le HTML : l'espace dépend de ce qui précède,
+   pas de l'humeur du moment. Six valeurs différentes traînaient pour le même
+   rôle — c'est ainsi qu'une échelle se perd.
+   -------------------------------------------------------------------------- */
+.mono + .display,
+.mono + .display-sm{ margin-top:18px; }
+.display + .intro,
+.display-sm + .intro,
+.display + .body-lg,
+.display-sm + .body-lg{ margin-top:22px; }
+.intro + .spec,
+.body-lg + .spec,
+.schema-duo + .spec{ margin-top:46px; }
+.spec + .link-row,
+.intro + .link-row,
+.body-lg + .link-row,
+.rows + .link-row{ margin-top:38px; }
+.intro + .stage,
+.intro + .schema-duo{ margin-top:52px; }
+
+/* Un titre posé sur fond sombre passe au blanc pur : le gris de lecture
+   conviendrait mal à une capitale de 60 px. */
+.dark .display, .dark .display-sm, .dark .row-body h3{ color:#fff; }
+
+.spec-center{ margin-inline:auto; }
+
+/* Première section d'une page intérieure : elle passe sous la barre fixe. */
+.screen-first{ padding-top:170px; }
+
+/* --------------------------------------------------------------------------
+   Ancres
+   La barre de navigation mesure 52 px et le sélecteur de formation 46 : sans
+   cette réserve, cliquer « R489 » amenait le titre juste sous les deux barres.
+   -------------------------------------------------------------------------- */
+section[id]{ scroll-margin-top:104px; }
+
+/* --------------------------------------------------------------------------
+   Invitation à descendre
+   Le premier écran ne montre rien de ce qui suit : sans ce repère, rien ne dit
+   que la page continue. Il s'efface dès que le défilement commence.
+   -------------------------------------------------------------------------- */
+.scroll-cue{
+  position:absolute; left:50%; bottom:34px; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:9px;
+  color:var(--on-dark-faint); font-family:var(--font-mono);
+  font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+  transition:opacity .4s var(--ease);
+}
+.scroll-cue svg{ width:15px; height:15px; animation:cue 2.4s var(--ease) infinite; }
+@keyframes cue{
+  0%, 62%, 100%{ transform:translateY(0); opacity:.55; }
+  30%{ transform:translateY(5px); opacity:1; }
+}
+body.is-scrolled .scroll-cue{ opacity:0; pointer-events:none; }
+@media (prefers-reduced-motion: reduce){
+  .scroll-cue svg{ animation:none; }
 }

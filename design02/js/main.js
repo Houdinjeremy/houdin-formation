@@ -13,8 +13,11 @@
      l'animation au retour en arrière donne l'impression que la page n'est
      jamais stabilisée. */
   var cibles = document.querySelectorAll("[data-appear]");
-  if (!cibles.length) return;
 
+  /* Pas de sortie anticipée ici : le repère de défilement et l'année du pied de
+     page ne dépendent pas des apparitions, et une page sans `data-appear` les
+     perdrait en silence. */
+  if (cibles.length) {
   if (reduit || !("IntersectionObserver" in window)) {
     Array.prototype.forEach.call(cibles, function(el){ el.classList.add("seen"); });
   } else {
@@ -37,6 +40,21 @@
         }
       });
     });
+  }
+  }
+
+  /* Le repère « Découvrir » s'efface au premier défilement : il a rempli son
+     office, le garder deviendrait du décor. */
+  var cue = document.querySelector(".scroll-cue");
+  if (cue) {
+    var effacer = function(){
+      if (window.scrollY > 40) {
+        document.body.classList.add("is-scrolled");
+        window.removeEventListener("scroll", effacer);
+      }
+    };
+    window.addEventListener("scroll", effacer, { passive:true });
+    effacer();
   }
 
   var an = document.getElementById("year");
