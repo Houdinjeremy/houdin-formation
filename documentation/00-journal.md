@@ -478,3 +478,51 @@ paramètre appliqué. Sketchfab ignore silencieusement ceux qui dépassent le pl
 tarifaire du compte — pas de message, pas d'avertissement dans la console. La
 seule vérification qui vaille est visuelle, sur un fond qu'on ne peut pas
 confondre.
+
+## 2026-08-10 — Passe UI/UX : ce que mesurer change au diagnostic
+
+Journée en cinq temps : modèle 3D du gerbeur R485, partage social et données
+structurées, accessibilité, retrait des signatures génériques, refonte de la page
+Formations. Tout est en ligne.
+
+**Le fil conducteur : mesurer avant de juger.** Trois fois, la mesure a contredit
+l'impression, dans les deux sens.
+
+- J'ai cru voir un débordement horizontal en mobile sur une capture. Faux :
+  `scrollWidth = 390` pour un viewport de 390. Chrome sans interface rend la page
+  à environ 800 px puis recadre — l'image montre une mise en page desktop
+  tronquée. La mesure se fait en chargeant la page dans un cadre à la bonne
+  largeur, jamais à l'œil sur une capture.
+- Le client a trouvé le bloc BT trop long. Vrai, et l'écart était de 40 % :
+  899 / 882 / 922 / 918 px pour les quatre formations, 1293 pour la BT. Cause
+  structurelle et non graphique : elle est la seule dont les cartes portent un
+  paragraphe sous le schéma.
+- J'ai voulu vérifier si l'iframe Sketchfab était bien transparente. Réponse par
+  un fond magenta vif : le magenta traverse, `transparent=1` fonctionne. Mais le
+  bandeau titre + auteur, le partage et le plein écran restent affichés malgré
+  `ui_infos=0` : ces réglages sont réservés aux comptes payants. **Un paramètre
+  d'URL accepté n'est pas un paramètre appliqué.**
+
+**La cohérence graphique ne se perd pas dans la feuille de style, elle se perd
+dans les `style=""`.** Soixante-huit attributs semés au fil des pages, dont un
+même texte d'accompagnement écrit en 14, 14.5, 15.5, 16 et 16.5 px. Tant que la
+taille d'un titre se décide dans le HTML, aucune règle ne tient. Six classes de
+rôle les remplacent.
+
+**Deux corrections de mes propres décisions**, notées parce qu'elles se
+ressemblent : j'ai uniformisé les cinq boutons de formation en secondaire (juste
+sur l'uniformité, faux sur le niveau — ils sont maintenant tous primaires), et
+j'ai bien fait de garder les classes `.schema-*` que l'audit ponytail donnait
+pour mortes : elles servent `design/demo-schemas.html`.
+
+**Piège de la refonte Formations.** La transformation des sections par script
+laissait un `</div>` manquant par section : la colonne de droite se faisait
+absorber par celle de gauche et tout s'empilait, sans que le CSS soit en cause.
+Contrôle d'équilibre des balises avant toute capture, désormais.
+
+**Reste à faire.** Les 4 mentions légales obligatoires (SIRET, adresse, TVA,
+numéro de déclaration d'activité) que seul le client peut fournir. Le `noindex`
+et le `robots.txt` bloquant, qui tombent le jour de la vraie mise en ligne — ce
+jour-là, penser à faire sortir `sitemap.xml` vers ce qui est déployé, car
+`build-demo.sh` ne le copie pas. Et la photo de la page À propos, toujours
+remplacée par le picto.
