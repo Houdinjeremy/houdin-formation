@@ -439,3 +439,42 @@ pour un modèle Meshy : un gerbeur à timon est une géométrie simple.
   avec `! vercel deploy --prod --yes`, ou ajouter une règle de permission.
 - Toujours **4 mentions légales obligatoires manquantes** (SIRET, adresse
   complète, TVA, n° de déclaration d'activité).
+
+## 2026-08-10 — La transparence du lecteur 3D, tranchée par l'expérience
+
+La question traînait depuis la refonte de la visionneuse : le modèle flotte-t-il
+vraiment sur le navy, ou l'iframe peint-elle son propre fond ? Mes captures sans
+interface ne pouvaient pas répondre — sans WebGL, le lecteur affiche un écran
+d'erreur gris qui ressemble exactement à ce qu'on cherche à exclure.
+
+**Le protocole qui a tranché.** Poser l'iframe seule sur un fond magenta vif,
+dans une page de test, et regarder ce qui passe au travers. Le magenta n'existe
+nulle part dans la charte : aucune confusion possible avec un fond du lecteur.
+
+**Résultat, deux constats opposés.**
+
+`transparent=1` fonctionne. Le magenta traverse de bord à bord. La mise en scène
+sans cadre tient, et le cadre grisâtre aperçu sur les captures précédentes était
+l'écran d'erreur WebGL du navigateur sans interface, rien d'autre.
+
+`ui_infos=0` ne fonctionne pas, ni `ui_fullscreen=0`. Le bandeau titre + auteur
+en haut à gauche, le bouton de partage en haut à droite et le bouton plein écran
+en bas à droite restent affichés. Ces réglages sont réservés aux comptes
+Sketchfab payants ; sur un compte gratuit, l'attribution est imposée. Aucun CSS
+ne peut les masquer : l'iframe vient d'une autre origine, la page n'a aucune
+prise sur son contenu.
+
+**Ce qu'on en fait.** On compose avec. Les faire disparaître supposerait
+d'auto-héberger les fichiers .glb et de passer par `<model-viewer>` — la licence
+CC BY des trois premiers modèles le permettrait, mais pas celle du gerbeur R485
+(Sketchfab Standard : redistribution du fichier interdite). On perdrait donc un
+engin sur quatre pour gagner trois pastilles d'interface. Le compte n'y est pas.
+
+La ligne de crédit sous la scène reste nécessaire malgré le bandeau : celui-ci
+donne le titre et l'auteur, mais jamais la licence, que l'attribution CC BY exige.
+
+**Le piège à retenir.** Un paramètre d'URL accepté sans erreur n'est pas un
+paramètre appliqué. Sketchfab ignore silencieusement ceux qui dépassent le plan
+tarifaire du compte — pas de message, pas d'avertissement dans la console. La
+seule vérification qui vaille est visuelle, sur un fond qu'on ne peut pas
+confondre.

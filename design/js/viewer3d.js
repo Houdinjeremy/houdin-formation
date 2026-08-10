@@ -80,9 +80,25 @@
     document.head.appendChild(s);
   }
 
-  /* `transparent=1` est la clé de la nouvelle mise en scène : sans lui l'iframe
-     peint son propre fond et redevient une vignette rapportée sur la page.
-     `dnt=1` coupe le suivi publicitaire du lecteur. */
+  /* `transparent=1` est la clé de la mise en scène : sans lui l'iframe peint son
+     propre fond et redevient une vignette rapportée sur la page. `dnt=1` coupe
+     le suivi publicitaire du lecteur.
+
+     VÉRIFIÉ le 2026-08-10, en posant cette iframe sur un fond magenta vif dans
+     une page de test : le magenta traverse de bord à bord. La transparence
+     fonctionne bel et bien.
+
+     Le même test a montré l'inverse pour les paramètres d'interface. Le bandeau
+     titre + auteur en haut à gauche, le bouton de partage et le bouton plein
+     écran restent affichés malgré `ui_infos=0` et `ui_fullscreen=0` : ces
+     réglages sont réservés aux comptes Sketchfab payants, et l'attribution est
+     imposée sur un compte gratuit. On ne peut pas les masquer par CSS — l'iframe
+     est d'une autre origine. La scène doit donc composer avec eux ; les couper
+     supposerait d'auto-héberger les .glb, ce que la licence du gerbeur R485
+     (Sketchfab Standard, redistribution interdite) empêche de toute façon.
+
+     Les autres `ui_*` sont conservés : le test ne permet pas de conclure sur des
+     contrôles qui n'apparaissent qu'une fois le rendu WebGL démarré. */
   function urlSketchfab(uid){
     /* `autostart=1` est indispensable en iframe simple : sans lui le lecteur
        reste sur son écran de lancement et la scène paraît vide. L'ancienne
