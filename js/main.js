@@ -348,7 +348,7 @@
         message;
 
       window.location.href =
-        "mailto:jeremyhoudin95@gmail.com" +
+        "mailto:jeremy@houdin-formation.com" +
         "?subject=" + encodeURIComponent(subject) +
         "&body=" + encodeURIComponent(body);
 
@@ -367,7 +367,7 @@
       note.innerHTML =
         "Message préparé. Si rien ne s'est ouvert, aucun logiciel de messagerie " +
         "n'est configuré sur cet appareil : écrivez à " +
-        '<a href="mailto:jeremyhoudin95@gmail.com">jeremyhoudin95@gmail.com</a>.';
+        '<a href="mailto:jeremy@houdin-formation.com">jeremy@houdin-formation.com</a>.';
       note.classList.add("is-on");
 
       if (bouton) {
