@@ -19,3 +19,4 @@ sauvegarde-avant-refonte-*
 # recrée tout seul ou qui n'est pas encore versionné.
 dist
 Prompt
+node_modules

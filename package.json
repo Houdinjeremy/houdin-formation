@@ -1,0 +1,26 @@
+{
+  "name": "houdin-formation",
+  "version": "1.0.0",
+  "description": "Houdin Formation - Centre de formation CACES® et habilitation électrique",
+  "scripts": {
+    "build": "bash scripts/build-demo.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Houdinjeremy/houdin-formation.git"
+  },
+  "keywords": [
+    "formation",
+    "caces",
+    "habilitation-electrique"
+  ],
+  "author": "Jérémy Houdin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Houdinjeremy/houdin-formation/issues"
+  },
+  "homepage": "https://github.com/Houdinjeremy/houdin-formation#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
