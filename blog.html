@@ -30,6 +30,29 @@
 <link rel="preload" href="assets/fonts/anton-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
+<!-- Fil d'Ariane structuré : reprend a l'identique le fil affiché plus bas
+     dans la page. Google s'en sert pour remplacer l'URL brute par un chemin
+     lisible dans les resultats de recherche. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Accueil",
+      "item": "https://houdin-formation.fr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://houdin-formation.fr/blog.html"
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
