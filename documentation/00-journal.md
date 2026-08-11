@@ -625,3 +625,54 @@ et des témoignages.
 `~/Documents/ClaudeCode/Clients/Houdin-Formation/01-Site-Web/`, déplacé par une
 autre session. `.git`, `.vercel` et `.claude` sont intacts, le remote inchangé :
 Vercel suivant GitHub et non le chemin local, le déploiement n'est pas affecté.
+
+## 2026-08-10 (reprise) — Séquence SEO : brief 3, première page d'article
+
+Reprise de `documentation/03-seo-briefs.md`. Les briefs 1 (Île-de-France) et 2
+(Gisors) restent conditionnés au texte exact Qualiopi/financement, encore
+attendu du client. Le brief 3 n'avait aucune dépendance : fait.
+
+**`blog-r489-ou-r485.html`** — première page d'article individuelle du site ;
+jusqu'ici `blog.html` était une page unique portant tout le contenu en ligne.
+Le plan suit le brief : la question telle qu'elle se pose en entreprise, le
+critère réel (position de l'opérateur, pas la hauteur de levée), le schéma
+comparatif, les conséquences d'une erreur de catégorie, la marche à suivre en
+cas de doute. Les deux schémas (`gerbeur-accompagnant`, `gerbeur-porte`) et le
+bloc `.reco-visual` sont repris à l'identique de `formations.html#r485`, déjà
+validés en production — aucune nouvelle classe CSS créée. Article rattaché à
+l'organisme (`@id #organisme` de `index.html`) via un `Article` schema.org
+plutôt que d'en dupliquer un.
+
+Intégré dans `blog.html` (nouvelle entrée en tête de liste, datée Août 2026,
+avec lien « Lire l'article complet ») et dans `sitemap.xml`.
+
+**Non vérifié en navigateur réel** : l'extension Chrome n'était pas connectée
+dans cette session. Contrôle fait par équivalence structurelle (balises
+équilibrées, classes et schémas identiques à une page déjà validée) plutôt que
+visuellement — à confirmer à l'œil avant la prochaine mise en ligne.
+
+**Reste à faire** : briefs 1 et 2, dès réception du texte Qualiopi/financement
+annoncé par le client.
+
+**Maillage interne ajouté** : la section R485 de `formations.html` pointe
+désormais vers le nouvel article (`.reco-visual-lede a`, nouvelle règle CSS —
+lien blanc souligné, seule couleur lisible sur le fond navy de `.reco-visual`).
+Toujours pas de vérification visuelle possible, extension Chrome non connectée
+sur les deux tentatives de cette session.
+
+**Réponse Qualiopi/financement annoncée pour dans deux semaines.** Plutôt que
+d'attendre sans rien faire, `formation-caces-ile-de-france.html` (brief 1) est
+rédigée à l'avance — tout le plan sauf la section 6 (financement), laissée en
+commentaire HTML à l'emplacement exact, sur le modèle du bloc Qualiopi déjà
+utilisé dans `mentions-legales.html`. Réutilise sans aucune nouvelle classe
+CSS : `.som-grid` (déjà sur `formations.html`) pour les cinq recommandations,
+`.value-grid`/`.value-card` (déjà sur `a-propos.html`) pour les trois raisons
+de l'intra-entreprise, `.steps.stack` (déjà sur `contact.html`) pour le
+déroulé. **Publiée le jour même, sur décision du client** : plutôt qu'attendre
+la réponse (annoncée sous deux semaines), la page est mise en ligne sans la
+section Financement — ajoutée à `sitemap.xml`, et reliée depuis la carte
+« Île-de-France, Gisors et sa région » de `index.html` (nouveau lien, nouvelle
+règle `.feature p a` pour sa lisibilité sur fond sombre). Le commentaire
+placeholder de la section Financement reste en place ; reste seulement à
+l'écrire, et à corriger le bloc Qualiopi de `mentions-legales.html`
+(actuellement en commentaire lui aussi), dès la réponse du client.
