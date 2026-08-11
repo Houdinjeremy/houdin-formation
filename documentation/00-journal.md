@@ -756,3 +756,68 @@ fait préparer Cloudflare Pages. En concentrant tout sur Vercel, ce filet
 disparaît — il faut passer au plan **Pro** (~20 $/mois) pour un site
 commercial. Rien n'est cassé aujourd'hui, mais la conformité aux conditions
 d'utilisation de Vercel n'est pas acquise.
+
+## 2026-08-11 — Reprise du responsive : ce qui se mesure, et ce qui se voit
+
+Chantier mené écran par écran, sur les douze pages, à 320, 390, 768, 1024 et
+1440 px, avec Chrome piloté par le protocole de débogage. Précision utile pour
+la suite : **Chrome en mode `--headless` refuse toute fenêtre de moins de 500 px
+sur macOS**. Les premières captures à 375 px étaient donc un rendu à 500 px
+recadré — un faux diagnostic de débordement, corrigé en passant par
+`Emulation.setDeviceMetricsOverride`, qui seul émule une vraie largeur mobile.
+
+**Le défaut le plus coûteux ne se voyait pas.** En fin de feuille, le palier des
+petits écrans réduit la gouttière : `@media (max-width:400px){ .wrap{ padding:0
+18px } }`. La forme raccourcie écrit les quatre côtés — elle remettait donc à
+zéro le padding vertical de tout élément cumulant `.wrap` avec une autre classe.
+Sous 400 px, le pied de page perdait ses 52, 32 et 22 px de respiration, et la
+pilule de l'en-tête ses 10 px : 128 px envolés, précisément sur la largeur des
+iPhone SE et d'une bonne part du parc Android. Le piège était déjà décrit plus
+haut dans la feuille, à propos de `.footer-top` ; il s'était refermé ailleurs.
+`padding-inline` referme la question.
+
+**Cibles tactiles.** Sous 44 px, une cible se rate. Étaient concernés : les deux
+liens d'appel et d'e-mail du menu mobile (22 px — les seuls raccourcis de
+contact de tout le menu), les puces de catégories R482 à BT (38 px), les onglets
+du visualiseur 3D une fois leur libellé masqué (38 px), le lien de marque, les
+liens du pied de page sous 560 px (39 px), les puces de désambiguïsation des
+pages formation (35 px) et le fil d'Ariane (19 px — une navigation n'est pas un
+lien de lecture, l'exemption des liens en ligne ne le couvre pas).
+
+Pour « Voir le détail » des cartes de formation, le grossissement aurait détruit
+le rapport de force de la carte : la zone active est étendue à la carte entière
+par un pseudo-élément. C'est déjà elle que le doigt vise.
+
+**Flous.** Trois coûtaient sans rendre :
+
+- `.mm-voile`, le voile plein écran du mégamenu, est créé en JavaScript sur
+  toutes les tailles alors que le mégamenu disparaît sous 980 px. Un
+  `backdrop-filter` plein écran retient une couche de composition GPU en
+  permanence — sur mobile, pour un menu qui ne s'ouvrira jamais.
+- L'en-tête garde un flou de 16 px après opacification du fond à 95 %, où il ne
+  se distingue plus. Il tombe à 6 px une fois le défilement engagé : c'est
+  l'élément fixe à l'écran, son filtre se recalcule à chaque image.
+- Les fiches des pages formation floutaient à 2 px derrière un fond blanc à 5 %.
+  Invisible, et facturé une couche par fiche. Retiré sous 900 px.
+
+**Tailles de box.** Le pied de page tenait ses colonnes à `minmax(150px, 1fr)` :
+bon arbitrage sur téléphone, mais au-delà il en faisait tenir quatre de 158 à
+181 px, où cinq libellés sur quinze se repliaient — « R482 — Engins de
+chantier », « jeremy@houdin-formation.com » — alors que la place existait. À
+185 px au-delà de 460 px : plus aucune césure de la tablette au grand écran,
+soixante pixels de hauteur en plus, et un pied de page plus court qu'avant entre
+600 et 900 px, trois colonnes qui cassent occupant davantage que deux qui ne
+cassent pas.
+
+Deux défauts de rythme, présents à toutes les largeurs : le chapô de chaque
+en-tête de section touchait son titre (le reset pose `margin:0`, et `.lede` ne
+reprenait sa marge que dans `.page-hero` et `.reco-title`) ; et le filet du bas
+de pied de page, posé sur la bordure d'un élément portant `.wrap`, partait du
+bord du conteneur et non de celui du contenu — jusqu'au bord de l'écran sous
+1180 px. Un trait de séparation s'aligne sur ce qu'il sépare.
+
+**État vérifié après coup**, sur les douze pages aux cinq largeurs : aucun
+débordement horizontal, aucune cible tactile sous 44 px hormis les liens en
+ligne au fil d'une phrase, que la norme exempte. Les points de rupture n'ont pas
+été réécrits : chacun porte une justification dans la feuille, et les
+harmoniser de force aurait défait des réglages fins pour un gain d'apparence.
