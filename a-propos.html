@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>À propos — Jérémy Houdin | Houdin Formation</title>
-<meta name="description" content="Houdin Formation, c'est 25 ans d'expérience industrielle mis au service de la formation CACES® et de l'habilitation électrique. Découvrez le parcours de Jérémy Houdin.">
+<title>À propos — Jérémy Houdin, formateur CACES® | Houdin Formation</title>
+<meta name="description" content="Houdin Formation, c'est 25 ans d'expérience industrielle au service de la formation CACES® et de l'habilitation électrique BT. Le parcours de Jérémy Houdin.">
 <!-- Partage social et URL de référence. L'image est une carte 1200×630 : c'est
      le format qu'attendent LinkedIn, Facebook et les messageries. Sans elle,
      un lien partagé s'affiche en vignette grise. -->
 <link rel="canonical" href="https://houdin-formation.fr/a-propos.html">
 <meta property="og:type" content="profile">
 <meta property="og:url" content="https://houdin-formation.fr/a-propos.html">
-<meta property="og:title" content="À propos — Jérémy Houdin | Houdin Formation">
-<meta property="og:description" content="Houdin Formation, c'est 25 ans d'expérience industrielle mis au service de la formation CACES® et de l'habilitation électrique. Découvrez le parcours de Jérémy Houdin.">
+<meta property="og:title" content="À propos — Jérémy Houdin, formateur CACES® | Houdin Formation">
+<meta property="og:description" content="Houdin Formation, c'est 25 ans d'expérience industrielle au service de la formation CACES® et de l'habilitation électrique BT. Le parcours de Jérémy Houdin.">
 <meta property="og:image" content="https://houdin-formation.fr/assets/img/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,6 +20,9 @@
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Houdin Formation">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="À propos — Jérémy Houdin, formateur CACES® | Houdin Formation">
+<meta name="twitter:description" content="Houdin Formation, c'est 25 ans d'expérience industrielle au service de la formation CACES® et de l'habilitation électrique BT. Le parcours de Jérémy Houdin.">
+<meta name="twitter:image" content="https://houdin-formation.fr/assets/img/og-cover.jpg">
 
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -27,6 +30,61 @@
 <link rel="preload" href="assets/fonts/anton-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
+<!-- Fil d'Ariane structuré : reprend a l'identique le fil affiché plus bas
+     dans la page. Google s'en sert pour remplacer l'URL brute par un chemin
+     lisible dans les resultats de recherche. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Accueil",
+      "item": "https://houdin-formation.fr/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "À propos",
+      "item": "https://houdin-formation.fr/a-propos.html"
+    }
+  ]
+}
+</script>
+
+<!-- La page « À propos » est celle qui parle de la personne, pas de l'organisme :
+     c'est donc ici que Person a sa place, avec un identifiant stable auquel la
+     fiche de l'organisme peut se rattacher depuis l'accueil. Rien n'est ajoute
+     qui ne figure deja en clair sur la page. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://houdin-formation.fr/a-propos.html#jeremy-houdin",
+  "name": "Jérémy Houdin",
+  "jobTitle": "Formateur et évaluateur CACES®",
+  "description": "Formateur et évaluateur CACES® fort de 25 ans d'expérience industrielle au contact des engins de chantier, des chariots de manutention et des installations électriques basse tension.",
+  "url": "https://houdin-formation.fr/a-propos.html",
+  "mainEntityOfPage": "https://houdin-formation.fr/a-propos.html",
+  "sameAs": "https://www.linkedin.com/in/j%C3%A9r%C3%A9my-houdin-87210a153/",
+  "email": "jeremy@houdin-formation.com",
+  "telephone": "+33682999151",
+  "worksFor": { "@id": "https://houdin-formation.fr/#organisme" },
+  "knowsAbout": [
+    "CACES® R482 — engins de chantier",
+    "CACES® R485 — gerbeurs à conducteur accompagnant",
+    "CACES® R486 — plates-formes élévatrices mobiles de personnel",
+    "CACES® R489 — chariots élévateurs à conducteur porté",
+    "Habilitation électrique basse tension"
+  ],
+  "areaServed": [
+    { "@type": "AdministrativeArea", "name": "Île-de-France" },
+    { "@type": "City", "name": "Gisors" }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -34,7 +92,7 @@
 
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
-    <a href="index.html" class="brand"><img src="assets/img/logo-wordmark-navy.png" alt="Houdin Formation"></a>
+    <a href="index.html" class="brand"><img src="assets/img/logo-wordmark-navy.png" alt="Houdin Formation" width="320" height="116"></a>
     <nav class="main-nav" aria-label="Navigation principale">
       <a href="index.html" class="nav-link">Accueil</a>
       <a href="formations.html" class="nav-link">Nos formations</a>
@@ -45,7 +103,7 @@
     <div class="header-cta">
       <a href="contact.html" class="btn btn-primary btn-small">
         <span>Demander un devis</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileNav">
         <span></span><span></span><span></span>
@@ -94,7 +152,7 @@
   <section class="section on-light">
     <div class="wrap about-hero">
       <div class="monogram-plate" data-reveal>
-        <img src="assets/img/logo-picto.png" alt="">
+        <img src="assets/img/logo-picto.png" alt="" width="480" height="458" fetchpriority="high" decoding="async">
       </div>
       <div data-reveal>
         <h2>Une expertise terrain avant d'être une expertise pédagogique</h2>
@@ -159,33 +217,34 @@
 <footer class="site-footer">
   <div class="wrap footer-top">
     <div class="footer-brand">
-      <img src="assets/img/logo-picto.png" alt="" class="footer-logo">
+      <img src="assets/img/logo-picto.png" alt="" class="footer-logo" width="480" height="458" loading="lazy" decoding="async">
       <p>Houdin Formation — organisme de formation CACES® et habilitation électrique en Île-de-France, à Gisors et dans sa région.</p>
     </div>
     <div class="footer-links">
       <div class="footer-col">
-      <h4>Navigation</h4>
+      <h2>Navigation</h2>
       <a href="index.html">Accueil</a>
       <a href="formations.html">Nos formations</a>
       <a href="a-propos.html">À propos</a>
       <a href="blog.html">Blog</a>
     </div>
     <div class="footer-col">
-      <h4>Formations</h4>
+      <h2>Formations</h2>
       <a href="formation-caces-r482.html">R482 — Engins de chantier</a>
       <a href="formation-caces-r485.html">R485 — Gerbeurs</a>
       <a href="formation-caces-r486.html">R486 — Nacelles</a>
       <a href="formation-caces-r489.html">R489 — Chariots élévateurs</a>
       <a href="formation-habilitation-electrique.html">Habilitation électrique BT</a>
+      <a href="formation-caces-ile-de-france.html">Formation en Île-de-France</a>
     </div>
     <div class="footer-col">
-      <h4>Contact</h4>
+      <h2>Contact</h2>
       <a href="tel:+33682999151">06 82 99 91 51</a>
       <a href="mailto:jeremy@houdin-formation.com">jeremy<wbr>@houdin-formation.com</a>
       <a href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-houdin-87210a153/" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (nouvelle fenêtre)</span></a>
     </div>
       <div class="footer-col">
-      <h4>Informations</h4>
+      <h2>Informations</h2>
       <a href="mentions-legales.html">Mentions légales</a>
       <a href="confidentialite.html">Données personnelles</a>
     </div>

@@ -20,6 +20,7 @@
   "use strict";
 
   var VENDOR  = "assets/vendor/model-viewer.min.js";
+  var SCHEMAS = "js/schemas.js";
   var MODELES = "assets/models/";
 
   /* L'ordre définit celui des onglets.
@@ -65,6 +66,15 @@
   var credit  = document.getElementById("stage3dCredit");
   if(!scene || !onglets) return;
 
+  /* Les onglets s'annoncaient deja comme un tablist, mais rien ne disait a un
+     lecteur d'ecran QUOI ils pilotent : pas d'aria-controls, pas de panneau.
+     La scene est le panneau, et il est unique — son contenu est remplace a
+     chaque bascule plutot que masque/demasque. Un seul tabpanel donc, dont le
+     libelle suit l'onglet actif via aria-labelledby.
+     Pas de tabindex="0" dessus : en mode 3D il contient un <model-viewer> deja
+     focusable, l'ajouter creerait un arret de tabulation en double. */
+  scene.setAttribute("role", "tabpanel");
+
   var vendorDemande = false, courant = null;
 
   function reduitMouvement(){
@@ -77,6 +87,21 @@
     vendorDemande = true;
     var s = document.createElement("script");
     s.type = "module"; s.src = VENDOR;
+    document.head.appendChild(s);
+  }
+
+  /* Le repli dessine un schéma technique, qui a besoin de schemas.js. Les pages
+     qui n'affichent aucun schéma ne chargent pas ce module : on va le chercher
+     au moment où le repli sert réellement, plutôt que de le faire porter à
+     toutes les pages pour un cas qui ne survient presque jamais. */
+  var schemasDemande = false;
+  function chargeSchemas(){
+    if(window.HFSchemas){ window.HFSchemas.rafraichir(); return; }
+    if(schemasDemande) return;
+    schemasDemande = true;
+    var s = document.createElement("script");
+    s.src = SCHEMAS;
+    s.onload = function(){ if(window.HFSchemas) window.HFSchemas.rafraichir(); };
     document.head.appendChild(s);
   }
 
@@ -168,7 +193,8 @@
     scene.appendChild(neuf);
 
     /* Le schéma se monte APRÈS insertion : le module dessine dans l'élément vivant. */
-    if(window.HFSchemas) window.HFSchemas.rafraichir();
+    if(neuf.classList.contains("is-schema")) chargeSchemas();
+    else if(window.HFSchemas) window.HFSchemas.rafraichir();
 
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){ neuf.classList.remove("is-entrant"); });
@@ -187,6 +213,8 @@
     }
     if(credit) credit.innerHTML = engin.credit || "";
 
+    scene.setAttribute("aria-labelledby", "stage3dTab-" + engin.id);
+
     Array.prototype.forEach.call(onglets.children, function(b){
       var actif = b.getAttribute("data-engin") === engin.id;
       b.setAttribute("aria-selected", actif ? "true" : "false");
@@ -199,6 +227,8 @@
     var b = document.createElement("button");
     b.type = "button";
     b.setAttribute("role", "tab");
+    b.id = "stage3dTab-" + engin.id;
+    b.setAttribute("aria-controls", "stage3dScene");
     b.setAttribute("data-engin", engin.id);
     b.setAttribute("aria-selected", i === 0 ? "true" : "false");
     b.tabIndex = i === 0 ? 0 : -1;
