@@ -528,6 +528,31 @@
      lieu d'ouvrir une seconde boucle d'animation. */
   var vues = [], boucleLancee = false;
 
+  /* Un schéma hors de l'écran n'a aucune raison d'être redessiné. Sans ce
+     filtre, les dix mécanismes de la page formations tournent soixante fois
+     par seconde tant que l'onglet reste ouvert, y compris pendant qu'on lit
+     le bas de page. On suit donc ce qui est réellement visible, et la boucle
+     se met en sommeil quand plus rien ne l'est. */
+  var visibles = null, io = null;
+
+  function observeur(){
+    if(io || typeof IntersectionObserver !== "function") return io;
+    visibles = [];
+    io = new IntersectionObserver(function(entrees){
+      entrees.forEach(function(e){
+        var i = visibles.indexOf(e.target);
+        if(e.isIntersecting){ if(i < 0) visibles.push(e.target); }
+        else if(i >= 0){ visibles.splice(i, 1); }
+      });
+      relance();
+    }, { rootMargin:"200px 0px" });
+    return io;
+  }
+
+  function estVisible(svg){
+    return !io || visibles.indexOf(svg) >= 0;
+  }
+
   function monte(svg){
     var nom = svg.getAttribute("data-schema"), meca = MECA[nom];
     if(!meca || svg.hasAttribute("data-schema-monte")) return null;
@@ -552,14 +577,20 @@
 
     var vue = { meca:meca, cible:gMeca, svg:svg };
     vues.push(vue);
+    if(observeur()) io.observe(svg);
     return vue;
   }
 
-  function rendu(t){
+  function rendu(t, tout){
     for(var i = vues.length - 1; i >= 0; i--){
       var v = vues[i];
       /* un schéma retiré du DOM (changement de modèle) sort du rendu */
-      if(!v.svg.isConnected){ vues.splice(i, 1); continue; }
+      if(!v.svg.isConnected){
+        vues.splice(i, 1);
+        if(io) io.unobserve(v.svg);
+        continue;
+      }
+      if(!tout && !estVisible(v.svg)) continue;
       clear(v.cible); v.meca.dessine(v.cible, t);
     }
   }
@@ -570,17 +601,33 @@
     var fige = new URLSearchParams(location.search).get("t");
 
     if(reduit || fige !== null){
-      rendu(fige === null ? 1 : Math.min(1, Math.max(0, parseFloat(fige) || 0)));
+      /* Image figée : on dessine tout, y compris hors écran, puisqu'il n'y
+         aura pas de seconde passe au défilement. */
+      rendu(fige === null ? 1 : Math.min(1, Math.max(0, parseFloat(fige) || 0)), true);
       return;
     }
     if(boucleLancee) return;
     boucleLancee = true;
-    var t0 = null;
-    requestAnimationFrame(function boucle(ts){
-      if(t0 === null) t0 = ts;
-      rendu(courbe(ts - t0));
-      requestAnimationFrame(boucle);
-    });
+    relance();
+  }
+
+  var t0 = null, enCours = false;
+
+  /* La phase se lit sur l'horloge du navigateur, pas sur un compteur de
+     frames : une mise en sommeil ne décale donc pas l'animation, elle
+     reprend là où elle en serait restée. */
+  function frame(ts){
+    if(t0 === null) t0 = ts;
+    rendu(courbe(ts - t0));
+    if(io && !visibles.length){ enCours = false; return; }
+    requestAnimationFrame(frame);
+  }
+
+  function relance(){
+    if(!boucleLancee || enCours) return;
+    if(io && !visibles.length) return;
+    enCours = true;
+    requestAnimationFrame(frame);
   }
 
   /* Rescanne le document : sert au premier chargement comme après injection. */
