@@ -1173,6 +1173,11 @@ body.nav-is-open .read-progress{ opacity:0; }
 .legal h2:first-child{ margin-top:0; padding-top:0; border-top:0; }
 .legal p{ margin-top:14px; color:var(--ink-soft); }
 .legal a{ color:var(--spark-700); text-decoration:underline; text-underline-offset:3px; }
+
+/* Page d'erreur : un lien noyé dans un paragraphe doit rester repérable
+   autrement que par la position, d'où le soulignement comme ailleurs. */
+.page-aide{ margin-top:30px; }
+.page-aide a{ color:var(--spark-700); text-decoration:underline; text-underline-offset:3px; }
 .legal a:hover{ color:var(--spark-600); }
 
 .legal-list{ margin:18px 0 0; display:grid; grid-template-columns:minmax(190px,auto) 1fr; gap:2px 28px; }
