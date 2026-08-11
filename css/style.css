@@ -444,7 +444,6 @@ h3, .h3{
 
 /* ---------- section shells ---------- */
 .section{ padding:96px 0; position:relative; overflow:hidden; }
-.section-tight{ padding:64px 0; }
 .on-light{ background:var(--paper); color:var(--ink); }
 .on-alt{ background:var(--paper-alt); color:var(--ink); }
 .on-dark{ background:var(--navy-950); color:#EDEFEF; }
@@ -458,12 +457,6 @@ h3, .h3{
   background-size:44px 44px;
   -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.9), transparent 85%);
           mask-image:linear-gradient(180deg, rgba(0,0,0,.9), transparent 85%);
-}
-.hazard-corner{
-  position:absolute; top:0; right:0; width:96px; height:96px;
-  background:repeating-linear-gradient(-45deg, var(--spark-500) 0 10px, var(--navy-800) 10px 20px);
-  clip-path:polygon(100% 0, 0 0, 100% 100%);
-  opacity:.9;
 }
 
 /* ---------- hero ---------- */
@@ -552,33 +545,11 @@ h3, .h3{
   background:transparent; color:var(--dark-body);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.24);
 }
-.hero-plate{
-  position:relative; width:100%; max-width:420px; aspect-ratio:1/1.05;
-  background:var(--navy-800);
-  border-radius:var(--radius-l);
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:var(--shadow-lift);
-}
-.hero-plate img{ width:72%; height:auto; }
-.hero-plate::before{
-  content:""; position:absolute; inset:0; border-radius:inherit;
-  background-image:
-    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
-  background-size:10% 10%;
-}
-.hero-plate-tag{
-  position:absolute; left:-14px; bottom:26px;
-  background:var(--spark-500); color:var(--on-spark); font-family:var(--font-mono);
-  font-size:12px; letter-spacing:.06em; padding:10px 16px; border-radius:8px;
-  box-shadow:0 10px 20px -8px rgba(0,0,0,.4);
-}
 @media (max-width: 900px){
   .hero-inner{ grid-template-columns:1fr; gap:40px; }
   /* order:-1 faisait passer la plaque décorative AU-DESSUS du h1 : sur mobile,
      le premier écran ne montrait qu'un logo, titre et CTA sous la ligne de flottaison. */
   .hero-visual{ order:0; }
-  .hero-plate{ max-width:300px; }
   .machine-plate{ margin-left:0; max-width:none; }
   .hero{ padding-top:118px; padding-bottom:72px; }
 }
@@ -672,8 +643,6 @@ h3, .h3{
 .reco-icon{ width:40px; height:40px; color:var(--navy-800); }
 .reco-card h3{ font-size:19px; }
 .reco-desc{ color:var(--ink-soft); font-size:15px; line-height:1.6; flex:1; }
-.reco-meta{ display:flex; flex-direction:column; gap:6px; font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint); border-top:1px dashed var(--line); padding-top:14px; }
-.reco-meta span b{ color:var(--ink); font-weight:600; }
 .reco-link{ display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:14px; color:var(--navy-900); margin-top:4px; }
 .reco-link svg{ width:14px; height:14px; transition:transform var(--dur-fast) var(--ease-out-back); }
 .reco-card:hover .reco-link svg{ transform:translateX(4px); }
@@ -877,15 +846,8 @@ h3, .h3{
   box-shadow:var(--shadow-lift);
 }
 .monogram-plate img{ width:60%; }
-.timeline{ display:flex; flex-direction:column; }
-.timeline-item{ display:grid; grid-template-columns:110px 1fr; gap:24px; padding:24px 0; border-top:1px solid var(--line); }
-.timeline-item:first-child{ border-top:0; }
-.timeline-year{ font-family:var(--font-mono); font-weight:600; color:var(--spark-600); }
 .value-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
 @media (max-width:780px){ .value-grid{ grid-template-columns:1fr; } }
-.value-grid-4{ grid-template-columns:repeat(4,1fr); }
-@media (max-width:900px){ .value-grid-4{ grid-template-columns:repeat(2,1fr); } }
-@media (max-width:560px){ .value-grid-4{ grid-template-columns:1fr; } }
 .value-card{ padding:26px; border:1px solid var(--line); border-radius:var(--radius-m); background:var(--white); }
 .value-card .n{ font-family:var(--font-mono); color:var(--ink-faint); font-size:13px; }
 
@@ -925,7 +887,6 @@ h3, .h3{
 .page-hero :focus-visible,
 .site-footer :focus-visible,
 .facts-band :focus-visible,
-.schema-section :focus-visible,
 .showcase-3d :focus-visible,
 .mobile-nav :focus-visible{ outline-color:var(--spark-500); }
 
@@ -947,12 +908,6 @@ h3, .h3{
    de messagerie. */
 .btn:disabled, .btn[aria-disabled="true"]{
   opacity:.5; cursor:not-allowed; transform:none; box-shadow:none;
-}
-
-.divider-plate{
-  height:64px; background:
-    repeating-linear-gradient(-45deg, var(--spark-500) 0 8px, transparent 8px 16px);
-  opacity:.08;
 }
 .page-hero{
   background:linear-gradient(158deg, var(--navy-900) 0%, var(--navy-990) 78%);
@@ -1224,26 +1179,6 @@ body.nav-is-open .read-progress{ opacity:0; }
   color:var(--ink-faint); font-style:italic;
 }
 
-/* Marqueur d'information manquante.
-   Volontairement voyant : une mention légale incomplète mise en ligne sans
-   qu'on s'en aperçoive est pire que pas de page du tout. Le script de
-   publication compte ces marqueurs et le signale. */
-/* Volontairement neutre (gris, pas --spark) : un badge en couleur de marque
-   pour un champ manquant se lit comme un élément de design assumé, pas comme
-   un repère de chantier à ne jamais laisser en ligne tel quel. */
-.todo{
-  background:#EDEEF0; color:#646D78;
-  font-family:var(--font-mono); font-size:12px; letter-spacing:.04em;
-  text-transform:uppercase; padding:3px 8px; border-radius:4px;
-  border:1px dashed #B7BCC2; white-space:nowrap;
-}
-
-/* ==========================================================================
-   Schémas techniques animés — mécanismes générés par js/schemas.js
-   ========================================================================== */
-
-.schema-section{ background:var(--navy-990); color:#fff; padding:72px 0 84px; position:relative; overflow:hidden; }
-
 .schema-grid{
   display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:44px;
 }
@@ -1279,8 +1214,6 @@ body.nav-is-open .read-progress{ opacity:0; }
 }
 .schema-figure svg{ display:block; width:100%; height:auto; }
 
-.schema-desc{ color:var(--dark-body); font-size:14.5px; line-height:1.6; margin:16px 0 0; }
-
 /* Matrice de caractéristiques : une grille de données, pas des cartons. */
 .schema-specs{ display:grid; grid-template-columns:minmax(96px,auto) 1fr; gap:0 20px; margin:16px 0 0; }
 .schema-specs dt{
@@ -1296,49 +1229,6 @@ body.nav-is-open .read-progress{ opacity:0; }
   .schema-specs{ grid-template-columns:1fr; }
   .schema-specs dd{ border-top:0; padding-top:0; padding-bottom:12px; }
 }
-
-.schema-legend{
-  display:flex; gap:20px; flex-wrap:wrap; margin-top:14px;
-  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.06em;
-  text-transform:uppercase; color:#8FA0B2;
-}
-.schema-legend span{ display:flex; align-items:center; gap:7px; }
-.legend-swatch{ width:20px; height:0; border-top:2px dashed var(--spark-500); flex:none; }
-.legend-swatch.solid{ border-top:2px solid #C4CDD6; }
-
-.schema-note{
-  margin-top:40px; padding:20px 22px;
-  background:rgba(238,113,17,.07); border:1px solid rgba(238,113,17,.28);
-  border-radius:6px; color:var(--dark-body); font-size:14.5px; line-height:1.65;
-}
-.schema-note strong{ color:#fff; }
-
-.proto-tag{
-  position:absolute; top:14px; right:16px;
-  font-family:var(--font-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
-  color:#8FA0B2; border:1px dashed rgba(255,255,255,.22); padding:3px 9px; border-radius:4px;
-}
-
-/* Séparateur de série : repère mono, filet de part et d'autre. */
-.schema-rule{
-  display:flex; align-items:center; gap:16px; margin:52px 0 22px;
-  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--spark-500);
-}
-.schema-rule::before, .schema-rule::after{
-  content:""; height:1px; background:var(--line-on-dark); flex:1;
-}
-.schema-rule::before{ flex:0 0 28px; }
-.legend-swatch.pin{
-  width:9px; height:9px; border:0; border-radius:50%;
-  background:#060E18; box-shadow:0 0 0 2px var(--spark-500) inset;
-}
-
-/* Bandeau sombre inséré dans une section claire : les schémas conservent leur
-   fond de « plaque technique » sans qu'on ait à redessiner leurs couleurs. */
-.schema-strip .schema-grid{ margin-top:20px; }
-@media (max-width:640px){ .schema-strip{ padding:20px 16px 24px; } }
-
 /* ==========================================================================
    Page formations — fiche technique par recommandation
    Remplace les quatre cartons blancs identiques par une plaque à chanfrein
@@ -1376,7 +1266,6 @@ body.nav-is-open .read-progress{ opacity:0; }
   .reco-plate{ padding:22px 20px 18px; }
 }
 
-
 /* Confirmation d'envoi du formulaire. Masquée tant que rien n'a été soumis :
    elle n'existe dans le document qu'une fois le message préparé. */
 .form-status{
@@ -1405,9 +1294,6 @@ body.nav-is-open .read-progress{ opacity:0; }
 .h3-compact{ font-size:16px; letter-spacing:.02em; }
 
 .footer-logo{ height:52px; width:auto; margin-bottom:14px; }
-/* Chapô de tête de section : plus large que le .lede par défaut, qui est calé
-   sur 56ch pour le confort de lecture d'un paragraphe isolé. */
-.lede-wide{ margin-bottom:32px; max-width:none; }
 
 /* ---------- page Formations : deux colonnes ----------
    Le ruban vertical d'origine (titre, fiche pleine largeur, note, bouton, bande
