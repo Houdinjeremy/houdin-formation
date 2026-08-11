@@ -1951,7 +1951,10 @@ body.mm-open .site-header{ z-index:130; }
 /* Deux colonnes et non quatre : à 280 px de large, le nom d'une recommandation
    passe sur trois lignes et la tuile ne dit plus rien d'utile. */
 .cat-grille{ display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
-@media (max-width:820px){ .cat-grille{ grid-template-columns:1fr; } }
+/* 620 et non 820 : à 768 px de large, deux colonnes donnent des tuiles de
+   348 px, ce qui reste confortable. Une colonne unique les étirait sur 720 px
+   pour trois lignes de texte, et l'œil perdait le début de la ligne suivante. */
+@media (max-width:620px){ .cat-grille{ grid-template-columns:1fr; } }
 
 .cat-tuile{
   display:flex; flex-direction:column; gap:12px;
@@ -2135,4 +2138,97 @@ body.mm-open .site-header{ z-index:130; }
   .catalogue:has(.cat-vedette:hover) .cat-grille,
   .cat-grille:has(.cat-tuile:hover) .cat-tuile:not(:hover),
   .cat-table:has(.cat-rang:hover) .cat-rang:not(:hover){ filter:none; opacity:.5; }
+}
+
+/* ==========================================================================
+   Petits écrans : rythme, cibles tactiles, retour au toucher
+   --------------------------------------------------------------------------
+   Trois défauts mesurés sur un écran de 375 px, et non supposés :
+
+     1. Les sections gardaient leurs 96 px de padding haut et bas, soit 192 px
+        de vide entre deux sections : près d'un quart d'écran à faire défiler
+        pour ne rien lire. Le blanc qui aère un écran de 1440 px encombre un
+        écran de poche.
+
+     2. Plusieurs cibles tombaient sous 44 px de haut : 38 px pour les codes de
+        formation du menu, 41 px pour « Voir le programme ». C'est le seuil en
+        dessous duquel un doigt rate sa cible, et il ne se voit pas à la souris.
+
+     3. Aucun retour au toucher. Le survol, qui désigne l'élément visé sur un
+        écran d'ordinateur, n'existe pas ici : sans rien à la place, le doigt
+        appuie et il ne se passe rien jusqu'au changement de page.
+   ========================================================================== */
+
+@media (max-width: 700px){
+
+  /* ---- rythme vertical ---- */
+  .section{ padding:56px 0; }
+  .section-tight{ padding:40px 0; }
+  .section-head{ margin-bottom:28px; }
+  .cat-vedette{ margin-bottom:18px; padding:24px 20px 22px; }
+  .cat-grille{ gap:16px; }
+  .cat-tuile{ padding:22px 20px 20px; }
+  .cat-table{ margin-top:0; }
+  .cat-rang{ padding:22px 20px; }
+  .cat-rang.is-vedette{ margin-block:10px; }
+  .choix{ padding:20px 0; }
+  .prog-cols{ gap:30px; }
+  .deroule-layout{ gap:32px; }
+  .faq-item summary{ padding:18px 0; }
+
+  /* ---- cibles tactiles ----
+     44 px de haut au minimum, obtenus par le padding : agrandir la police
+     aurait déséquilibré la typographie pour un problème qui n'est pas de
+     lisibilité mais de précision du doigt. */
+  .mn-liste a{ padding:12px 16px; }
+  .tuile-lien{ padding:16px 0 6px; }
+  .choix-liens a{ padding:11px 16px; }
+  .autres-liste a{ padding:18px; }
+  .rail{ display:none; }
+
+  /* ---- retour au toucher ----
+     Remplace le survol, absent sur écran tactile. Le bloc s'enfonce très
+     légèrement sous le doigt : le geste est accusé avant même que la page ne
+     change, ce qui évite le double appui par doute. */
+  .cat-tuile:active,
+  .cat-vedette:active,
+  .autres-liste a:active,
+  .choix-liens a:active{
+    transform:scale(.985);
+    transition-duration:90ms;
+  }
+  .cat-rang:not(.is-vedette):active{
+    background:var(--white);
+    box-shadow:var(--shadow-card);
+  }
+}
+
+/* Sous 400 px, le padding latéral de 24 px prend 13 % de la largeur utile.
+   Il descend à 18, et les blocs qui débordaient de 24 suivent, sans quoi ils
+   dépasseraient le conteneur. */
+@media (max-width: 400px){
+  .wrap{ padding:0 18px; }
+  .cat-rang{ padding:22px 18px; margin-inline:-18px; }
+  .cat-rang::after{ left:18px; right:18px; }
+  .cat-vedette{ padding:22px 18px 20px; }
+  .cat-tuile{ padding:20px 18px 18px; }
+}
+
+/* Palier tablette : entre 700 et 1000 px, l'écran n'est ni un téléphone ni un
+   bureau. Les 96 px de padding y restent trop généreux, sans qu'il faille
+   descendre aux 56 px du mobile. */
+@media (min-width: 701px) and (max-width: 1000px){
+  .section{ padding:72px 0; }
+  .section-head{ margin-bottom:36px; }
+}
+
+/* Les boutons portent `white-space:nowrap`, ce qui leur va tant que le libellé
+   est court. « Demander un devis habilitation BT », le plus long du site,
+   réclamait 333 px sur un écran de 320 et poussait toute la page hors cadre.
+   Sous 420 px, le texte peut donc revenir à la ligne : mieux vaut un bouton sur
+   deux lignes qu'une page entière décalée vers la droite. */
+@media (max-width: 420px){
+  .btn{ white-space:normal; text-align:center; }
+  .form-hero-actions .btn,
+  .cta-actions .btn{ width:100%; justify-content:center; }
 }
