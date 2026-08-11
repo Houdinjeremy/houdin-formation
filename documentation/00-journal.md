@@ -722,3 +722,37 @@ poussé ni déployé** — titres/descriptions recalibrés, Twitter Cards, JSON-
 BreadcrumbList, SVG décoratifs en `aria-hidden`, contrastes AA, en-têtes de
 sécurité et CSP en Report-Only dans `vercel.json`, `404.html`. À relire et
 fusionner manuellement — non vérifié par cette session.
+
+## 2026-08-11 — Une seule chaîne de publication : GitHub → Vercel
+
+Demande du client : supprimer tout ce qui passait par Cloudflare, ne garder que
+**GitHub pour le versionnement et le `git push`, Vercel pour l'hébergement**.
+
+Ce qui a été retiré :
+
+- **`scripts/build-demo.sh`** (le dossier `scripts/` disparaît avec lui). Il
+  fabriquait `dist/` pour Cloudflare Pages : `noindex` injecté dans les pages,
+  `robots.txt` en `Disallow: /`, fichier `_headers` au format Cloudflare, et
+  l'archive `houdin-formation-demo.zip`. Rien de tout cela n'a jamais atteint la
+  production — Vercel publie la racine (constat du 2026-08-10). Le script était
+  devenu du poids mort, et un **piège** : le jour où ce `dist/` serait arrivé
+  chez Vercel, son `robots.txt` en `Disallow: /` aurait désindexé le site.
+- **`outputDirectory: "dist"`** dans `vercel.json` — la clé qui pointait vers ce
+  dossier fantôme. Retrait sans effet sur la production, qui l'ignorait déjà ;
+  la configuration décrit enfin ce qui se passe réellement.
+- **`dist/` et `houdin-formation-demo.zip`** de `.gitignore`, **`dist`** de
+  `.vercelignore` : plus rien ne les crée.
+- Les commentaires devenus faux dans `sitemap.xml` (« absent de `dist/` ») et
+  `css/fonts.css` (« régénérer : voir `scripts/build-demo.sh` » — le script ne
+  régénérait pas les polices). `documentation/06-schema-bdd.md` ne présente plus
+  Cloudflare Pages comme l'hébergement en place.
+
+L'en-tête de `.vercelignore` énonce maintenant la chaîne en clair : push sur
+`main` → Vercel déploie la racine, pas de build, pas de dossier de sortie.
+
+**Le point à trancher par le client**, hérité de l'entrée du 2026-08-10 : le
+plan **Vercel Hobby exclut l'usage commercial**. C'était l'argument qui avait
+fait préparer Cloudflare Pages. En concentrant tout sur Vercel, ce filet
+disparaît — il faut passer au plan **Pro** (~20 $/mois) pour un site
+commercial. Rien n'est cassé aujourd'hui, mais la conformité aux conditions
+d'utilisation de Vercel n'est pas acquise.

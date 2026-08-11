@@ -5,7 +5,7 @@
    recommande l'auto-hébergement, et des juridictions européennes ont déjà
    sanctionné la pratique inverse.
    Sous-ensembles latin et latin-ext uniquement — le reste ne sert à rien ici.
-   Régénérer : voir scripts/build-demo.sh et l'historique git. */
+   Les fichiers .woff2 vivent dans assets/fonts/ ; voir l'historique git. */
 
 /* Anton 400 — latin-ext */
 @font-face {

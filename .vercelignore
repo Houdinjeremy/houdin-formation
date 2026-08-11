@@ -1,10 +1,10 @@
 # Ce qui n'a rien à faire en ligne.
 #
-# ATTENTION — vérifié le 2026-08-10 : malgré `outputDirectory: dist` dans
-# vercel.json, Vercel publie la RACINE et non dist/, faute de commande de
-# build. La balise noindex et le robots.txt injectés par build-demo.sh ne sont
-# donc jamais servis ; seul l'en-tête X-Robots-Tag de vercel.json bloque
-# l'indexation. Tout ce qui n'est pas listé ici est public.
+# Chaîne de publication, une seule et unique : on pousse sur GitHub
+# (Houdinjeremy/houdin-formation, branche main), Vercel voit le push et
+# déploie. Pas de commande de build, pas de dossier de sortie : Vercel publie
+# la RACINE du dépôt telle quelle. Tout ce qui n'est PAS listé ci-dessous est
+# donc public. Le site est indexable, ce qui est bien l'objectif en production.
 .claude
 documentation
 scripts
@@ -15,7 +15,6 @@ sauvegarde-avant-refonte-*
 
 # Dossiers de travail. design/ et design02/ ont été sortis du dépôt le
 # 2026-08-10 (voir ../JeremyHoudin-archives/) : ce qui n'est plus ici ne peut
-# plus être publié par erreur. Les lignes restantes protègent ce qui se
-# recrée tout seul ou qui n'est pas encore versionné.
-dist
+# plus être publié par erreur. La ligne restante protège un dossier de travail
+# non versionné.
 Prompt

@@ -13,10 +13,9 @@ Ce n'est pas un détail de vocabulaire. Ajouter authentification et base de
 données, ce n'est pas une évolution du site actuel : c'est une **reconstruction**
 sous framework. Trois conséquences concrètes :
 
-1. **L'hébergement change.** Cloudflare Pages, qu'on vient de préparer, sert des
-   fichiers statiques. Une application avec base de données a besoin d'un
-   véritable exécutant serveur. Le plan gratuit de Vercel étant réservé à
-   l'usage non commercial, il faudra un hébergement payant.
+1. **L'hébergement change.** Vercel sert aujourd'hui des fichiers statiques.
+   Une application avec base de données a besoin d'un véritable exécutant
+   serveur, et donc d'un plan payant.
 2. **Un coût récurrent apparaît**, là où le site actuel peut tourner à zéro euro
    par mois. Base de données et hébergement applicatif, à provisionner avec le
    client.
