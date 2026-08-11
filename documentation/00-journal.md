@@ -676,3 +676,49 @@ règle `.feature p a` pour sa lisibilité sur fond sombre). Le commentaire
 placeholder de la section Financement reste en place ; reste seulement à
 l'écrire, et à corriger le bloc Qualiopi de `mentions-legales.html`
 (actuellement en commentaire lui aussi), dès la réponse du client.
+
+## 2026-08-10 (nuit) — Corrections critiques, Web3Forms, chantier parallèle
+
+**Deux commits du client en direct sur `main`**, pendant cette session : mise à
+jour de l'adresse mail (`jeremyhoudin95@gmail.com` → `jeremy@houdin-formation.com`,
+dans `js/main.js`) et une tentative de correction dans `contact.html` qui a
+mal tourné — `<head>` remplacé par `<hjeremy@houdin-formation.comead>`,
+**publié en production le temps de la corriger**. Balise restaurée, adresse
+harmonisée sur les 9 pages (lien `mailto:`, texte affiché avec `<wbr>`,
+JSON-LD). Un troisième commit du client a introduit une seconde adresse,
+`jeremy@houdin-formation.fr` (`.fr`) dans le JSON-LD d'`index.html` — conflit
+de fusion, tranché par le client en faveur du `.com` déjà utilisé partout
+ailleurs.
+
+**Vercel Speed Insights** intégré en HTML pur (les deux balises `<script>`
+recommandées par la doc officielle, route `/_vercel/speed-insights/script.js`)
+sur les 9 pages — pas de `npm install`, le projet reste sans build. Une PR
+auto-générée par l'intégration Vercel (`vercel/install-vercel-speed-insights-*`)
+propose une variante par CDN tiers (`cdn.jsdelivr.net`) : **volontairement pas
+fusionnée**, contraire à la logique du projet (tout est vendoré en local,
+cf. `model-viewer.min.js`).
+
+**Formulaire de contact** : le `mailto:` ne permettait de vérifier ni l'envoi
+ni la réception — remplacé par Web3Forms (clé d'accès obtenue par le client,
+publique côté service, pas un secret). Testé de bout en bout dans un vrai
+navigateur : succès confirmé côté API. `js/main.js` gère maintenant l'état
+(en cours / envoyé / échec) au lieu d'ouvrir un client mail local.
+
+**Skills SEO installées**, après vérification du code source (pas d'`eval`,
+pas d'appel réseau suspect) : `seo-audit-full` (copié dans
+`.claude/skills/`, scripts Python) et `superseo-skills` (marketplace
+officielle, aucun script exécutable — que des `SKILL.md`). `gsc-mcp` et
+`local-seo-skills` écartés : le premier demande un projet Google Cloud avec
+identifiants OAuth, le second embarque de l'automatisation autonome liée à
+une plateforme commerciale tierce — trop engageant pour une installation à la
+volée.
+
+**Chantier parallèle.** Une seconde session Claude Code a travaillé la même
+nuit sur la branche `optim-nocturne-2026-08-10`, dans un worktree isolé
+(`01-Site-Web-optim-nocturne/`), sur mandat du client : SEO technique,
+performance, accessibilité RGAA/WCAG. Coordination faite en direct entre les
+deux sessions pour éviter les conflits. Résultat annoncé : 11 commits, **rien
+poussé ni déployé** — titres/descriptions recalibrés, Twitter Cards, JSON-LD
+BreadcrumbList, SVG décoratifs en `aria-hidden`, contrastes AA, en-têtes de
+sécurité et CSP en Report-Only dans `vercel.json`, `404.html`. À relire et
+fusionner manuellement — non vérifié par cette session.
