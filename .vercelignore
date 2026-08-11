@@ -13,8 +13,9 @@ sauvegarde-avant-refonte-*
 *.zip
 .DS_Store
 
-# Dossiers de travail : ils étaient en ligne et accessibles par URL directe.
-design
-design02
+# Dossiers de travail. design/ et design02/ ont été sortis du dépôt le
+# 2026-08-10 (voir ../JeremyHoudin-archives/) : ce qui n'est plus ici ne peut
+# plus être publié par erreur. Les lignes restantes protègent ce qui se
+# recrée tout seul ou qui n'est pas encore versionné.
 dist
 Prompt
