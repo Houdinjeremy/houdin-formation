@@ -403,9 +403,15 @@ h3, .h3{
 }
 .footer-brand img{ height:40px; margin-bottom:14px; }
 .footer-brand p{ font-size:14px; line-height:1.7; max-width:34ch; color:#8FA0AF; }
-.footer-col h4{
+/* Ces titres de colonnes etaient des h4 : le document passait donc de h2 a h4
+   sans h3, un saut de niveau que le RGAA refuse (9.1.3). Ce sont des sections
+   de premier niveau du pied de page, pas des sous-sections du dernier titre du
+   contenu : h2 est le niveau juste. `font-weight` et `line-height` sont repris
+   explicitement, sinon la regle `h2, .h2` degraisserait le texte et le tasserait. */
+.footer-col h2{
   font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
   color:var(--spark-500); margin-bottom:16px;
+  font-weight:700; line-height:inherit;
 }
 /* `jeremyhoudin95@gmail.com` est un mot insécable de près de 180 px : dans une
    colonne de cette largeur il débordait, quelle que soit la taille d'écran.
