@@ -5,12 +5,42 @@
   var burger = document.getElementById("burgerBtn");
   var mobileNav = document.getElementById("mobileNav");
   if (burger && mobileNav) {
+    /* L'overlay est opaque, mais la tabulation continuait derrière lui : après
+       le dernier lien du menu, le focus repartait dans la page masquée, sur des
+       éléments invisibles. On neutralise tout ce qui n'est pas le menu, en
+       remontant de frère en frère jusqu'au body. `inert` retire d'un coup le
+       focus, le pointeur et la restitution aux lecteurs d'écran. */
+    var gelerFond = function(open){
+      var noeud = mobileNav;
+      while (noeud && noeud !== document.body) {
+        var parent = noeud.parentNode;
+        if (!parent) break;
+        Array.prototype.forEach.call(parent.children, function(frere){
+          if (frere === noeud) return;
+          if (open) {
+            // Ne jamais retirer un inert que l'on n'a pas posé soi-même.
+            if (!frere.hasAttribute("inert")) {
+              frere.setAttribute("inert", "");
+              frere.setAttribute("data-inert-menu", "");
+            }
+          } else if (frere.hasAttribute("data-inert-menu")) {
+            frere.removeAttribute("inert");
+            frere.removeAttribute("data-inert-menu");
+          }
+        });
+        noeud = parent;
+      }
+    };
+
     var setNav = function(open){
       mobileNav.classList.toggle("is-open", open);
       burger.setAttribute("aria-expanded", open ? "true" : "false");
+      // Le libellé décrit l'action à venir, il doit donc suivre l'état.
+      burger.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
       // L'overlay couvre l'écran : on gèle le défilement de la page dessous.
       document.body.style.overflow = open ? "hidden" : "";
       document.body.classList.toggle("nav-is-open", open);
+      gelerFond(open);
     };
     burger.addEventListener("click", function(){
       setNav(!mobileNav.classList.contains("is-open"));
@@ -49,10 +79,17 @@
   // Sticky header shadow on scroll
   var header = document.getElementById("siteHeader");
   if (header) {
+    var enAttente = false;
     var onScroll = function(){
+      enAttente = false;
       header.classList.toggle("is-scrolled", window.scrollY > 24);
     };
-    document.addEventListener("scroll", onScroll, { passive:true });
+    /* Même regroupement par frame que la barre de lecture et la parallaxe plus
+       bas : le header est collant et flouté, un recalcul de style par événement
+       de défilement se paie à chaque frame. */
+    document.addEventListener("scroll", function(){
+      if (!enAttente) { enAttente = true; requestAnimationFrame(onScroll); }
+    }, { passive:true });
     onScroll();
   }
 
