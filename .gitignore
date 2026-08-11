@@ -15,9 +15,11 @@ documentation/transcription/session-brute.jsonl.gz
 # Skills installées localement (paquets tiers, pas du code projet).
 # Exception : google-seo est écrite pour ce projet précis, pas un paquet
 # tiers — elle reste versionnée comme les agents dans .claude/agents/.
-.claude/skills/
-!.claude/skills/google-seo/
-!.claude/skills/google-seo/**
+# `skills/*` (et non `skills/`) est nécessaire pour que la négation
+# suivante fonctionne : un dossier exclu dans son ensemble ne peut plus
+# être réintégré par un `!` sur un sous-chemin, faute pour git d'y descendre.
+.claude/skills/*
+!.claude/skills/google-seo
 
 # Métadonnées locales de la CLI Vercel
 .vercel
