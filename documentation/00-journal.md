@@ -585,3 +585,43 @@ côté), catégories dépliables au chevron, et mise au point sur le choix en co
 oppose maintenant que les mentions légales sont complètes, c'est une décision du
 client. `sitemap.xml` est déjà servi en ligne. Et `design02/`, la piste « langage
 Apple », n'a que deux pages sur sept.
+
+## 2026-08-10 (fin) — Audit externe, ouverture à l'indexation, déménagement
+
+**Le site est ouvert à Google.** L'en-tête `X-Robots-Tag: noindex, nofollow` est
+retiré de `vercel.json`. Il protégeait une démonstration à laquelle manquaient
+quatre mentions légales ; celles-ci étant renseignées et vérifiées, la consigne
+n'avait plus d'objet. Vérifié en production : plus aucune ligne robots dans la
+réponse. Reste à soumettre le sitemap dans la Search Console — c'est ce qui fait
+passer le délai de plusieurs semaines à quelques jours.
+
+**Audit externe traité** (`documentation/Houdin-Formation-Audit-Complet…pdf`,
+non versionné, contenu commercial et dépôt public).
+
+Le seul point à risque juridique était une contradiction interne : l'accueil
+promettait « vos collaborateurs repartent avec un certificat CACES® » quand la
+page confidentialité indique que le test part chez un organisme testeur tiers.
+Seul un OTC délivre un CACES®, et la réglementation interdit l'usage commercial
+de la marque à qui ne l'est pas. Formulation retenue — « le test est organisé
+avec un organisme testeur certifié » — vraie que Jérémy soit OTC ou non : la
+contradiction tombe sans attendre sa réponse, mais la formulation reste à lui
+faire valider.
+
+Cache posé : un an pour `/assets/*`, une heure pour CSS et JS, dont le nom n'est
+pas haché. Tout était en `max-age=0`. Image de partage ramenée de 121 à 80 Ko,
+sans conversion WebP : elle n'est jamais chargée par un visiteur, seulement par
+les robots de partage, donc hors du chemin critique.
+
+**Un faux positif de l'audit**, à retenir : la coquille « un iers » n'existe pas.
+La page dit « vers un tiers », le mot coupé par un retour à la ligne — l'outil
+d'extraction a perdu le « t ». Vérifier dans le fichier, jamais dans le rapport.
+
+**Ce qui dépend du client**, par ordre d'urgence : statut OTC, plan Vercel
+(l'offre Hobby exclut l'usage commercial — Cloudflare Pages est gratuit et
+l'autorise), un formulaire qui envoie vraiment, une adresse au domaine, Qualiopi,
+et des témoignages.
+
+**Déménagement.** Le dépôt vit désormais dans
+`~/Documents/ClaudeCode/Clients/Houdin-Formation/01-Site-Web/`, déplacé par une
+autre session. `.git`, `.vercel` et `.claude` sont intacts, le remote inchangé :
+Vercel suivant GitHub et non le chemin local, le déploiement n'est pas affecté.
