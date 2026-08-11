@@ -199,8 +199,12 @@ h3, .h3{
 .btn-outline:hover{ box-shadow:inset 0 0 0 1.5px var(--navy-900); transform:translateY(-2px); }
 .on-dark .btn-outline{ color:var(--white); box-shadow:inset 0 0 0 1.5px var(--line-on-dark); }
 .on-dark .btn-outline:hover{ box-shadow:inset 0 0 0 1.5px #fff; }
-.hero .btn-outline{ color:var(--white); box-shadow:inset 0 0 0 1.5px var(--line-on-dark); }
-.hero .btn-outline:hover{ box-shadow:inset 0 0 0 1.5px #fff; }
+/* .page-hero au même titre que .hero : les deux sont des aplats navy. Sans
+   cette ligne, le bouton secondaire des pages de formation héritait de la
+   variante claire, soit du navy-900 sur du navy-900 (1,2:1) : le numéro de
+   téléphone était présent, cliquable, et invisible. */
+.hero .btn-outline, .page-hero .btn-outline{ color:var(--white); box-shadow:inset 0 0 0 1.5px var(--line-on-dark); }
+.hero .btn-outline:hover, .page-hero .btn-outline:hover{ box-shadow:inset 0 0 0 1.5px #fff; }
 .btn-small{ padding:10px 18px; font-size:13px; }
 .btn-block{ width:100%; justify-content:center; }
 .btn:hover svg{ transform:translateX(4px); }
@@ -922,7 +926,8 @@ h3, .h3{
   box-shadow:0 0 0 4px var(--navy-990);
 }
 .on-dark .btn:focus-visible,
-.hero .btn:focus-visible{ box-shadow:0 0 0 4px var(--spark-500); }
+.hero .btn:focus-visible,
+.page-hero .btn:focus-visible{ box-shadow:0 0 0 4px var(--spark-500); }
 
 /* Huitième état, jusqu'ici absent : le bouton d'envoi n'avait aucune apparence
    désactivée, et rien n'empêchait un second clic pendant l'ouverture du client
@@ -950,11 +955,9 @@ h3, .h3{
 @media (max-width:900px){ .page-hero{ padding:112px 0 52px; } }
 /* Le header reste sticky/fixed par-dessus : sans ça, une ancre comme
    formations.html#r482 arrive avec le badge et le titre masqués dessous. */
-:target,
-#r482, #r485, #r486, #r489, #bt{ scroll-margin-top:158px; }
+:target{ scroll-margin-top:158px; }
 @media (max-width:880px){
-  :target,
-  #r482, #r485, #r486, #r489, #bt{ scroll-margin-top:140px; }
+  :target{ scroll-margin-top:140px; }
 }
 /* La grille vivait dans un style inline sur contact.html, que seul un !important
    pouvait contrer. Elle est ici, donc les media queries fonctionnent normalement. */
@@ -1572,7 +1575,7 @@ body.rail-on .rail{ opacity:1; pointer-events:auto; }
 
 .megamenu{
   position:absolute; top:calc(100% + 18px); left:50%;
-  width:min(880px, calc(100vw - 48px));
+  width:min(940px, calc(100vw - 48px));
   transform:translate(-50%, -10px);
   background:var(--paper);
   border:1px solid var(--paper-line);
@@ -1597,25 +1600,38 @@ body.rail-on .rail{ opacity:1; pointer-events:auto; }
   content:""; position:absolute; left:0; right:0; top:-20px; height:20px;
 }
 
-.mm-grid{
-  display:grid; grid-template-columns:repeat(5, 1fr); gap:10px;
-}
+/* Une entrée par ligne, et non cinq colonnes : la description ajoutée sous le
+   nom demande de la largeur, pas de la hauteur. À 176 px de colonne, « Conducteur
+   accompagnant, catégories 1 et 2 » tombait sur quatre lignes. */
+.mm-grid{ display:flex; flex-direction:column; gap:2px; }
 .mm-grid a{
-  display:flex; flex-direction:column; gap:8px;
-  padding:16px 14px 18px; border-radius:10px;
+  display:grid; grid-template-columns:auto minmax(0,1fr) minmax(0,1.05fr);
+  align-items:center; gap:16px;
+  padding:12px 14px; border-radius:10px;
   transition:background var(--dur-fast) var(--ease-out);
 }
 .mm-grid a:hover, .mm-grid a:focus-visible{ background:var(--white); }
-.mm-icon{ width:26px; height:26px; color:var(--navy-800); }
+.mm-icon{ width:26px; height:26px; color:var(--navy-800); flex:none; }
 .mm-grid a:hover .mm-icon{ color:var(--spark-600); }
+.mm-texte{ display:flex; flex-direction:column; gap:3px; min-width:0; }
 .mm-code{
   font-family:var(--font-mono); font-size:11px; font-weight:600;
   letter-spacing:.09em; color:var(--spark-700);
 }
 .mm-nom{
   font-family:var(--font-display); text-transform:uppercase;
-  font-size:14.5px; line-height:1.2; color:var(--ink);
-  text-wrap:balance;
+  font-size:15px; line-height:1.2; color:var(--ink);
+}
+/* La description reste en retrait : elle départage deux recommandations
+   voisines, elle ne se lit pas d'abord. */
+.mm-note{
+  font-size:13px; line-height:1.45; color:var(--ink-soft); min-width:0;
+}
+/* Sous 1080 px la troisième colonne étrangle les deux autres : la description
+   passe sous le nom plutôt que de réduire le titre à un mot par ligne. */
+@media (max-width:1080px){
+  .mm-grid a{ grid-template-columns:auto minmax(0,1fr); }
+  .mm-note{ grid-column:2; margin-top:2px; }
 }
 .mm-pied{
   display:flex; justify-content:space-between; align-items:center; gap:16px;
@@ -1656,3 +1672,457 @@ body.mm-open .site-header{ z-index:130; }
 @media (prefers-reduced-motion: reduce){
   .mm-voile{ transition:opacity .01ms; }
 }
+
+/* ==========================================================================
+   Pages de formation (une par recommandation)
+   --------------------------------------------------------------------------
+   Gabarit commun aux cinq recommandations. La page des formations présente et
+   oriente ; celle-ci répond, section par section, aux questions qu'un
+   responsable se pose avant de demander un devis : quelles catégories, quel
+   programme, quels prérequis, que vaut le certificat.
+   ========================================================================== */
+
+/* ---------- en-tête de page ----------
+   Deux colonnes de rôles distincts, comme sur la page des formations : à
+   gauche ce qui situe et amène à l'action, à droite la fiche que le lecteur
+   vient chercher. Sous 900 px la fiche passe dessous, jamais à côté : à
+   moins de 300 px de large, ses deux colonnes de définitions se cassent. */
+.form-hero-inner{
+  display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  gap:52px; align-items:start;
+}
+@media (max-width:900px){
+  .form-hero-inner{ grid-template-columns:1fr; gap:34px; }
+}
+
+/* Le code de la recommandation en Anton, à la taille d'un titre : c'est le
+   repère que cherche l'œil sur une page de catalogue, et le seul élément
+   commun aux cinq pages. */
+.form-code{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:clamp(30px,4.4vw,44px); line-height:1; letter-spacing:.01em;
+  color:var(--spark-500); margin-bottom:10px;
+}
+.form-hero h1{ text-wrap:balance; }
+.form-hero-actions{
+  display:flex; gap:14px; flex-wrap:wrap; margin-top:30px;
+}
+
+/* Fiche d'identité : la plaque constructeur du site, en version sombre. Le
+   filet orange en pied remplace le filet navy de la version claire, qui
+   disparaîtrait sur ce fond. */
+.fiche-plate{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line-on-dark);
+  border-bottom:3px solid var(--spark-500);
+  border-radius:26px 6px 6px 6px;
+  padding:24px 26px 22px;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.fiche-head{
+  display:flex; justify-content:space-between; align-items:baseline; gap:14px;
+  padding-bottom:16px; border-bottom:1px solid var(--line-on-dark);
+  flex-wrap:wrap;
+}
+.fiche-head strong{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:16px; letter-spacing:.02em; color:#fff; font-weight:400;
+}
+.fiche-head span{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.08em;
+  color:var(--spark-500);
+}
+/* Même matrice que .reco-specs, calée pour un fond sombre. gap:0 : la
+   gouttière briserait le filet pointillé au milieu de chaque ligne. */
+.fiche-specs{
+  display:grid; grid-template-columns:minmax(96px,auto) 1fr; gap:0; margin:16px 0 0;
+}
+.fiche-specs dt{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:#8FA0AF;
+  padding:13px 22px 13px 0; border-top:1px dashed var(--line-on-dark);
+}
+.fiche-specs dd{
+  margin:0; padding:13px 0; border-top:1px dashed var(--line-on-dark);
+  font-size:14.5px; line-height:1.5; color:#fff;
+}
+.fiche-specs dt:first-of-type, .fiche-specs dd:first-of-type{ border-top:0; padding-top:0; }
+.fiche-note{
+  margin-top:18px; padding-top:14px; border-top:1px solid var(--line-on-dark);
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.03em;
+  color:var(--dark-body);
+}
+@media (max-width:520px){
+  .fiche-specs{ grid-template-columns:1fr; }
+  .fiche-specs dt{ padding:14px 0 3px; }
+  .fiche-specs dd{ border-top:0; padding-top:0; padding-bottom:14px; }
+}
+
+/* ---------- chapô : le texte porte, la colonne de droite énumère ---------- */
+.form-intro{
+  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
+  gap:48px; align-items:start;
+}
+@media (max-width:900px){ .form-intro{ grid-template-columns:1fr; gap:30px; } }
+.form-intro a{ color:var(--spark-700); text-decoration:underline; text-underline-offset:3px; }
+
+.form-points{ display:flex; flex-direction:column; gap:0; }
+.form-points li{
+  padding:18px 0; border-top:1px solid var(--paper-line);
+  font-size:15px; line-height:1.6; color:var(--ink-soft);
+}
+.form-points li:first-child{ border-top:0; padding-top:0; }
+.form-points b{ color:var(--ink); font-weight:700; }
+
+/* ---------- les catégories ----------
+   Une table technique, pas une grille de tuiles : neuf catégories réparties en
+   six familles n'ont pas le même poids, et des cartes de taille égale
+   auraient donné à la catégorie 7 l'importance de la catégorie 3. Le code de
+   famille tient la colonne de gauche, le détail occupe la droite. */
+.cat-table{ margin-top:8px; }
+.cat-rang{
+  display:grid; grid-template-columns:minmax(0,.62fr) minmax(0,1fr);
+  gap:36px; padding:32px 0;
+  border-top:1px solid var(--paper-line);
+}
+.cat-rang:first-child{ border-top:0; padding-top:8px; }
+@media (max-width:820px){
+  .cat-rang{ grid-template-columns:1fr; gap:14px; padding:26px 0; }
+}
+
+.cat-codes{
+  display:inline-block;
+  font-family:var(--font-mono); font-size:12.5px; font-weight:600; letter-spacing:.08em;
+  background:var(--navy-950); color:var(--spark-500);
+  padding:5px 11px; border-radius:6px; margin-bottom:12px;
+}
+.cat-tete h3{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:clamp(18px,2vw,21px); line-height:1.15; color:var(--ink);
+  text-wrap:balance;
+}
+/* Signale les deux familles qui concentrent la demande. Une mention écrite
+   plutôt qu'une pastille de couleur : elle se lit, elle s'entend, et elle ne
+   demande pas au lecteur de deviner ce que veut dire un point orange. */
+.cat-tag{
+  margin-top:10px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--spark-700);
+}
+.cat-desc{ font-size:15.5px; line-height:1.65; color:var(--ink-soft); }
+.cat-defs{
+  display:grid; grid-template-columns:minmax(44px,auto) 1fr; gap:0;
+  margin:18px 0 0;
+}
+.cat-defs dt{
+  font-family:var(--font-mono); font-size:13px; font-weight:600; color:var(--navy-800);
+  padding:12px 20px 12px 0; border-top:1px dashed var(--paper-line);
+}
+.cat-defs dd{
+  margin:0; padding:12px 0; border-top:1px dashed var(--paper-line);
+  font-size:14.5px; line-height:1.55; color:var(--ink);
+}
+.cat-defs dt:first-of-type, .cat-defs dd:first-of-type{ border-top:0; padding-top:0; }
+/* Les familles les plus demandées reçoivent le fond blanc et un retrait :
+   elles se détachent de la table sans changer de gabarit. */
+.cat-rang.is-vedette{
+  background:var(--white);
+  border-radius:var(--radius-m);
+  padding:30px 28px;
+  margin:14px 0;
+  border-top:0;
+}
+.cat-rang.is-vedette + .cat-rang{ border-top:0; }
+@media (max-width:820px){
+  .cat-rang.is-vedette{ padding:24px 20px; }
+}
+
+/* ---------- programme ----------
+   Deux colonnes égales : théorie et pratique pèsent autant l'une que l'autre
+   dans un CACES®, et le test porte sur les deux. */
+.prog-cols{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:40px;
+}
+.prog-titre{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:20px; letter-spacing:.02em; color:var(--ink);
+  padding-bottom:14px; border-bottom:2px solid var(--navy-800);
+}
+.prog-liste{ margin-top:20px; display:flex; flex-direction:column; gap:0; }
+.prog-liste li{
+  position:relative; padding:13px 0 13px 26px;
+  border-top:1px dashed var(--paper-line);
+  font-size:15px; line-height:1.6; color:var(--ink);
+}
+.prog-liste li:first-child{ border-top:0; }
+/* Le tiret de liste est tracé en CSS plutôt qu'écrit : une puce typographique
+   se retrouverait dans le presse-papier à la copie du texte. */
+.prog-liste li::before{
+  content:""; position:absolute; left:0; top:22px;
+  width:13px; height:2px; background:var(--spark-500);
+}
+.prog-note{
+  margin-top:34px; padding:18px 22px;
+  background:var(--white); border:1px solid var(--paper-line); border-radius:var(--radius-s);
+  font-size:14.5px; line-height:1.65; color:var(--ink-soft);
+  max-width:70ch;
+}
+
+/* ---------- prérequis et déroulé ---------- */
+.deroule-layout{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.85fr);
+  gap:56px; align-items:start;
+}
+@media (max-width:900px){ .deroule-layout{ grid-template-columns:1fr; gap:40px; } }
+
+.check-liste{ margin-top:22px; display:flex; flex-direction:column; gap:0; }
+.check-liste li{
+  position:relative; padding:15px 0 15px 32px;
+  border-top:1px solid var(--paper-line);
+  font-size:15.5px; line-height:1.6; color:var(--ink);
+}
+.check-liste li:first-child{ border-top:0; }
+/* Coche dessinée en bordures : deux traits d'un carré pivoté à 45°. Aucun
+   fichier à charger, et elle suit la couleur du texte si le thème change. */
+.check-liste li::before{
+  content:""; position:absolute; left:2px; top:20px;
+  width:11px; height:6px;
+  border-left:2px solid var(--spark-600);
+  border-bottom:2px solid var(--spark-600);
+  transform:rotate(-45deg);
+}
+
+/* ---------- questions fréquentes ----------
+   <details> natif : ouverture au clavier sans une ligne de script, et la
+   recherche du navigateur déplie d'elle-même la réponse trouvée. Un accordéon
+   maison perd les deux. */
+.faq{ max-width:78ch; }
+.faq-item{ border-top:1px solid var(--paper-line); }
+.faq-item:last-child{ border-bottom:1px solid var(--paper-line); }
+.faq-item summary{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:20px;
+  padding:22px 0; cursor:pointer; list-style:none;
+  font-size:17px; font-weight:600; line-height:1.45; color:var(--ink);
+  transition:color var(--dur-fast) var(--ease-out);
+}
+.faq-item summary::-webkit-details-marker{ display:none; }
+.faq-item summary:hover{ color:var(--navy-800); }
+/* Le chevron est un carré dont on ne garde que deux côtés, pivoté : il tourne
+   d'un quart de tour à l'ouverture. `transform` seul, donc composé par le GPU. */
+.faq-item summary::after{
+  content:""; flex:none; margin-top:6px;
+  width:9px; height:9px;
+  border-right:2px solid var(--spark-600);
+  border-bottom:2px solid var(--spark-600);
+  transform:rotate(45deg);
+  transition:transform var(--dur-base) var(--ease-out);
+}
+.faq-item[open] summary::after{ transform:rotate(-135deg); }
+.faq-item[open] summary{ color:var(--navy-900); }
+.faq-corps{ padding:0 0 24px; max-width:68ch; }
+.faq-corps p{
+  font-size:15.5px; line-height:1.7; color:var(--ink-soft);
+}
+.faq-corps p + p{ margin-top:14px; }
+.faq-corps a{ color:var(--spark-700); text-decoration:underline; text-underline-offset:3px; }
+@media (prefers-reduced-motion: reduce){
+  .faq-item summary::after{ transition:none; }
+}
+
+/* ---------- passerelle vers les autres recommandations ----------
+   En pied de page de formation : celui qui n'a pas trouvé sa machine ici doit
+   pouvoir sauter à la bonne page sans repasser par le catalogue. */
+.autres-titre{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-faint); font-weight:600;
+  margin-bottom:18px;
+}
+.autres-liste{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px;
+}
+.autres-liste a{
+  display:flex; align-items:baseline; gap:10px;
+  padding:16px 18px;
+  background:var(--white); border:1px solid var(--paper-line); border-radius:8px;
+  transition:border-color var(--dur-fast) var(--ease-out),
+             transform var(--dur-fast) var(--ease-out);
+}
+.autres-liste a:hover{ border-color:var(--navy-800); transform:translateY(-2px); }
+.autres-code{
+  font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.07em;
+  color:var(--spark-700); flex:none;
+}
+.autres-nom{ font-size:14.5px; color:var(--ink); }
+@media (prefers-reduced-motion: reduce){
+  .autres-liste a{ transition:none; }
+}
+
+/* ==========================================================================
+   Page Nos formations — catalogue
+   --------------------------------------------------------------------------
+   La page ne déroule plus les cinq programmes : elle présente, oriente, et
+   laisse chaque page de formation faire son travail. Deux objets suffisent,
+   une vedette et quatre tuiles, parce que la demande n'est pas répartie
+   également entre les cinq recommandations.
+   ========================================================================== */
+
+.cat-vedette{
+  display:grid; grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  gap:44px; align-items:start;
+  background:var(--white);
+  border:1px solid var(--paper-line);
+  border-bottom:3px solid var(--navy-800);
+  border-radius:var(--radius-l) var(--radius-s) var(--radius-s) var(--radius-s);
+  padding:38px 40px 36px;
+  margin-bottom:28px;
+}
+@media (max-width:900px){
+  .cat-vedette{ grid-template-columns:1fr; gap:28px; padding:28px 24px 26px; }
+}
+/* L'icône était à gauche du titre, en drapeau : le titre partait alors 62 px
+   plus à droite que le paragraphe et le bouton placés dessous, et la carte
+   avait deux bords gauches. Tout s'aligne maintenant sur un seul axe, comme
+   dans les tuiles qui la suivent. */
+.vedette-corps{ display:flex; flex-direction:column; align-items:flex-start; }
+.vedette-tete{ margin-bottom:16px; }
+.vedette-icone{ width:44px; height:44px; color:var(--navy-800); margin-bottom:14px; }
+.vedette-code{
+  display:inline-block; margin-bottom:8px;
+  font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.08em;
+  background:var(--navy-950); color:var(--spark-500);
+  padding:5px 11px; border-radius:6px;
+}
+.vedette-tete h2{ font-size:clamp(22px,2.8vw,30px); line-height:1.12; text-wrap:balance; }
+.vedette-corps .btn{ margin-top:26px; }
+
+/* Même matrice de données que les fiches du site, en version resserrée : trois
+   lignes, celles qu'on compare d'une recommandation à l'autre. */
+/* Centrée et non calée en haut : la colonne de gauche est plus haute d'environ
+   150 px, et la fiche alignée sur son sommet laissait tout ce vide sous elle,
+   au bas de la carte. */
+.vedette-specs{
+  display:grid; grid-template-columns:minmax(94px,auto) 1fr; gap:0; margin:0;
+  align-self:center;
+  background:var(--paper); border-radius:var(--radius-s); padding:22px 24px;
+}
+.vedette-specs dt{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-faint);
+  padding:12px 20px 12px 0; border-top:1px dashed var(--paper-line);
+}
+.vedette-specs dd{
+  margin:0; padding:12px 0; border-top:1px dashed var(--paper-line);
+  font-size:14.5px; line-height:1.5; color:var(--ink);
+}
+.vedette-specs dt:first-of-type, .vedette-specs dd:first-of-type{ border-top:0; padding-top:0; }
+@media (max-width:520px){
+  .vedette-specs{ grid-template-columns:1fr; }
+  .vedette-specs dt{ padding:12px 0 3px; }
+  .vedette-specs dd{ border-top:0; padding-top:0; padding-bottom:12px; }
+}
+
+/* Deux colonnes et non quatre : à 280 px de large, le nom d'une recommandation
+   passe sur trois lignes et la tuile ne dit plus rien d'utile. */
+.cat-grille{ display:grid; grid-template-columns:repeat(2,1fr); gap:24px; }
+@media (max-width:820px){ .cat-grille{ grid-template-columns:1fr; } }
+
+.cat-tuile{
+  display:flex; flex-direction:column; gap:12px;
+  background:var(--white);
+  border:1px solid var(--paper-line);
+  border-radius:var(--radius-m);
+  padding:28px 28px 24px;
+  transition:border-color var(--dur-fast) var(--ease-out),
+             transform var(--dur-fast) var(--ease-out);
+}
+.cat-tuile:hover{ border-color:var(--navy-800); transform:translateY(-3px); }
+/* L'habilitation électrique n'est pas un CACES® : le filet orange en pied la
+   distingue des quatre recommandations, sans la sortir de la grille. */
+.cat-tuile.is-electric{ border-bottom:3px solid var(--spark-500); }
+.cat-icone{ width:38px; height:38px; color:var(--navy-800); }
+.cat-tuile-code{
+  align-self:flex-start;
+  font-family:var(--font-mono); font-size:11.5px; font-weight:600; letter-spacing:.08em;
+  background:var(--navy-950); color:var(--spark-500);
+  padding:4px 10px; border-radius:6px;
+}
+.cat-tuile-code.accent{ background:var(--spark-100); color:var(--spark-700); }
+.cat-tuile h3{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:19px; line-height:1.15; color:var(--ink); text-wrap:balance;
+}
+.cat-tuile > p{ font-size:14.5px; line-height:1.6; color:var(--ink-soft); }
+
+.tuile-specs{
+  display:grid; grid-template-columns:minmax(80px,auto) 1fr; gap:0;
+  margin:6px 0 0; padding-top:14px; border-top:1px dashed var(--paper-line);
+}
+.tuile-specs dt{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-faint); padding:5px 16px 5px 0;
+}
+.tuile-specs dd{ margin:0; padding:5px 0; font-size:14px; color:var(--ink); }
+
+/* `margin-top:auto` colle le lien au bas de la tuile : les quatre tuiles n'ont
+   pas la même hauteur de texte, et un lien flottant au milieu de l'une d'elles
+   casserait la ligne de lecture horizontale. */
+.tuile-lien{
+  margin-top:auto; padding-top:18px;
+  display:inline-flex; align-items:center; gap:8px;
+  font-weight:700; font-size:14.5px; color:var(--navy-900);
+}
+.tuile-lien svg{
+  width:15px; height:15px; flex:none;
+  transition:transform var(--dur-fast) var(--ease-out-back);
+}
+.cat-tuile:hover .tuile-lien svg{ transform:translateX(4px); }
+.tuile-lien:hover{ color:var(--spark-700); }
+
+@media (prefers-reduced-motion: reduce){
+  .cat-tuile, .tuile-lien svg{ transition:none; }
+}
+
+/* ---------- désambiguïsation ----------
+   Question à gauche, réponse à droite, séparées par un filet : le lecteur
+   balaie la colonne des questions et ne lit que celle qui le concerne. Trois
+   cartes côte à côte l'auraient obligé à tout lire pour trouver la sienne. */
+.choix{
+  display:grid; grid-template-columns:minmax(0,.72fr) minmax(0,1fr);
+  gap:36px; padding:30px 0;
+  border-top:1px solid var(--paper-line);
+}
+.choix:first-child{ border-top:0; padding-top:6px; }
+@media (max-width:820px){
+  .choix{ grid-template-columns:1fr; gap:12px; padding:24px 0; }
+}
+.choix-q{
+  font-family:var(--font-display); text-transform:uppercase;
+  font-size:clamp(17px,2vw,20px); line-height:1.2; color:var(--ink);
+  text-wrap:balance;
+}
+.choix-r{ font-size:15.5px; line-height:1.7; color:var(--ink-soft); }
+.choix-liens{
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;
+}
+.choix-liens a{
+  font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.04em;
+  color:var(--navy-900);
+  padding:7px 13px; border-radius:999px;
+  border:1px solid var(--line);
+  background:var(--white);
+  transition:border-color var(--dur-fast) var(--ease-out),
+             color var(--dur-fast) var(--ease-out);
+}
+.choix-liens a:hover{ border-color:var(--navy-800); color:var(--spark-700); }
+@media (prefers-reduced-motion: reduce){
+  .choix-liens a{ transition:none; }
+}
+
+/* Espacements repris des attributs style= posés au fil de la rédaction. Les
+   sortir du HTML n'est pas cosmétique : un seul style="" dans une page oblige
+   la politique de sécurité à autoriser style-src 'unsafe-inline', ce qui
+   désarme la protection pour toute la page. */
+.form-intro h2 + .text-soft{ margin-top:14px; }
+.vedette-corps .text-soft{ margin-top:0; }
+.check-liste + .h2-compact{ margin-top:44px; }
