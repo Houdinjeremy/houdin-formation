@@ -12,8 +12,12 @@ sauvegarde-avant-refonte-*/
 # Transcription brute de session (7 Mo, binaire)
 documentation/transcription/session-brute.jsonl.gz
 
-# Skills installées localement (paquets tiers, pas du code projet)
+# Skills installées localement (paquets tiers, pas du code projet).
+# Exception : google-seo est écrite pour ce projet précis, pas un paquet
+# tiers — elle reste versionnée comme les agents dans .claude/agents/.
 .claude/skills/
+!.claude/skills/google-seo/
+!.claude/skills/google-seo/**
 
 # Métadonnées locales de la CLI Vercel
 .vercel
