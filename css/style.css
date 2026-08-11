@@ -444,6 +444,9 @@ h3, .h3{
 
 /* ---------- section shells ---------- */
 .section{ padding:96px 0; position:relative; overflow:hidden; }
+/* Conservee : utilisee par les pages formation-caces-r48x en cours
+   d'ecriture dans le dossier principal. */
+.section-tight{ padding:64px 0; }
 .on-light{ background:var(--paper); color:var(--ink); }
 .on-alt{ background:var(--paper-alt); color:var(--ink); }
 .on-dark{ background:var(--navy-950); color:#EDEFEF; }
