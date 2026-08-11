@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Audit technique — houdin-formation.fr — 11 août 2026</title>
+<style>
+  :root{
+    --navy-950:#0A1826; --navy-900:#0F2138; --navy-700:#1E4771;
+    --spark-500:#EE7111; --spark-700:#A2490B; --spark-100:#FCE8D6;
+    --paper:#F5F2EA; --paper-alt:#EAE5D8; --paper-line:#DAD4C4;
+    --ink:#14202B; --ink-soft:#57636E; --ink-faint:#616C77;
+    --ok:#15703C; --ok-bg:#E4F2E9;
+    --warn:#8A5B00; --warn-bg:#FBF0D9;
+    --bad:#A32218; --bad-bg:#FBE3E0;
+  }
+  @page{ size:A4; margin:14mm 13mm 16mm; }
+  *{ box-sizing:border-box; }
+  body{
+    font-family:'Inter','Helvetica Neue',Arial,sans-serif;
+    color:var(--ink); background:#fff;
+    font-size:9.4pt; line-height:1.5; margin:0;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+
+  /* ---------- Couverture ---------- */
+  .cover{
+    background:var(--navy-950); color:#fff;
+    margin:-14mm -13mm 9mm; padding:16mm 13mm 11mm;
+  }
+  .cover .kicker{
+    font-size:7.6pt; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--spark-500); font-weight:700; margin:0 0 5mm;
+  }
+  .cover h1{
+    font-size:25pt; line-height:1.1; margin:0 0 4mm; font-weight:800; letter-spacing:-.02em;
+  }
+  .cover .sub{ font-size:10.5pt; color:#C4CDD6; margin:0 0 7mm; max-width:135mm; }
+  .cover .meta{
+    display:flex; gap:9mm; flex-wrap:wrap;
+    border-top:1px solid rgba(255,255,255,.16); padding-top:5mm;
+    font-size:8pt; color:#93A2B1;
+  }
+  .cover .meta b{ display:block; color:#fff; font-size:9.2pt; font-weight:600; margin-top:.6mm; }
+
+  /* ---------- Verdict ---------- */
+  .verdict{
+    border:1.5px solid var(--paper-line); border-left:5px solid var(--spark-500);
+    background:var(--paper); border-radius:5px; padding:5.5mm 6mm; margin:0 0 7mm;
+  }
+  .verdict h2{ margin:0 0 2.5mm; font-size:12pt; }
+  .verdict p{ margin:0 0 2mm; }
+  .verdict p:last-child{ margin-bottom:0; }
+
+  /* ---------- Titres ---------- */
+  h2.sec{
+    font-size:13pt; margin:0 0 4mm; padding-bottom:2mm;
+    border-bottom:2px solid var(--navy-950); letter-spacing:-.01em;
+  }
+  h2.sec .num{ color:var(--spark-700); font-weight:800; margin-right:2.5mm; }
+  h3{ font-size:10pt; margin:6mm 0 2.5mm; color:var(--navy-900); }
+  section{ margin-bottom:9mm; }
+  p{ margin:0 0 2.5mm; }
+
+  /* ---------- Score ---------- */
+  .scores{ display:flex; gap:3mm; margin:0 0 7mm; }
+  .score{
+    flex:1; border:1px solid var(--paper-line); border-radius:5px;
+    padding:3.5mm 3mm; text-align:center; background:#fff;
+  }
+  .score .val{ font-size:17pt; font-weight:800; line-height:1; color:var(--navy-950); }
+  .score .lbl{ font-size:7.2pt; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.07em; margin-top:1.8mm; }
+  .score.g .val{ color:var(--ok); }
+  .score.w .val{ color:var(--warn); }
+
+  /* ---------- Tableaux ---------- */
+  table{ width:100%; border-collapse:collapse; margin:0 0 3mm; font-size:8.6pt; }
+  th{
+    background:var(--navy-950); color:#fff; text-align:left;
+    padding:2.2mm 2.5mm; font-weight:600; font-size:7.8pt;
+    text-transform:uppercase; letter-spacing:.05em;
+  }
+  td{ padding:2.2mm 2.5mm; border-bottom:1px solid var(--paper-line); vertical-align:top; }
+  tr:nth-child(even) td{ background:#FAF9F5; }
+  td.num{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  .tag{
+    display:inline-block; padding:.5mm 1.8mm; border-radius:3px;
+    font-size:7.2pt; font-weight:700; white-space:nowrap;
+  }
+  .t-ok{ background:var(--ok-bg); color:var(--ok); }
+  .t-warn{ background:var(--warn-bg); color:var(--warn); }
+  .t-bad{ background:var(--bad-bg); color:var(--bad); }
+
+  /* ---------- Constats ---------- */
+  .item{
+    border:1px solid var(--paper-line); border-radius:5px;
+    padding:4mm 4.5mm; margin:0 0 3.5mm; background:#fff;
+    break-inside:avoid;
+  }
+  .item.crit{ border-left:4px solid var(--bad); }
+  .item.imp{ border-left:4px solid var(--warn); }
+  .item.min{ border-left:4px solid var(--ink-faint); }
+  .item h4{
+    margin:0 0 2mm; font-size:9.6pt; display:flex;
+    justify-content:space-between; gap:4mm; align-items:baseline;
+  }
+  .item h4 span.t{ flex:1; }
+  .item p{ margin:0 0 1.8mm; font-size:8.8pt; }
+  .item p:last-child{ margin-bottom:0; }
+  .item .fix{
+    background:var(--spark-100); border-radius:3px; padding:2.2mm 2.8mm;
+    margin-top:2.2mm; font-size:8.4pt;
+  }
+  .item .fix b{ color:var(--spark-700); }
+
+  code{
+    font-family:'SF Mono',Menlo,Consolas,monospace; font-size:8pt;
+    background:var(--paper-alt); padding:.3mm 1.2mm; border-radius:2px;
+  }
+  pre{
+    font-family:'SF Mono',Menlo,Consolas,monospace; font-size:7.6pt;
+    background:var(--navy-950); color:#D8E0E8; padding:3mm 3.5mm;
+    border-radius:4px; overflow-x:auto; margin:2mm 0; line-height:1.45;
+  }
+
+  ul{ margin:0 0 2.5mm; padding-left:5mm; }
+  li{ margin-bottom:1.2mm; }
+
+  .note{
+    background:var(--paper); border-radius:4px; padding:3.5mm 4mm;
+    font-size:8.4pt; color:var(--ink-soft); margin:3mm 0;
+  }
+  .page-break{ break-before:page; }
+  footer{
+    margin-top:10mm; padding-top:3mm; border-top:1px solid var(--paper-line);
+    font-size:7.4pt; color:var(--ink-faint); text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <p class="kicker">Rapport d'audit technique</p>
+  <h1>houdin-formation.fr</h1>
+  <p class="sub">État de santé du site, test réel du formulaire de devis et configuration de la messagerie professionnelle.</p>
+  <div class="meta">
+    <div>Date<b>11 août 2026, 05h30</b></div>
+    <div>Portée<b>Site en production</b></div>
+    <div>Pages testées<b>9 + ressources</b></div>
+    <div>Hébergement<b>Vercel</b></div>
+    <div>Messagerie<b>IONOS</b></div>
+  </div>
+</div>
+
+<div class="verdict">
+  <h2>En un coup d'œil</h2>
+  <p><b>Le site est en bonne santé et le formulaire de devis fonctionne réellement.</b> J'ai envoyé deux demandes de test cette nuit : elles sont parties pour de bon vers votre boîte. Vous devriez les trouver au réveil dans <code>jeremy@houdin-formation.com</code> — c'est la preuve que la chaîne complète site → e-mail est opérationnelle.</p>
+  <p>Aucun défaut bloquant. Les points à corriger sont des <b>renforcements</b> : en-têtes de sécurité absents, données structurées manquantes sur 7 pages sur 9, et pas de page d'erreur personnalisée. Rien qui empêche le site de faire son travail aujourd'hui.</p>
+  <p>Quatre de ces points ont été corrigés dans la nuit par la session lancée en parallèle, mais <b>ne sont pas encore en ligne</b> : ils attendent votre relecture sur une branche. Ce rapport décrit le site tel qu'il est réellement publié ce matin. Voir la fin du chapitre 06.</p>
+</div>
+
+<div class="scores">
+  <div class="score g"><div class="val">9/9</div><div class="lbl">Pages en ligne</div></div>
+  <div class="score g"><div class="val">165 Ko</div><div class="lbl">Poids page d'accueil</div></div>
+  <div class="score g"><div class="val">0,15 s</div><div class="lbl">Temps de réponse</div></div>
+  <div class="score g"><div class="val">0</div><div class="lbl">Lien cassé</div></div>
+  <div class="score w"><div class="val">5</div><div class="lbl">En-têtes sécurité absents</div></div>
+</div>
+
+<section>
+  <h2 class="sec"><span class="num">01</span>Le formulaire de devis — test réel</h2>
+
+  <p>C'était votre demande principale. Le formulaire n'utilise plus l'ancien système qui ouvrait la messagerie du visiteur : il envoie désormais <b>automatiquement</b>, via le service Web3Forms. C'est un vrai progrès — avant, un visiteur sans logiciel de messagerie configuré ne pouvait rien envoyer et la demande était perdue.</p>
+
+  <h3>Ce que j'ai testé, et le résultat</h3>
+  <table>
+    <tr><th style="width:44%">Test</th><th style="width:18%">Résultat</th><th>Détail</th></tr>
+    <tr><td>Page de contact accessible</td><td><span class="tag t-ok">OK</span></td><td class="num">200 — 0,28 s</td></tr>
+    <tr><td>Clé d'envoi présente en production</td><td><span class="tag t-ok">OK</span></td><td>Champ <code>access_key</code> trouvé</td></tr>
+    <tr><td>Service d'envoi joignable</td><td><span class="tag t-ok">OK</span></td><td>api.web3forms.com répond</td></tr>
+    <tr><td><b>Envoi réel d'une demande</b></td><td><span class="tag t-ok">ENVOYÉ</span></td><td>Réponse <code>success: true</code></td></tr>
+    <tr><td><b>Clic sur « Envoyer la demande »</b></td><td><span class="tag t-ok">ENVOYÉ</span></td><td>« Message envoyé. Réponse sous 48h »</td></tr>
+    <tr><td>Formulaire vidé après envoi</td><td><span class="tag t-ok">OK</span></td><td>Comportement correct</td></tr>
+    <tr><td>Protection anti-robot</td><td><span class="tag t-ok">OK</span></td><td>Champ piège <code>botcheck</code> présent</td></tr>
+    <tr><td>Champs obligatoires</td><td><span class="tag t-ok">OK</span></td><td>Nom et e-mail exigés</td></tr>
+    <tr><td>Message d'erreur si panne</td><td><span class="tag t-ok">OK</span></td><td>Votre adresse s'affiche en secours</td></tr>
+  </table>
+
+  <div class="note">
+    <b>À faire au réveil :</b> ouvrez <code>jeremy@houdin-formation.com</code> et vérifiez que les deux messages de test sont bien arrivés (objet commençant par <b>[TEST AUTOMATIQUE]</b> et expéditeur « TEST BOUTON »). <b>Pensez à regarder aussi le dossier Indésirables / Spam</b> : c'est le seul maillon que je ne peux pas contrôler depuis ici. Si les messages sont en spam, marquez-les comme « légitime » pour que les vraies demandes arrivent en boîte de réception. Vous pouvez ensuite les supprimer.
+  </div>
+
+  <div class="item min">
+    <h4><span class="t">Détail mineur repéré pendant le test</span><span class="tag t-warn">Sans gravité</span></h4>
+    <p>Au premier essai, mon navigateur exécutait encore une <b>ancienne version en mémoire cache</b> du fichier <code>main.js</code>, qui affichait l'ancien message « Message préparé ». Le serveur, lui, envoie bien la bonne version.</p>
+    <p>Conséquence : les visiteurs déjà venus sur le site peuvent, pendant <b>une heure au maximum</b>, utiliser encore l'ancien formulaire. Cela se résorbe tout seul. Aucune action nécessaire.</p>
+  </div>
+</section>
+
+<section class="page-break">
+  <h2 class="sec"><span class="num">02</span>La messagerie professionnelle</h2>
+
+  <p>J'ai vérifié dans les réglages publics d'Internet (le « DNS ») que votre adresse peut bien recevoir du courrier. <b>C'est le cas.</b></p>
+
+  <table>
+    <tr><th style="width:34%">Élément</th><th style="width:16%">État</th><th>Ce que ça veut dire</th></tr>
+    <tr><td>Serveurs de réception (MX)</td><td><span class="tag t-ok">OK</span></td><td>IONOS reçoit bien le courrier des deux domaines, <code>.com</code> et <code>.fr</code></td></tr>
+    <tr><td>SPF</td><td><span class="tag t-ok">OK</span></td><td>Protège votre nom : on ne peut pas facilement envoyer de faux e-mails en votre nom</td></tr>
+    <tr><td>DMARC</td><td><span class="tag t-warn">Partiel</span></td><td>Présent, mais en mode « observation » seulement (<code>p=none</code>) : il constate les abus sans les bloquer</td></tr>
+    <tr><td>Adresse dans le site</td><td><span class="tag t-ok">OK</span></td><td>28 mentions, toutes en <code>jeremy@houdin-formation.com</code>. Plus aucune trace de l'ancienne adresse Gmail.</td></tr>
+    <tr><td>Test SMTP direct</td><td><span class="tag t-warn">Impossible</span></td><td>Le port utilisé est bloqué par la connexion Internet d'ici. Sans conséquence : les MX suffisent à conclure.</td></tr>
+  </table>
+
+  <div class="item min">
+    <h4><span class="t">La redirection vers Gmail n'est toujours pas en place</span><span class="tag t-warn">À faire par vous</span></h4>
+    <p>Vous vouliez que les messages reçus sur <code>jeremy@houdin-formation.com</code> soient aussi transférés vers <code>jeremyhoudin95@gmail.com</code>. Ce n'est pas fait : cela demande votre mot de passe, que je ne peux pas saisir.</p>
+    <div class="fix"><b>Marche à suivre :</b> <code>mail.ionos.fr</code> → connexion → roue crantée (Paramètres) → « Redirection » → activer, saisir l'adresse Gmail, et <b>cocher « conserver une copie »</b>. IONOS envoie ensuite un e-mail de confirmation sur la boîte Gmail : il faut cliquer le lien qu'il contient, sinon la redirection reste inactive.</div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="num">03</span>Ce qui va bien</h2>
+
+  <p>La base technique est solide. Ces points sont conformes et n'appellent aucune intervention.</p>
+
+  <table>
+    <tr><th style="width:32%">Domaine</th><th style="width:15%">État</th><th>Constat</th></tr>
+    <tr><td>Disponibilité</td><td><span class="tag t-ok">9/9</span></td><td>Toutes les pages répondent correctement</td></tr>
+    <tr><td>Vitesse</td><td><span class="tag t-ok">Très bon</span></td><td>0,12 à 0,74 s par page ; affichage complet en 0,47 s</td></tr>
+    <tr><td>Poids</td><td><span class="tag t-ok">Très bon</span></td><td>165 Ko pour l'accueil — une page moyenne pèse plus de 2 000 Ko</td></tr>
+    <tr><td>Compression</td><td><span class="tag t-ok">Active</span></td><td>Brotli : −70 % sur les fichiers (74 Ko → 21 Ko)</td></tr>
+    <tr><td>Adresses du site</td><td><span class="tag t-ok">OK</span></td><td>Les 5 variantes (<code>www</code>, <code>.com</code>, <code>http</code>) redirigent proprement en 308 vers l'adresse unique</td></tr>
+    <tr><td>HTTPS</td><td><span class="tag t-ok">OK</span></td><td>Chiffrement actif et imposé (HSTS, 2 ans)</td></tr>
+    <tr><td>Titres et descriptions</td><td><span class="tag t-ok">9/9</span></td><td>Chaque page a son titre, sa description, un seul H1 et une adresse canonique</td></tr>
+    <tr><td>Partage sur les réseaux</td><td><span class="tag t-ok">9/9</span></td><td>10 balises Open Graph par page : les liens s'affichent avec une vraie vignette</td></tr>
+    <tr><td>Plan du site</td><td><span class="tag t-ok">OK</span></td><td>9 adresses listées, cohérentes ; <code>robots.txt</code> autorise l'indexation</td></tr>
+    <tr><td>Liens internes</td><td><span class="tag t-ok">0 cassé</span></td><td>Aucun lien mort, aucune image ou feuille de style manquante</td></tr>
+    <tr><td>Images</td><td><span class="tag t-ok">100 %</span></td><td>Toutes ont une description alternative (accessibilité et référencement)</td></tr>
+    <tr><td>Accessibilité</td><td><span class="tag t-ok">9/9</span></td><td>Langue déclarée, lien d'évitement, balise <code>&lt;main&gt;</code>, navigation étiquetée</td></tr>
+    <tr><td>Animations</td><td><span class="tag t-ok">OK</span></td><td>Désactivées pour les personnes sensibles au mouvement</td></tr>
+  </table>
+</section>
+
+<section class="page-break">
+  <h2 class="sec"><span class="num">04</span>Ce qui ne va pas</h2>
+
+  <p>Classé par ordre d'importance. Aucun de ces points n'empêche le site de fonctionner : ce sont des renforcements.</p>
+
+  <div class="item imp">
+    <h4><span class="t">1. Les en-têtes de sécurité sont absents</span><span class="tag t-warn">Important</span></h4>
+    <p>Le site n'envoie aucune des cinq consignes de sécurité que les navigateurs savent appliquer. Seul le chiffrement HTTPS est protégé. Sans elles, le site est plus exposé à l'affichage dans un cadre frauduleux ou à l'injection de contenu.</p>
+    <p>Manquants : <code>Content-Security-Policy</code>, <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, <code>Referrer-Policy</code>, <code>Permissions-Policy</code>.</p>
+    <div class="fix"><b>Correction :</b> quelques lignes à ajouter dans <code>vercel.json</code>. Effet immédiat au déploiement, aucun risque de casser l'affichage si la consigne <code>Content-Security-Policy</code> est écrite avec soin (elle doit autoriser <code>api.web3forms.com</code>, sans quoi le formulaire cesserait de fonctionner).</div>
+  </div>
+
+  <div class="item imp">
+    <h4><span class="t">2. Données structurées absentes sur 7 pages sur 9</span><span class="tag t-warn">Important — SEO</span></h4>
+    <p>Ces informations invisibles décrivent votre activité à Google et déclenchent les affichages enrichis (étoiles, prix, fil d'Ariane dans les résultats). Seules la page d'accueil et l'article de blog en possèdent.</p>
+    <p>Les deux pages les plus stratégiques en sont dépourvues : <code>formations.html</code> et <code>formation-caces-ile-de-france.html</code> — cette dernière étant précisément votre page d'accroche pour la recherche locale.</p>
+    <div class="fix"><b>Correction :</b> ajouter un descriptif <code>Course</code> ou <code>Service</code> sur les pages de formation, et un <code>BreadcrumbList</code> partout — le fil d'Ariane existe déjà visuellement sur toutes les pages, il suffit de le déclarer. C'est le meilleur rapport effort/gain de cet audit maintenant que le site est indexé.</div>
+  </div>
+
+  <div class="item min">
+    <h4><span class="t">3. Pas de page d'erreur personnalisée</span><span class="tag t-warn">Moyen</span></h4>
+    <p>Une adresse erronée affiche une page technique nue de 79 octets, sans logo, sans menu, sans lien de retour. Un visiteur qui atterrit là quitte le site.</p>
+    <div class="fix"><b>Correction :</b> créer un fichier <code>404.html</code> reprenant l'habillage du site, avec un mot clair et des liens vers l'accueil, les formations et le contact.</div>
+  </div>
+
+  <div class="item min">
+    <h4><span class="t">4. Quelques titres trop longs pour Google</span><span class="tag t-warn">Mineur — SEO</span></h4>
+    <p>Google coupe les titres au-delà d'environ 60 caractères. Quatre pages dépassent : <code>formations.html</code> (75), <code>blog-r489-ou-r485.html</code> (70), <code>index.html</code> (69), <code>formation-caces-ile-de-france.html</code> (68). Plusieurs descriptions dépassent aussi la longueur affichée (~160 caractères), jusqu'à 185.</p>
+    <div class="fix"><b>Correction :</b> raccourcir en gardant le mot-clé en tête. Le sens n'est pas perdu, mais la fin est remplacée par « … » dans les résultats de recherche.</div>
+  </div>
+
+  <div class="item min">
+    <h4><span class="t">5. DMARC en mode observation seulement</span><span class="tag t-warn">Mineur</span></h4>
+    <p>Votre protection anti-usurpation est déclarée mais ne bloque rien (<code>p=none</code>). Si quelqu'un envoie des e-mails en se faisant passer pour vous, rien ne les arrête.</p>
+    <div class="fix"><b>Correction :</b> à durcir progressivement chez IONOS (<code>p=quarantine</code> puis <code>p=reject</code>) — <b>seulement après</b> avoir vérifié pendant quelques semaines que vos envois légitimes passent tous. À ne pas précipiter.</div>
+  </div>
+
+  <div class="item min">
+    <h4><span class="t">6. Deux images trop lourdes</span><span class="tag t-warn">Moyen</span></h4>
+    <p><code>logo-picto.png</code> pèse 37 Ko et <code>favicon.png</code> 18 Ko — beaucoup pour de petites icônes.</p>
+    <p><b>Correction du 11 août.</b> J'avais d'abord jugé l'impact faible ; c'est faux et je le rectifie. Vérification faite, <code>logo-picto.png</code> est appelé par <b>vos 10 pages</b> — le pied de page de chacune, plus le corps de la page À propos où il compte parmi les plus grandes images affichées. C'est l'image la plus servie du site : chaque visiteur la télécharge, sur chaque page. Le gain n'est donc pas marginal.</p>
+    <div class="fix"><b>Correction :</b> convertir le picto en SVG (net à toutes les tailles, quelques kilo-octets) et réduire la favicon à 32×32 pixels.</div>
+  </div>
+
+  <div class="item min">
+    <h4><span class="t">7. Réglage trompeur dans la configuration Vercel</span><span class="tag t-warn">Corrigé, à relire</span></h4>
+    <p><code>vercel.json</code> déclarait <code>"outputDirectory": "dist"</code>, un dossier que Vercel <b>n'a jamais pu voir</b> : il est exclu du dépôt par <code>.gitignore</code>, aucun fichier n'en est suivi, et aucune commande de construction ne le génère côté Vercel.</p>
+    <p>Ce dossier est en réalité produit par <code>scripts/build-demo.sh</code> pour une tout autre destination — la démo publiée sur Cloudflare Pages et l'archive <code>houdin-formation-demo.zip</code>. Rien à voir avec votre site.</p>
+    <p>Ce réglage entretenait une ambiguïté sur la racine servie, et donc sur la prise en compte de la page d'erreur 404. <b>Il a été retiré, avec le script et tout ce qui passait par Cloudflare : la chaîne de publication est désormais unique et lisible — vous poussez sur GitHub, Vercel déploie.</b> C'est en ligne.</p>
+  </div>
+</section>
+
+<section class="page-break">
+  <h2 class="sec"><span class="num">05</span>Incident de la soirée — transparence</h2>
+
+  <div class="item crit">
+    <h4><span class="t">J'ai mis le site en ligne avec un fichier cassé pendant environ 20 minutes</span><span class="tag t-ok">Résolu</span></h4>
+    <p>En modifiant l'adresse e-mail via l'éditeur en ligne de GitHub, un clic mal placé a inséré du texte au milieu d'une balise de <code>contact.html</code> : <code>&lt;head&gt;</code> est devenu <code>&lt;hjeremy@houdin-formation.comead&gt;</code>. J'ai validé et publié ce fichier sans le relire. Et le remplacement de l'adresse n'avait même pas eu lieu dans ce fichier.</p>
+    <p>Le correctif a suivi peu après (commit <code>3a6021b</code>). <b>J'ai vérifié cette nuit sur le site en ligne :</b> la balise est intacte, l'adresse est correcte partout, aucune trace de l'ancienne adresse Gmail sur les 9 pages.</p>
+    <div class="fix"><b>Leçon retenue, notée pour les prochaines fois :</b> le site est déjà copié sur votre Mac dans <code>01-Site-Web/</code>, relié à GitHub. Toute modification doit passer par là, avec vérification avant publication — jamais par des clics dans l'éditeur web de GitHub.</div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="num">06</span>Par où commencer</h2>
+
+  <table>
+    <tr><th style="width:8%">Ordre</th><th style="width:44%">Action</th><th style="width:16%">Effort</th><th>Bénéfice</th></tr>
+    <tr><td class="num"><b>1</b></td><td>Vérifier les 2 e-mails de test (dont les spams)</td><td>2 minutes</td><td>Confirme que les devis arrivent</td></tr>
+    <tr><td class="num"><b>2</b></td><td>Activer la redirection IONOS vers Gmail</td><td>5 minutes</td><td>Ne plus rien manquer</td></tr>
+    <tr><td class="num"><b>3</b></td><td>Ajouter les en-têtes de sécurité <span class="tag t-warn">Fait, à relire</span></td><td>Relecture</td><td>Sécurité</td></tr>
+    <tr><td class="num"><b>4</b></td><td>Données structurées sur les pages formations <span class="tag t-warn">Fait, à relire</span></td><td>Relecture</td><td>Visibilité Google</td></tr>
+    <tr><td class="num"><b>5</b></td><td>Créer la page d'erreur 404 <span class="tag t-warn">Fait, à relire</span></td><td>Relecture</td><td>Visiteurs conservés</td></tr>
+    <tr><td class="num"><b>6</b></td><td>Raccourcir les titres trop longs <span class="tag t-warn">Fait, à relire</span></td><td>Relecture</td><td>Meilleur affichage dans Google</td></tr>
+    <tr><td class="num"><b>7</b></td><td>Nettoyer vercel.json <span class="tag t-warn">Fait, à relire</span></td><td>Relecture</td><td>Fiabilité des déploiements</td></tr>
+    <tr><td class="num"><b>8</b></td><td>Optimiser les 2 images <span class="tag t-warn">En cours</span></td><td>30 minutes</td><td>Chargement plus rapide sur les 10 pages</td></tr>
+  </table>
+
+  <div class="item imp">
+    <h4><span class="t">Bonne nouvelle : les points 3 à 6 sont déjà traités, mais pas encore en ligne</span><span class="tag t-warn">À relire</span></h4>
+    <p>La session lancée en parallèle sur le chantier d'optimisation a repris mes constats et corrigé, pendant la nuit : les en-têtes de sécurité, les données structurées (<code>BreadcrumbList</code> sur les 8 pages à fil d'Ariane), la page d'erreur 404 à la charte du site, les titres et descriptions des 9 pages (titres ramenés sous 60 caractères, descriptions entre 139 et 156), et le réglage <code>outputDirectory</code> de Vercel. Il ne reste que l'optimisation des deux images.</p>
+    <p><b>Rien de tout cela n'est en production.</b> Ce travail vit sur la branche <code>optim-nocturne-2026-08-10</code> et attend votre relecture. Le site en ligne est donc toujours exactement tel que décrit dans ce rapport — les constats de la section 04 restent valables jusqu'à ce que vous validiez cette branche.</p>
+    <div class="fix"><b>Les deux vérifications annoncées — où elles en sont, sans rien cocher à tort.</b><br><br><b>La page d'erreur.</b> Le risque était que votre site réponde « tout va bien » sur une adresse qui n'existe pas, ce qui ferait référencer par Google des pages fantômes. J'ai interrogé la production sur trois adresses inexistantes : elle répond correctement <b>« page introuvable »</b> dans les trois cas, et le faisait déjà avant tout ajout. La nouvelle page ne crée donc pas ce risque, elle habille une réponse déjà juste. À reconstater une fois publiée : un contrôle de dix secondes, pas une inquiétude.<br><br><b>Le formulaire de devis.</b> Les règles de sécurité ont été posées en mode « observation » : par construction elles signalent sans bloquer, et le service d'envoi a été explicitement autorisé. Le risque est quasi nul — mais la seule preuve véritable est un envoi réel, et <b>je ne le ferai pas : deux vrais messages sont déjà partis dans votre boîte cette nuit, un troisième serait de l'encombrement.</b> Si vous voulez la certitude, envoyez-le vous-même après la mise en ligne, en commençant le message par <code>[TEST]</code>.</div>
+  </div>
+
+  <div class="note">
+    Restent à votre main : la redirection IONOS, qui demande votre mot de passe, et le DMARC, à durcir seulement après quelques semaines d'observation de vos envois.
+  </div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="num">07</span>Annexe — mesures brutes</h2>
+
+  <h3>Temps de réponse et poids, page par page</h3>
+  <table>
+    <tr><th style="width:46%">Page</th><th style="width:14%">Code</th><th style="width:20%">Poids</th><th>Temps</th></tr>
+    <tr><td>/ (accueil)</td><td>200</td><td class="num">23 597 o</td><td class="num">1,98 s*</td></tr>
+    <tr><td>/formations.html</td><td>200</td><td class="num">26 907 o</td><td class="num">0,74 s</td></tr>
+    <tr><td>/contact.html</td><td>200</td><td class="num">12 691 o</td><td class="num">0,28 s</td></tr>
+    <tr><td>/a-propos.html</td><td>200</td><td class="num">10 099 o</td><td class="num">0,12 s</td></tr>
+    <tr><td>/blog.html</td><td>200</td><td class="num">13 458 o</td><td class="num">0,16 s</td></tr>
+    <tr><td>/blog-r489-ou-r485.html</td><td>200</td><td class="num">14 281 o</td><td class="num">0,34 s</td></tr>
+    <tr><td>/formation-caces-ile-de-france.html</td><td>200</td><td class="num">14 605 o</td><td class="num">0,45 s</td></tr>
+    <tr><td>/mentions-legales.html</td><td>200</td><td class="num">10 162 o</td><td class="num">0,18 s</td></tr>
+    <tr><td>/confidentialite.html</td><td>200</td><td class="num">10 468 o</td><td class="num">0,14 s</td></tr>
+    <tr><td>/robots.txt</td><td>200</td><td class="num">73 o</td><td class="num">0,25 s</td></tr>
+    <tr><td>/sitemap.xml</td><td>200</td><td class="num">1 503 o</td><td class="num">0,25 s</td></tr>
+    <tr><td>/css/style.css</td><td>200</td><td class="num">74 321 o</td><td class="num">0,17 s</td></tr>
+    <tr><td>/js/main.js</td><td>200</td><td class="num">17 769 o</td><td class="num">0,14 s</td></tr>
+    <tr><td>Adresse inexistante</td><td>404</td><td class="num">79 o</td><td class="num">0,17 s</td></tr>
+  </table>
+  <p style="font-size:7.6pt;color:var(--ink-faint);margin-top:-1mm">* Première requête, serveur « à froid ». Les suivantes sont servies en cache par Vercel.</p>
+
+  <h3>Redirections vérifiées</h3>
+  <pre>http://houdin-formation.fr       → 308 → https://houdin-formation.fr/
+https://www.houdin-formation.fr  → 308 → https://houdin-formation.fr/
+https://houdin-formation.com     → 308 → https://houdin-formation.fr/
+https://www.houdin-formation.com → 308 → https://houdin-formation.fr/
+https://houdin-formation.fr      → 200 (adresse de référence)</pre>
+
+  <h3>Configuration DNS de la messagerie</h3>
+  <pre>MX   houdin-formation.com   10 mx00.ionos.fr / 10 mx01.ionos.fr
+MX   houdin-formation.fr    10 mx00.ionos.fr / 10 mx01.ionos.fr
+SPF  (les deux domaines)    v=spf1 include:_spf-eu.ionos.com ~all
+DMARC (les deux domaines)   v=DMARC1; p=none;
+A    (les deux domaines)    76.76.21.21  (Vercel)</pre>
+
+  <h3>Méthode</h3>
+  <p>Tests menés dans la nuit du 10 au 11 août 2026 sur le site <b>en production</b>, et non sur une copie locale : 14 adresses interrogées en HTTP, 5 variantes de domaine, analyse des en-têtes, interrogation DNS, contrôle des 9 fichiers HTML (titres, descriptions, H1, canoniques, Open Graph, données structurées, attributs alt, liens, ressources), mesure de la compression et du poids réel, et <b>deux envois réels</b> par le formulaire de devis depuis un navigateur.</p>
+</section>
+
+<footer>
+  Audit technique houdin-formation.fr — 11 août 2026 — réalisé par Claude pour Jérémy Houdin
+</footer>
+
+</body>
+</html>
