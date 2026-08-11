@@ -2028,8 +2028,16 @@ body.mm-open .site-header{ z-index:130; }
   text-wrap:balance;
 }
 .choix-r{ font-size:15.5px; line-height:1.7; color:var(--ink-soft); }
+/* Les liens appartiennent à la réponse, pas à la question : sans cette
+   consigne la grille les renvoie à la ligne suivante, colonne de gauche,
+   c'est-à-dire sous le titre et à des centaines de pixels du texte qu'ils
+   prolongent. */
 .choix-liens{
   display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;
+  grid-column:2;
+}
+@media (max-width:820px){
+  .choix-liens{ grid-column:1; margin-top:12px; }
 }
 .choix-liens a{
   font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.04em;
