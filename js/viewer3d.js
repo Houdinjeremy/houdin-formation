@@ -20,6 +20,7 @@
   "use strict";
 
   var VENDOR  = "assets/vendor/model-viewer.min.js";
+  var SCHEMAS = "js/schemas.js";
   var MODELES = "assets/models/";
 
   /* L'ordre définit celui des onglets.
@@ -77,6 +78,21 @@
     vendorDemande = true;
     var s = document.createElement("script");
     s.type = "module"; s.src = VENDOR;
+    document.head.appendChild(s);
+  }
+
+  /* Le repli dessine un schéma technique, qui a besoin de schemas.js. Les pages
+     qui n'affichent aucun schéma ne chargent pas ce module : on va le chercher
+     au moment où le repli sert réellement, plutôt que de le faire porter à
+     toutes les pages pour un cas qui ne survient presque jamais. */
+  var schemasDemande = false;
+  function chargeSchemas(){
+    if(window.HFSchemas){ window.HFSchemas.rafraichir(); return; }
+    if(schemasDemande) return;
+    schemasDemande = true;
+    var s = document.createElement("script");
+    s.src = SCHEMAS;
+    s.onload = function(){ if(window.HFSchemas) window.HFSchemas.rafraichir(); };
     document.head.appendChild(s);
   }
 
@@ -168,7 +184,8 @@
     scene.appendChild(neuf);
 
     /* Le schéma se monte APRÈS insertion : le module dessine dans l'élément vivant. */
-    if(window.HFSchemas) window.HFSchemas.rafraichir();
+    if(neuf.classList.contains("is-schema")) chargeSchemas();
+    else if(window.HFSchemas) window.HFSchemas.rafraichir();
 
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){ neuf.classList.remove("is-entrant"); });
