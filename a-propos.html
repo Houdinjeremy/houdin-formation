@@ -53,6 +53,38 @@
   ]
 }
 </script>
+
+<!-- La page « À propos » est celle qui parle de la personne, pas de l'organisme :
+     c'est donc ici que Person a sa place, avec un identifiant stable auquel la
+     fiche de l'organisme peut se rattacher depuis l'accueil. Rien n'est ajoute
+     qui ne figure deja en clair sur la page. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://houdin-formation.fr/a-propos.html#jeremy-houdin",
+  "name": "Jérémy Houdin",
+  "jobTitle": "Formateur et évaluateur CACES®",
+  "description": "Formateur et évaluateur CACES® fort de 25 ans d'expérience industrielle au contact des engins de chantier, des chariots de manutention et des installations électriques basse tension.",
+  "url": "https://houdin-formation.fr/a-propos.html",
+  "mainEntityOfPage": "https://houdin-formation.fr/a-propos.html",
+  "sameAs": "https://www.linkedin.com/in/j%C3%A9r%C3%A9my-houdin-87210a153/",
+  "email": "jeremy@houdin-formation.com",
+  "telephone": "+33682999151",
+  "worksFor": { "@id": "https://houdin-formation.fr/#organisme" },
+  "knowsAbout": [
+    "CACES® R482 — engins de chantier",
+    "CACES® R485 — gerbeurs à conducteur accompagnant",
+    "CACES® R486 — plates-formes élévatrices mobiles de personnel",
+    "CACES® R489 — chariots élévateurs à conducteur porté",
+    "Habilitation électrique basse tension"
+  ],
+  "areaServed": [
+    { "@type": "AdministrativeArea", "name": "Île-de-France" },
+    { "@type": "City", "name": "Gisors" }
+  ]
+}
+</script>
 </head>
 <body>
 
