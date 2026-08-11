@@ -111,9 +111,12 @@
       <div class="contact-layout">
         <div data-reveal>
           <h2 class="h2-compact">Décrivez votre besoin</h2>
-          <p class="lede text-soft" >Le formulaire ouvre votre messagerie avec les informations pré-remplies, à destination directe de Jérémy Houdin.</p>
+          <p class="lede text-soft" >Le formulaire envoie votre demande directement à Jérémy Houdin. Réponse sous 48h.</p>
 
           <form class="form-card" id="contactForm" style="margin-top:24px;">
+            <input type="hidden" name="access_key" value="cab8d1f4-09fa-4175-bc45-25d594d278e3">
+            <input type="hidden" name="from_name" value="Houdin Formation — site web">
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
             <div class="form-row">
               <div class="field">
                 <label for="name">Nom complet</label>
@@ -149,7 +152,7 @@
               <span>Envoyer la demande</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <p class="form-note">En envoyant ce formulaire, votre messagerie s'ouvre avec un email pré-rempli à destination de jeremy@houdin-formation.com.</p>
+            <p class="form-note">Envoyé directement à jeremy@houdin-formation.com — aucune donnée n'est stockée ailleurs.</p>
           </form>
         </div>
 

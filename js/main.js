@@ -327,35 +327,15 @@
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Contact form -> mailto (no backend available)
+  // Contact form -> Web3Forms (envoi réel, sans backend à héberger)
   var form = document.getElementById("contactForm");
   if (form) {
     form.addEventListener("submit", function(e){
       e.preventDefault();
       var data = new FormData(form);
       var name = (data.get("name") || "").toString();
-      var email = (data.get("email") || "").toString();
-      var phone = (data.get("phone") || "").toString();
       var formation = (data.get("formation") || "").toString();
-      var message = (data.get("message") || "").toString();
 
-      var subject = "Demande de formation — " + (formation || name || "site web");
-      var body =
-        "Nom : " + name + "\n" +
-        "Email : " + email + "\n" +
-        "Téléphone : " + phone + "\n" +
-        "Formation concernée : " + formation + "\n\n" +
-        message;
-
-      window.location.href =
-        "mailto:jeremy@houdin-formation.com" +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(body);
-
-      // Sans ce retour, le formulaire paraît ne rien faire : le client de
-      // messagerie s'ouvre derrière la fenêtre, ou pas du tout s'il n'y en a
-      // aucun de configuré. On le dit, et on donne l'adresse en repli.
-      var bouton = form.querySelector('button[type="submit"]');
       var note = document.getElementById("formStatus");
       if (!note) {
         note = document.createElement("p");
@@ -364,21 +344,45 @@
         note.setAttribute("role", "status");     // annoncé par les lecteurs d'écran
         form.appendChild(note);
       }
-      note.innerHTML =
-        "Message préparé. Si rien ne s'est ouvert, aucun logiciel de messagerie " +
-        "n'est configuré sur cet appareil : écrivez à " +
-        '<a href="mailto:jeremy@houdin-formation.com">jeremy@houdin-formation.com</a>.';
-      note.classList.add("is-on");
 
+      var bouton = form.querySelector('button[type="submit"]');
+      var libelle = bouton ? bouton.innerHTML : "";
       if (bouton) {
-        var libelle = bouton.innerHTML;
         bouton.disabled = true;
-        bouton.innerHTML = "<span>Message préparé</span>";
-        setTimeout(function(){
-          bouton.disabled = false;
-          bouton.innerHTML = libelle;
-        }, 5000);
+        bouton.innerHTML = "<span>Envoi en cours…</span>";
       }
+
+      data.set("subject", "Demande de formation — " + (formation || name || "site web"));
+
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: data
+      })
+        .then(function(r){ return r.json(); })
+        .then(function(result){
+          if (result.success) {
+            note.innerHTML = "Message envoyé. Réponse sous 48h à l'adresse indiquée.";
+            form.reset();
+          } else {
+            note.innerHTML =
+              "L'envoi a échoué : écrivez directement à " +
+              '<a href="mailto:jeremy@houdin-formation.com">jeremy@houdin-formation.com</a>.';
+          }
+          note.classList.add("is-on");
+        })
+        .catch(function(){
+          note.innerHTML =
+            "L'envoi a échoué (connexion indisponible) : écrivez directement à " +
+            '<a href="mailto:jeremy@houdin-formation.com">jeremy@houdin-formation.com</a>.';
+          note.classList.add("is-on");
+        })
+        .finally(function(){
+          if (bouton) {
+            bouton.disabled = false;
+            bouton.innerHTML = libelle;
+          }
+        });
     });
   }
 })();
