@@ -13,7 +13,7 @@
   --navy-600:#2C577F;
 
   --spark-500:#EE7111;
-  --spark-600:#C85C08;
+  --spark-600:#B25207;   /* orange d'etat : 4,6:1 en blanc dessus, 4,6:1 en texte sur creme */
   --spark-700:#A2490B;   /* orange lisible en TEXTE sur fond clair (5,4:1) */
   --spark-100:#FCE8D6;
 
@@ -909,7 +909,19 @@ h3, .h3{
   padding:12px 18px; z-index:200; border-radius:0 0 8px 0;
 }
 .skip-link:focus{ left:0; }
-:focus-visible{ outline:2px solid var(--spark-500); outline-offset:2px; }
+/* L'anneau de focus doit atteindre 3:1 contre le fond qu'il touche. L'orange
+   vif ne tient ce seuil que sur le navy : sur le creme de la page il tombe a
+   2,7:1 et sur les cartes blanches a 3,0:1. Le ton fonce sert donc de defaut,
+   et l'orange vif reste reserve aux sections sombres, ou il est a 6,0:1. */
+:focus-visible{ outline:2px solid var(--spark-700); outline-offset:2px; }
+.on-dark :focus-visible,
+.hero :focus-visible,
+.page-hero :focus-visible,
+.site-footer :focus-visible,
+.facts-band :focus-visible,
+.schema-section :focus-visible,
+.showcase-3d :focus-visible,
+.mobile-nav :focus-visible{ outline-color:var(--spark-500); }
 
 /* Anneau bicolore sur les boutons. L'anneau orange par défaut disparaissait sur
    .btn-primary, qui est lui-même orange : un utilisateur au clavier perdait la
@@ -1209,7 +1221,7 @@ body.nav-is-open .read-progress{ opacity:0; }
    pour un champ manquant se lit comme un élément de design assumé, pas comme
    un repère de chantier à ne jamais laisser en ligne tel quel. */
 .todo{
-  background:#EDEEF0; color:#6B7580;
+  background:#EDEEF0; color:#646D78;
   font-family:var(--font-mono); font-size:12px; letter-spacing:.04em;
   text-transform:uppercase; padding:3px 8px; border-radius:4px;
   border:1px dashed #B7BCC2; white-space:nowrap;
