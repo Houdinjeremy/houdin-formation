@@ -28,6 +28,9 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/anton-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Le formulaire poste vers Web3Forms : ouvrir la connexion des le chargement
+     evite au visiteur d'attendre la negociation TLS au moment de l'envoi. -->
+<link rel="preconnect" href="https://api.web3forms.com" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 <!-- Fil d'Ariane structuré : reprend a l'identique le fil affiché plus bas
@@ -60,7 +63,7 @@
 
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
-    <a href="index.html" class="brand"><img src="assets/img/logo-wordmark-navy.png" alt="Houdin Formation"></a>
+    <a href="index.html" class="brand"><img src="assets/img/logo-wordmark-navy.png" alt="Houdin Formation" width="320" height="116"></a>
     <nav class="main-nav" aria-label="Navigation principale">
       <a href="index.html" class="nav-link">Accueil</a>
       <a href="formations.html" class="nav-link">Nos formations</a>
@@ -216,7 +219,7 @@
 <footer class="site-footer">
   <div class="wrap footer-top">
     <div class="footer-brand">
-      <img src="assets/img/logo-picto.png" alt="" class="footer-logo">
+      <img src="assets/img/logo-picto.png" alt="" class="footer-logo" width="480" height="458" loading="lazy" decoding="async">
       <p>Houdin Formation — organisme de formation CACES® et habilitation électrique en Île-de-France, à Gisors et dans sa région.</p>
     </div>
     <div class="footer-links">
