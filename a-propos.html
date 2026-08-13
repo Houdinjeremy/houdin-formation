@@ -28,8 +28,8 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/anton-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=20260811e">
-<link rel="stylesheet" href="css/style.css?v=20260811e">
+<link rel="stylesheet" href="css/fonts.css?v=20260812c">
+<link rel="stylesheet" href="css/style.css?v=20260812c">
 <!-- Fil d'Ariane structuré : reprend a l'identique le fil affiché plus bas
      dans la page. Google s'en sert pour remplacer l'URL brute par un chemin
      lisible dans les resultats de recherche. -->
@@ -140,39 +140,92 @@
 
 <main id="main">
 
-  <section class="page-hero">
+  <!-- HERO — même ossature que les pages formation : texte à gauche, plaque
+       signalétique à droite. Le hero de cette page était vide sur sa moitié
+       droite ; la fiche y met de la preuve vérifiable plutôt que du décor. -->
+  <section class="page-hero form-hero">
     <div class="blueprint-grid" aria-hidden="true"></div>
-    <div class="wrap">
-      <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a> <span aria-hidden="true">/</span> <span aria-current="page">À propos</span></nav>
-      <h1>25 ans de terrain,<br>une expertise reconnue</h1>
-      <p class="lede">Houdin Formation est né d'un constat simple : on forme mieux à la sécurité quand on a soi-même conduit, réparé et exploité le matériel qu'on enseigne.</p>
+    <div class="wrap form-hero-inner">
+      <div class="form-hero-texte">
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a> <span aria-hidden="true">/</span> <span aria-current="page">À propos</span></nav>
+        <p class="eyebrow">Organisme de formation — Jérémy Houdin</p>
+        <h1>25 ans de terrain,<br>puis la transmission</h1>
+        <p class="lede">Houdin Formation est né d'un constat simple : on forme mieux à la sécurité quand on a soi-même conduit, réparé et exploité le matériel qu'on enseigne.</p>
+        <div class="form-hero-actions">
+          <a href="contact.html" class="btn btn-primary">
+            <span>Demander un devis</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="formations.html" class="btn btn-outline"><span>Voir les formations</span></a>
+        </div>
+      </div>
+
+      <aside class="fiche-plate" aria-label="Fiche d'identité du formateur">
+        <div class="fiche-head">
+          <strong>Fiche formateur</strong>
+          <span>Houdin Formation</span>
+        </div>
+        <dl class="fiche-specs">
+          <dt>Formateur</dt><dd>Jérémy Houdin</dd>
+          <dt>Référentiels</dt><dd>CACES® R482, R485, R486, R489 et habilitation électrique NF C18-510 A2</dd>
+          <dt>Terrain</dt><dd>25 ans en industrie avant d'enseigner</dd>
+          <dt>Zone</dt><dd>Île-de-France, Gisors et sa région</dd>
+        </dl>
+        <p class="fiche-note">Réponse à toute demande de devis sous 48 h.</p>
+      </aside>
     </div>
   </section>
 
-  <section class="section on-light">
-    <div class="wrap about-hero">
-      <div class="monogram-plate" data-reveal>
-        <img src="assets/img/logo-picto.png" alt="" width="480" height="458" fetchpriority="high" decoding="async">
+  <!-- BANDEAU DE CHIFFRES — repris de l'accueil. La preuve arrive avant le
+       discours : c'est le principe commun aux cinq références. -->
+  <div class="facts-band">
+    <div class="wrap facts-inner">
+      <div class="facts-figures">
+        <p class="fact">
+          <span class="stat-num">25</span><span class="fact-unit">ans</span>
+          <span class="fact-label">sur le terrain avant d'enseigner</span>
+        </p>
+        <p class="fact">
+          <span class="stat-num">5</span><span class="fact-unit">réf.</span>
+          <span class="fact-label">R482, R485, R486, R489 et habilitation BT</span>
+        </p>
       </div>
-      <div data-reveal>
-        <h2>Une expertise terrain avant d'être une expertise pédagogique</h2>
-        <p class="text-soft">
-          Jérémy Houdin a passé 25 ans dans l'industrie, au contact direct des engins de
-          chantier, des chariots de manutention et des installations électriques basse
-          tension. Cette expérience de terrain — pas seulement théorique — est le socle de
-          chaque formation dispensée aujourd'hui par Houdin Formation.
-        </p>
-        <p class="text-soft">
-          Formateur à la conduite en sécurité sur les recommandations R482, R485, R486 et
-          R489, ainsi qu'à la prévention du risque électrique basse tension, il intervient
-          aujourd'hui
-          directement sur le site de ses clients, en Île-de-France et dans la région de Gisors, pour des
-          sessions ancrées dans le matériel et les contraintes réelles de chaque équipe.
-        </p>
-        <div class="hero-badges" style="margin-top:24px;">
-          <span class="hero-badge light"><b>25 ans</b>&nbsp;d'expérience industrielle</span>
-          <span class="hero-badge light">Formateur CACES® &amp; habilitation BT</span>
+      <ul class="facts-notes">
+        <li>SIRET 824 790 240 00025</li>
+        <li>Déclaration d'activité n° 32600427860 — préfet de région Hauts-de-France</li>
+        <li>Formation en intra-entreprise, sur votre site et votre matériel</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BIOGRAPHIE — la plaque au picto du logo occupait 40 % de la largeur pour
+       ne rien dire. Remplacée par la mise en page titre/texte des pages
+       formation, avec à droite les trois terrains d'origine, tirés du
+       paragraphe lui-même. -->
+  <section class="section on-light">
+    <div class="wrap">
+      <div class="form-intro" data-reveal>
+        <div>
+          <h2>Une expertise terrain avant d'être une expertise pédagogique</h2>
+          <p class="text-soft">
+            Jérémy Houdin a passé 25 ans dans l'industrie, au contact direct des engins de
+            chantier, des chariots de manutention et des installations électriques basse
+            tension. Cette expérience de terrain — pas seulement théorique — est le socle de
+            chaque formation dispensée aujourd'hui par Houdin Formation.
+          </p>
+          <p class="text-soft">
+            Formateur à la conduite en sécurité sur les recommandations R482, R485, R486 et
+            R489, ainsi qu'à la prévention du risque électrique basse tension, il intervient
+            aujourd'hui directement sur le site de ses clients, en Île-de-France et dans la
+            région de Gisors, pour des sessions ancrées dans le matériel et les contraintes
+            réelles de chaque équipe.
+          </p>
         </div>
+        <ul class="form-points">
+          <li><strong>Engins de chantier</strong> — conduite et exploitation sur chantier.</li>
+          <li><strong>Chariots de manutention</strong> — entrepôt, logistique, industrie.</li>
+          <li><strong>Installations électriques BT</strong> — intervention et environnement de travail.</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -201,6 +254,200 @@
           <p class="text-sm">Formation en intra-entreprise, sur les engins et installations que vos équipes utiliseront réellement.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- RÉFÉRENCES — bandeau défilant.
+       Les plaques sont des emplacements en attente des logos clients (SVG sur
+       fond transparent). Le rail est masqué aux lecteurs d'écran tant qu'il
+       ne porte aucun nom : un gabarit vide n'a rien à leur annoncer. Quand les
+       vrais logos arriveront, l'aria-hidden tombe et chaque image porte le nom
+       de l'entreprise en alternative — c'est lui, l'information.
+       La seconde série est un doublon visuel : elle reste masquée dans tous
+       les cas, sans quoi chaque référence serait annoncée deux fois. -->
+  <section class="section on-light" id="references">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Ils nous font confiance</p>
+        <h2>Des équipes formées sur leur propre matériel</h2>
+      </div>
+    </div>
+
+    <div class="refs-rail" data-reveal aria-hidden="true">
+      <div class="refs-piste" id="refsPiste">
+        <ul class="refs-serie">
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">01</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">02</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">03</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">04</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">05</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">06</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">07</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">08</span>
+          </div>
+        </li>
+        </ul>
+        <ul class="refs-serie">
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">01</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">02</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">03</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">04</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">05</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">06</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">07</span>
+          </div>
+        </li>
+        <li class="refs-item">
+          <div class="refs-plaque">
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="refs-mots"><i></i><i></i></span>
+            <span class="refs-num">08</span>
+          </div>
+        </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="wrap refs-barre">
+      <p class="refs-note">Emplacements en attente des logos clients</p>
+      <button type="button" class="refs-pause" id="refsPause" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        <span>Mettre en pause</span>
+      </button>
     </div>
   </section>
 
@@ -259,7 +506,7 @@
   </div>
 </footer>
 
-<script src="js/main.js?v=20260811e"></script>
+<script src="js/main.js?v=20260812c"></script>
 <script>
   window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>

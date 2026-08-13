@@ -453,4 +453,20 @@
         });
     });
   }
+
+  // Bouton de pause du bandeau de références.
+  // Le survol suspend déjà le défilement, mais il ne répond ni au clavier ni
+  // au doigt : WCAG 2.2.2 demande un mécanisme d'arrêt pour tout mouvement
+  // automatique de plus de cinq secondes. Le bouton fige la piste pour de bon.
+  var refsPiste = document.getElementById("refsPiste");
+  var refsPause = document.getElementById("refsPause");
+  if (refsPiste && refsPause) {
+    var refsLibelle = refsPause.querySelector("span");
+    refsPause.addEventListener("click", function(){
+      var fige = refsPiste.getAttribute("data-fige") === "1";
+      refsPiste.setAttribute("data-fige", fige ? "0" : "1");
+      refsPause.setAttribute("aria-pressed", fige ? "false" : "true");
+      if (refsLibelle) refsLibelle.textContent = fige ? "Mettre en pause" : "Relancer";
+    });
+  }
 })();

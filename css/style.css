@@ -932,6 +932,21 @@ h3, .h3{
 .article ul{ margin:0 0 16px; padding-left:0; }
 .article li{ list-style:none; padding-left:26px; position:relative; margin-bottom:10px; color:var(--ink-soft); }
 .article li::before{ content:""; position:absolute; left:0; top:9px; width:8px; height:2px; background:var(--spark-500); }
+
+/* Liens en plein texte dans un article. Le reset ligne 83 met color:inherit et
+   text-decoration:none : sans cette règle, un lien de maillage interne est
+   strictement indiscernable du texte qui l'entoure. --spark-500 ne convient
+   pas ici (2,68:1 sur --paper, sous le seuil AA) ; --navy-700 donne 8,55:1,
+   et le soulignement porte la distinction sans dépendre de la couleur.
+   :not(.btn) laisse les boutons « Lire l'article complet » intacts. */
+.article p a:not(.btn), .article li a:not(.btn){
+  color:var(--navy-700); text-decoration:underline;
+  text-underline-offset:3px; text-decoration-thickness:1px;
+  transition:color .2s ease, text-decoration-color .2s ease;
+}
+.article p a:not(.btn):hover, .article li a:not(.btn):hover{
+  color:var(--navy-900); text-decoration-thickness:2px;
+}
 .tag-row{ display:flex; gap:8px; margin-top:20px; flex-wrap:wrap; }
 .tag{ font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; padding:5px 10px; border-radius:999px; background:var(--paper-alt); color:var(--ink-soft); }
 
@@ -2328,3 +2343,74 @@ body.mm-open .site-header{ z-index:130; }
   .form-hero-actions .btn,
   .cta-actions .btn{ width:100%; justify-content:center; }
 }
+
+/* ---------- bandeau de références (« ils nous font confiance ») ----------
+   Deux séries identiques dans une piste deux fois plus large que le cadre :
+   la translation de -50 % ramène la seconde exactement là où commençait la
+   première, donc la boucle ne laisse voir aucun raccord. Les deux séries
+   doivent rester rigoureusement identiques, gouttières comprises — d'où le
+   demi-écart en padding de chaque série, qui reconstitue l'écart plein au
+   point de jonction.
+
+   Le fondu des bords est un masque, pas un filtre. Un `blur` sur un élément
+   animé en continu se recalcule à chaque image, et c'est précisément ce que
+   la feuille a cessé de faire ailleurs (en-tête, fiches de formation, voile
+   du mégamenu). Le masque, lui, ne coûte rien par image. */
+.refs-rail{
+  position:relative; overflow:hidden; margin-top:36px;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+          mask-image:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.refs-piste{ display:flex; width:max-content; animation:refs-defile 38s linear infinite; }
+.refs-serie{ display:flex; align-items:center; gap:18px; padding:0 9px; margin:0; list-style:none; }
+.refs-item{ flex:none; }
+@keyframes refs-defile{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(-50%,0,0); } }
+
+/* Survol et focus clavier suspendent le défilement ; le bouton le fige pour
+   de bon. WCAG 2.2.2 : un mouvement automatique de plus de cinq secondes doit
+   pouvoir être arrêté, et le survol seul ne répond ni au clavier ni au doigt. */
+.refs-rail:hover .refs-piste,
+.refs-rail:focus-within .refs-piste{ animation-play-state:paused; }
+.refs-piste[data-fige="1"]{ animation-play-state:paused; }
+
+/* La plaque tient lieu de logo tant que les fichiers clients manquent :
+   même gabarit, même cadre que les cartes du site, contenu neutre. */
+.refs-plaque{
+  display:flex; align-items:center; gap:14px;
+  width:200px; height:82px; padding:0 22px;
+  background:var(--white); border:1px solid var(--line); border-radius:var(--radius-m);
+}
+.refs-plaque svg{ flex:none; color:var(--paper-line); }
+.refs-mots{ display:flex; flex-direction:column; gap:7px; flex:1; }
+.refs-mots i{ display:block; height:8px; border-radius:4px; background:var(--paper-alt); }
+.refs-mots i:last-child{ width:60%; background:var(--paper-line); }
+
+.refs-barre{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; }
+.refs-note{ font-family:var(--font-mono); font-size:12px; letter-spacing:.04em; color:var(--ink-faint); }
+.refs-pause{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-soft); background:transparent; cursor:pointer;
+  border:1px solid var(--line); border-radius:999px; padding:9px 16px;
+  min-height:44px; transition:color .2s ease, border-color .2s ease;
+}
+.refs-pause:hover{ color:var(--ink); border-color:var(--ink); }
+.refs-pause svg{ width:13px; height:13px; flex:none; }
+
+@media (max-width: 560px){
+  /* Le libellé du bouton passe sous la note plutôt que de la comprimer. */
+  .refs-barre{ flex-direction:column; align-items:flex-start; }
+  .refs-plaque{ width:168px; height:74px; padding:0 18px; gap:12px; }
+}
+
+/* Mouvement réduit : les logos restent lisibles, ils ne bougent plus. Le
+   bouton n'a alors plus d'objet. */
+@media (prefers-reduced-motion: reduce){
+  .refs-piste{ animation:none; }
+  .refs-pause{ display:none; }
+}
+
+/* Repère de maquette : le numéro d'emplacement. Il disparaît avec les vrais
+   logos — il ne sert qu'à rendre le défilement lisible tant que les huit
+   plaques sont interchangeables. */
+.refs-num{ font-family:var(--font-mono); font-size:11px; color:var(--paper-line); flex:none; }
