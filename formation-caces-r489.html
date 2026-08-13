@@ -22,8 +22,8 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/anton-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=20260812c">
-<link rel="stylesheet" href="css/style.css?v=20260812c">
+<link rel="stylesheet" href="css/fonts.css?v=20260813a">
+<link rel="stylesheet" href="css/style.css?v=20260813a">
 
 <!-- Trois blocs de données structurées, chacun pour un usage distinct :
      Course décrit la formation elle-même, BreadcrumbList donne à Google le
@@ -585,6 +585,22 @@
     </div>
   </section>
 
+  <!-- BANDEAU DE RÉFÉRENCES.
+       La coquille et le titre vivent ici ; les plaques sont montées par
+       js/main.js, à partir de la liste REFERENCES qui sert les dix pages.
+       Tant que cette liste est vide, la section reste `hidden` et ne coûte
+       rien : ni espace, ni image, ni annonce à un lecteur d'écran. Remplir
+       la liste suffit à l'allumer partout, sans toucher à aucune page. -->
+  <section class="section on-alt" id="references" data-bandeau-references hidden>
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Ils nous font confiance</p>
+        <h2>Sur leurs chariots, dans leurs allées</h2>
+      </div>
+    </div>
+    <div data-refs-rail></div>
+  </section>
+
   <section class="cta-band">
     <div class="wrap">
       <h2>Des caristes à former ou à recycler ?</h2>
@@ -640,8 +656,8 @@
   </div>
 </footer>
 
-<script src="js/schemas.js?v=20260812c"></script>
-<script src="js/main.js?v=20260812c"></script>
+<script src="js/schemas.js?v=20260813a"></script>
+<script src="js/main.js?v=20260813a"></script>
 <script>
   window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>

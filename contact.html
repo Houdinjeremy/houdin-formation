@@ -31,8 +31,8 @@
 <!-- Le formulaire poste vers Web3Forms : ouvrir la connexion des le chargement
      evite au visiteur d'attendre la negociation TLS au moment de l'envoi. -->
 <link rel="preconnect" href="https://api.web3forms.com" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=20260812c">
-<link rel="stylesheet" href="css/style.css?v=20260812c">
+<link rel="stylesheet" href="css/fonts.css?v=20260813a">
+<link rel="stylesheet" href="css/style.css?v=20260813a">
 <!-- Fil d'Ariane structuré : reprend a l'identique le fil affiché plus bas
      dans la page. Google s'en sert pour remplacer l'URL brute par un chemin
      lisible dans les resultats de recherche. -->
@@ -217,6 +217,22 @@
     </div>
   </section>
 
+  <!-- BANDEAU DE RÉFÉRENCES.
+       La coquille et le titre vivent ici ; les plaques sont montées par
+       js/main.js, à partir de la liste REFERENCES qui sert les dix pages.
+       Tant que cette liste est vide, la section reste `hidden` et ne coûte
+       rien : ni espace, ni image, ni annonce à un lecteur d'écran. Remplir
+       la liste suffit à l'allumer partout, sans toucher à aucune page. -->
+  <section class="section on-alt" id="references" data-bandeau-references hidden>
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Ils nous font confiance</p>
+        <h2>Ils ont formé leurs équipes sur site</h2>
+      </div>
+    </div>
+    <div data-refs-rail></div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
@@ -261,7 +277,7 @@
   </div>
 </footer>
 
-<script src="js/main.js?v=20260812c"></script>
+<script src="js/main.js?v=20260813a"></script>
 <script>
   window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>

@@ -28,8 +28,8 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/anton-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=20260812c">
-<link rel="stylesheet" href="css/style.css?v=20260812c">
+<link rel="stylesheet" href="css/fonts.css?v=20260813a">
+<link rel="stylesheet" href="css/style.css?v=20260813a">
 <!-- Fil d'Ariane structuré : reprend a l'identique le fil affiché plus bas
      dans la page. Google s'en sert pour remplacer l'URL brute par un chemin
      lisible dans les resultats de recherche. -->
@@ -257,215 +257,21 @@
     </div>
   </section>
 
-  <!-- RÉFÉRENCES — bandeau défilant, DÉSACTIVÉ EN ATTENTE DES LOGOS CLIENTS.
-
-       Le bandeau est complet et fonctionnel, mais ses huit plaques sont vides.
-       Publié tel quel, il annonce à chaque prospect « aucune référence à
-       montrer » : un gabarit visible dit moins que pas de section du tout.
-       Il reste donc en commentaire jusqu'à réception des logos.
-
-       POUR LE REMETTRE EN LIGNE, une fois les logos en main :
-         1. supprimer les deux bornes de commentaire qui encadrent la section
-            ci-dessous : celle qui suit immédiatement ce bloc, et celle qui
-            ferme après le dernier </section>, avant la bande d'appel ;
-         2. remplacer chaque .refs-plaque par <img> du logo, en donnant le nom
-            de l'entreprise en alternative — c'est lui, l'information ;
-         3. retirer aria-hidden du .refs-rail : il n'est là que parce qu'un
-            gabarit sans nom n'a rien à annoncer à un lecteur d'écran ;
-         4. supprimer les .refs-num (repères de maquette) et la .refs-note ;
-         5. incrémenter la version des assets dans les 18 pages.
-
-       La seconde série est un doublon visuel destiné à la boucle : elle doit
-       rester masquée, sans quoi chaque référence serait annoncée deux fois.
-       Le CSS (.refs-*) et le script du bouton de pause restent en place, sans
-       effet tant que la section n'est pas rendue. -->
-  <!--
-  <section class="section on-light" id="references">
+  <!-- BANDEAU DE RÉFÉRENCES.
+       La coquille et le titre vivent ici ; les plaques sont montées par
+       js/main.js, à partir de la liste REFERENCES qui sert les dix pages.
+       Tant que cette liste est vide, la section reste `hidden` et ne coûte
+       rien : ni espace, ni image, ni annonce à un lecteur d'écran. Remplir
+       la liste suffit à l'allumer partout, sans toucher à aucune page. -->
+  <section class="section on-light" id="references" data-bandeau-references hidden>
     <div class="wrap">
       <div class="section-head" data-reveal>
         <p class="eyebrow">Ils nous font confiance</p>
         <h2>Des équipes formées sur leur propre matériel</h2>
       </div>
     </div>
-
-    <div class="refs-rail" data-reveal aria-hidden="true">
-      <div class="refs-piste" id="refsPiste">
-        <ul class="refs-serie">
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">01</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">02</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">03</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">04</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">05</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">06</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">07</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">08</span>
-          </div>
-        </li>
-        </ul>
-        <ul class="refs-serie">
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">01</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">02</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">03</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">04</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">05</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">06</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">07</span>
-          </div>
-        </li>
-        <li class="refs-item">
-          <div class="refs-plaque">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="refs-mots"><i></i><i></i></span>
-            <span class="refs-num">08</span>
-          </div>
-        </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="wrap refs-barre">
-      <p class="refs-note">Emplacements en attente des logos clients</p>
-      <button type="button" class="refs-pause" id="refsPause" aria-pressed="false">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
-        <span>Mettre en pause</span>
-      </button>
-    </div>
+    <div data-refs-rail></div>
   </section>
-  -->
 
   <section class="cta-band">
     <div class="wrap" data-reveal>
@@ -522,7 +328,7 @@
   </div>
 </footer>
 
-<script src="js/main.js?v=20260812c"></script>
+<script src="js/main.js?v=20260813a"></script>
 <script>
   window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>

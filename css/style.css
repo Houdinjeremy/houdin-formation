@@ -2373,20 +2373,43 @@ body.mm-open .site-header{ z-index:130; }
 .refs-rail:focus-within .refs-piste{ animation-play-state:paused; }
 .refs-piste[data-fige="1"]{ animation-play-state:paused; }
 
-/* La plaque tient lieu de logo tant que les fichiers clients manquent :
-   même gabarit, même cadre que les cartes du site, contenu neutre. */
+/* La plaque accueille un logo client : même cadre que les cartes du site,
+   dimensions fixes pour que des logos de proportions très différentes
+   s'alignent quand même. `contain` préserve chaque rapport d'origine, sans
+   jamais déformer une marque. */
 .refs-plaque{
-  display:flex; align-items:center; gap:14px;
+  display:flex; align-items:center; justify-content:center;
   width:200px; height:82px; padding:0 22px;
   background:var(--white); border:1px solid var(--line); border-radius:var(--radius-m);
 }
-.refs-plaque svg{ flex:none; color:var(--paper-line); }
-.refs-mots{ display:flex; flex-direction:column; gap:7px; flex:1; }
-.refs-mots i{ display:block; height:8px; border-radius:4px; background:var(--paper-alt); }
-.refs-mots i:last-child{ width:60%; background:var(--paper-line); }
 
-.refs-barre{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:20px; }
-.refs-note{ font-family:var(--font-mono); font-size:12px; letter-spacing:.04em; color:var(--ink-faint); }
+/* Les logos clients arrivent dans des couleurs qui n'ont aucun rapport entre
+   elles ni avec le navy et l'orange du site. Le passage en gris les fait
+   tenir ensemble et empêche le bandeau de virer au patchwork ; la couleur
+   revient au survol, là où le défilement s'arrête justement. Le filtre ne
+   joue qu'au survol d'une plaque, jamais en continu. */
+/* Deux plafonds, pas un seul : borné en hauteur uniquement, un logo très
+   allongé occuperait toute la plaque quand un logo carré y flotterait, et la
+   bande paraîtrait faite de marques d'importance inégale. Le plafond de
+   largeur rétablit un poids optique comparable d'une plaque à l'autre. */
+.refs-plaque img{
+  max-width:76%; max-height:46px;
+  width:auto; height:auto; object-fit:contain;
+  filter:grayscale(1); opacity:.62;
+  transition:opacity .2s ease, filter .2s ease;
+}
+.refs-plaque:hover img,
+.refs-plaque:focus-within img{ filter:grayscale(0); opacity:1; }
+
+/* Le rail garde sa hauteur avant même que les images soient décodées : sans
+   ce plancher, la bande se déplierait sous le titre au chargement. */
+.refs-rail{ min-height:82px; }
+
+/* Le titre tient la gauche ; le bouton, simple commande, ferme la bande à
+   droite. Centré, il flotterait seul sous un titre qui n'occupe que le tiers
+   gauche de l'écran. En colonne étroite la question ne se pose plus : il se
+   recentre plus bas. */
+.refs-barre{ display:flex; align-items:center; justify-content:flex-end; gap:16px; margin-top:20px; }
 .refs-pause{
   display:inline-flex; align-items:center; gap:8px;
   font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
@@ -2397,20 +2420,40 @@ body.mm-open .site-header{ z-index:130; }
 .refs-pause:hover{ color:var(--ink); border-color:var(--ink); }
 .refs-pause svg{ width:13px; height:13px; flex:none; }
 
+/* Tablette : la plaque perd un cran, le fondu des bords se resserre pour
+   qu'une plaque entière reste lisible de chaque côté. */
+@media (max-width: 900px){
+  .refs-plaque{ width:176px; height:76px; padding:0 18px; }
+  .refs-plaque img{ max-height:42px; }
+  .refs-serie{ gap:14px; padding:0 7px; }
+}
+
+/* Mobile : sous 560 px le cadre ne montre plus que deux plaques. Le fondu
+   passe de 10 % à 6 % de chaque bord, sinon il mange la plaque du milieu. */
 @media (max-width: 560px){
-  /* Le libellé du bouton passe sous la note plutôt que de la comprimer. */
-  .refs-barre{ flex-direction:column; align-items:flex-start; }
-  .refs-plaque{ width:168px; height:74px; padding:0 18px; gap:12px; }
+  .refs-plaque{ width:152px; height:70px; padding:0 16px; }
+  .refs-plaque img{ max-height:38px; }
+  .refs-serie{ gap:12px; padding:0 6px; }
+  .refs-rail{
+    min-height:70px; margin-top:28px;
+    -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+            mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .refs-barre{ margin-top:16px; justify-content:center; }
 }
 
-/* Mouvement réduit : les logos restent lisibles, ils ne bougent plus. Le
-   bouton n'a alors plus d'objet. */
+/* Mouvement réduit : plus rien ne défile tout seul. La piste étant plus large
+   que le cadre, les dernières plaques deviendraient alors inatteignables —
+   le rail redevient donc une bande que l'on parcourt au doigt ou à la
+   molette. Le masque tombe, sinon il laisserait croire à une coupure, la
+   série en double disparaît puisqu'elle ne sert qu'à la boucle, et le bouton
+   de pause n'a plus d'objet. */
 @media (prefers-reduced-motion: reduce){
-  .refs-piste{ animation:none; }
+  .refs-piste{ animation:none; width:auto; }
   .refs-pause{ display:none; }
+  .refs-rail{
+    overflow-x:auto; scrollbar-width:thin;
+    -webkit-mask-image:none; mask-image:none;
+  }
+  .refs-serie[aria-hidden="true"]{ display:none; }
 }
-
-/* Repère de maquette : le numéro d'emplacement. Il disparaît avec les vrais
-   logos — il ne sert qu'à rendre le défilement lisible tant que les huit
-   plaques sont interchangeables. */
-.refs-num{ font-family:var(--font-mono); font-size:11px; color:var(--paper-line); flex:none; }

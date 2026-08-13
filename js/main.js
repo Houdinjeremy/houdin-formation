@@ -454,19 +454,113 @@
     });
   }
 
-  // Bouton de pause du bandeau de références.
-  // Le survol suspend déjà le défilement, mais il ne répond ni au clavier ni
-  // au doigt : WCAG 2.2.2 demande un mécanisme d'arrêt pour tout mouvement
-  // automatique de plus de cinq secondes. Le bouton fige la piste pour de bon.
-  var refsPiste = document.getElementById("refsPiste");
-  var refsPause = document.getElementById("refsPause");
-  if (refsPiste && refsPause) {
-    var refsLibelle = refsPause.querySelector("span");
-    refsPause.addEventListener("click", function(){
-      var fige = refsPiste.getAttribute("data-fige") === "1";
-      refsPiste.setAttribute("data-fige", fige ? "0" : "1");
-      refsPause.setAttribute("aria-pressed", fige ? "false" : "true");
-      if (refsLibelle) refsLibelle.textContent = fige ? "Mettre en pause" : "Relancer";
+  /* ==================================================================
+     BANDEAU DE RÉFÉRENCES — source unique pour tout le site.
+
+     Le bandeau figure sur dix pages. Plutôt que d'y recopier deux cents
+     lignes de plaques identiques, chaque page ne porte que sa coquille et
+     son titre ; le rail est monté ici, à partir de la seule liste qui
+     suit. Un logo change, une ligne change, les dix pages suivent.
+
+     L'INTERRUPTEUR, C'EST LA LISTE. Tant que REFERENCES est vide, aucune
+     coquille ne s'ouvre : les sections restent `hidden`, exactement comme
+     si elles n'existaient pas. Le jour où les logos arrivent, il suffit de
+     remplir ce tableau — rien d'autre à toucher, sur aucune page.
+
+     Format attendu par entrée :
+       { nom: "Nom de l'entreprise", logo: "assets/img/references/xxx.svg" }
+     Le nom n'est pas décoratif : il devient l'alternative textuelle de
+     l'image, et c'est lui qui porte l'information pour un lecteur d'écran.
+     ================================================================== */
+  var REFERENCES = [];
+
+  function monteBandeauReferences(){
+    var coquilles = document.querySelectorAll("[data-bandeau-references]");
+    if (!coquilles.length || !REFERENCES.length) return;
+
+    Array.prototype.forEach.call(coquilles, function(section){
+      var hote = section.querySelector("[data-refs-rail]");
+      if (!hote) return;
+
+      // Deux séries rigoureusement identiques : la piste fait deux fois la
+      // largeur du cadre, et la translation de -50 % ramène la seconde là
+      // où commençait la première. Sans ce doublon, la boucle sauterait.
+      // La seconde est masquée aux lecteurs d'écran, sans quoi chaque
+      // référence serait annoncée deux fois.
+      var rail = document.createElement("div");
+      rail.className = "refs-rail";
+      rail.setAttribute("data-reveal", "");
+
+      var piste = document.createElement("div");
+      piste.className = "refs-piste";
+
+      [false, true].forEach(function(doublon){
+        var serie = document.createElement("ul");
+        serie.className = "refs-serie";
+        if (doublon) serie.setAttribute("aria-hidden", "true");
+
+        REFERENCES.forEach(function(ref){
+          var item = document.createElement("li");
+          item.className = "refs-item";
+
+          var plaque = document.createElement("div");
+          plaque.className = "refs-plaque";
+
+          // Pas de loading="lazy" ici : la moitié des plaques est hors cadre
+          // horizontalement, et un navigateur ne déclenche pas toujours le
+          // chargement différé d'une image qui n'est décalée que sur l'axe X.
+          // Elles arriveraient vides au moment où le défilement les amène.
+          // Ce sont des logos, quelques kilo-octets chacun.
+          var img = document.createElement("img");
+          img.src = ref.logo;
+          img.alt = doublon ? "" : ref.nom;
+          img.decoding = "async";
+
+          plaque.appendChild(img);
+          item.appendChild(plaque);
+          serie.appendChild(item);
+        });
+
+        piste.appendChild(serie);
+      });
+
+      rail.appendChild(piste);
+      hote.appendChild(rail);
+
+      // Arrêt du défilement. Le survol suspend déjà la piste, mais il ne
+      // répond ni au clavier ni au doigt : WCAG 2.2.2 demande un mécanisme
+      // d'arrêt pour tout mouvement automatique de plus de cinq secondes.
+      // Sous prefers-reduced-motion la piste ne bouge pas : le bouton n'a
+      // alors plus d'objet, la feuille le masque.
+      var barre = document.createElement("div");
+      barre.className = "wrap refs-barre";
+
+      var bouton = document.createElement("button");
+      bouton.type = "button";
+      bouton.className = "refs-pause";
+      bouton.setAttribute("aria-pressed", "false");
+      bouton.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+        '<rect x="6" y="5" width="4" height="14" rx="1"/>' +
+        '<rect x="14" y="5" width="4" height="14" rx="1"/></svg>' +
+        "<span>Mettre en pause</span>";
+
+      bouton.addEventListener("click", function(){
+        var fige = piste.getAttribute("data-fige") === "1";
+        piste.setAttribute("data-fige", fige ? "0" : "1");
+        bouton.setAttribute("aria-pressed", fige ? "false" : "true");
+        var libelle = bouton.querySelector("span");
+        if (libelle) libelle.textContent = fige ? "Mettre en pause" : "Relancer";
+      });
+
+      barre.appendChild(bouton);
+      hote.appendChild(barre);
+
+      // La coquille n'est démasquée qu'une fois son contenu en place : la
+      // hauteur est déjà réservée par la feuille, rien ne se décale.
+      section.removeAttribute("hidden");
     });
   }
+
+  monteBandeauReferences();
 })();
