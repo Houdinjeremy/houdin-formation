@@ -474,9 +474,33 @@
      ================================================================== */
   var REFERENCES = [];
 
+  // Nombre de plaques affichées tant qu'aucun logo n'est fourni.
+  var GABARITS = 8;
+
+  // Une plaque vide : le picto neutre, deux barres qui figurent un nom, et le
+  // numéro d'emplacement. Sans ce numéro, huit plaques rigoureusement
+  // identiques ne laisseraient rien voir du défilement.
+  function plaqueGabarit(rang){
+    var d = document.createElement("div");
+    d.className = "refs-plaque refs-plaque--vide";
+    d.innerHTML =
+      '<svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">' +
+      '<circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/>' +
+      '<path d="M10 20.5l4.5-7 3.5 5 3-3.5" fill="none" stroke="currentColor" ' +
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '<span class="refs-mots"><i></i><i></i></span>' +
+      '<span class="refs-num">' + (rang < 10 ? "0" + rang : rang) + "</span>";
+    return d;
+  }
+
   function monteBandeauReferences(){
     var coquilles = document.querySelectorAll("[data-bandeau-references]");
-    if (!coquilles.length || !REFERENCES.length) return;
+    if (!coquilles.length) return;
+
+    // Deux états, un seul composant. Sans logo, la bande s'affiche en gabarit ;
+    // dès que REFERENCES est rempli, elle passe aux vraies images sans qu'une
+    // seule page ait à être retouchée.
+    var vide = !REFERENCES.length;
 
     Array.prototype.forEach.call(coquilles, function(section){
       var hote = section.querySelector("[data-refs-rail]");
@@ -490,6 +514,10 @@
       var rail = document.createElement("div");
       rail.className = "refs-rail";
       rail.setAttribute("data-reveal", "");
+      // En gabarit, le rail entier est masqué aux lecteurs d'écran : des
+      // plaques sans nom n'ont rien à leur annoncer. L'attribut tombe de
+      // lui-même dès que les vrais logos, eux, portent une information.
+      if (vide) rail.setAttribute("aria-hidden", "true");
 
       var piste = document.createElement("div");
       piste.className = "refs-piste";
@@ -499,27 +527,36 @@
         serie.className = "refs-serie";
         if (doublon) serie.setAttribute("aria-hidden", "true");
 
-        REFERENCES.forEach(function(ref){
-          var item = document.createElement("li");
-          item.className = "refs-item";
+        if (vide) {
+          for (var i = 1; i <= GABARITS; i++) {
+            var creneau = document.createElement("li");
+            creneau.className = "refs-item";
+            creneau.appendChild(plaqueGabarit(i));
+            serie.appendChild(creneau);
+          }
+        } else {
+          REFERENCES.forEach(function(ref){
+            var item = document.createElement("li");
+            item.className = "refs-item";
 
-          var plaque = document.createElement("div");
-          plaque.className = "refs-plaque";
+            var plaque = document.createElement("div");
+            plaque.className = "refs-plaque";
 
-          // Pas de loading="lazy" ici : la moitié des plaques est hors cadre
-          // horizontalement, et un navigateur ne déclenche pas toujours le
-          // chargement différé d'une image qui n'est décalée que sur l'axe X.
-          // Elles arriveraient vides au moment où le défilement les amène.
-          // Ce sont des logos, quelques kilo-octets chacun.
-          var img = document.createElement("img");
-          img.src = ref.logo;
-          img.alt = doublon ? "" : ref.nom;
-          img.decoding = "async";
+            // Pas de loading="lazy" ici : la moitié des plaques est hors cadre
+            // horizontalement, et un navigateur ne déclenche pas toujours le
+            // chargement différé d'une image qui n'est décalée que sur l'axe X.
+            // Elles arriveraient vides au moment où le défilement les amène.
+            // Ce sont des logos, quelques kilo-octets chacun.
+            var img = document.createElement("img");
+            img.src = ref.logo;
+            img.alt = doublon ? "" : ref.nom;
+            img.decoding = "async";
 
-          plaque.appendChild(img);
-          item.appendChild(plaque);
-          serie.appendChild(item);
-        });
+            plaque.appendChild(img);
+            item.appendChild(plaque);
+            serie.appendChild(item);
+          });
+        }
 
         piste.appendChild(serie);
       });
@@ -534,6 +571,15 @@
       // alors plus d'objet, la feuille le masque.
       var barre = document.createElement("div");
       barre.className = "wrap refs-barre";
+
+      // En gabarit, la mention dit franchement ce que sont ces plaques. Elle
+      // disparaît d'elle-même avec les vrais logos, qui se passent de légende.
+      if (vide) {
+        var note = document.createElement("p");
+        note.className = "refs-note";
+        note.textContent = "Emplacements en attente des logos clients";
+        barre.appendChild(note);
+      }
 
       var bouton = document.createElement("button");
       bouton.type = "button";
