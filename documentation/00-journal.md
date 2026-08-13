@@ -914,6 +914,19 @@ cette fois : les quatre sections se composent, le compteur du bandeau s'arrête
 sur 25 et 5, le rail défile et le bouton de pause répond. Les dix-huit pages
 répondent en 200.
 
-**Reste à faire** : remplacer les huit plaques par les vrais logos clients
-(SVG sur fond transparent), retirer alors `aria-hidden` du rail et les numéros
-d'emplacement, et donner à chaque image le nom de l'entreprise en alternative.
+**Le bandeau de références est reparti aussitôt.** Publié à midi, retiré dans
+la foulée : ses huit plaques étaient vides, sous un titre « Ils nous font
+confiance » et une note annonçant des emplacements en attente. Un gabarit
+visible en dit moins que pas de section du tout — il apprend au prospect qu'il
+n'y a aucune référence à montrer. La section reste en commentaire dans
+`a-propos.html`, complète et fonctionnelle ; le bloc qui la précède énumère les
+cinq gestes pour la rallumer. Le CSS `.refs-*` et le script du bouton de pause
+restent en place, sans effet tant que la section n'est pas rendue : le script
+ne s'accroche que si `#refsPiste` existe.
+
+**Reste à faire** : obtenir les logos clients en SVG sur fond transparent, puis
+rallumer la section selon cette marche à suivre.
+
+**Ménage** : le worktree `01-Site-Web-optim-nocturne` a été supprimé. Sa
+branche `optim-nocturne-2026-08-10` est entièrement fusionnée dans `main` et
+reste dans le dépôt — le dossier ne portait plus aucun travail unique.
