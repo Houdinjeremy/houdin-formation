@@ -12,6 +12,10 @@ sauvegarde-avant-refonte-*/
 # Transcription brute de session (7 Mo, binaire)
 documentation/transcription/session-brute.jsonl.gz
 
+# Prompts de travail interne. Ils restent sur le disque : ce sont des notes de
+# conduite de chantier, pas du contenu de site, et le dépôt est public.
+Prompt/
+
 # Skills installées localement (paquets tiers, pas du code projet).
 # Exception : google-seo est écrite pour ce projet précis, pas un paquet
 # tiers — elle reste versionnée comme les agents dans .claude/agents/.

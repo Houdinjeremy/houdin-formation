@@ -821,3 +821,99 @@ débordement horizontal, aucune cible tactile sous 44 px hormis les liens en
 ligne au fil d'une phrase, que la norme exempte. Les points de rupture n'ont pas
 été réécrits : chacun porte une justification dans la feuille, et les
 harmoniser de force aurait défait des réglages fins pour un gain d'apparence.
+
+## 2026-08-11 (suite) — Le blog devient un blog
+
+Quatre articles s'affichaient sur `blog.html`, un seul avait une page. Les trois
+autres étaient du texte posé dans la page de liste : rédigés, lisibles, et
+invisibles pour Google — aucune URL à indexer, aucun titre à faire remonter,
+aucune requête informationnelle captée. Ils ont chacun leur page :
+`blog-r489-categories.html`, `blog-caces-ou-habilitation-electrique.html`,
+`blog-preparer-evaluation-caces.html`, sur le gabarit de l'article gerbeurs —
+JSON-LD `Article` et `BreadcrumbList`, cartes de partage, fil d'Ariane. La page
+de liste ne garde que des accroches et leur bouton.
+
+**Une erreur réglementaire dormait dans le texte extrait.** Le bloc sur les
+catégories R489 annonçait « six catégories » numérotées 1 à 6, et plaçait la
+conduite hors production en catégorie 6. La R489 en compte neuf — 1A, 1B, 2A,
+2B, 3, 4, 5, 6, 7 — la 6 est le poste de conduite élevable et la 7 la conduite
+hors production. C'est ce que publie déjà `formation-caces-r489.html` : le blog
+contredisait la page formation, et reproduisait exactement le défaut que le
+site reproche aux concurrents restés sur la R389. L'article dédié repart de la
+page formation et prend un autre angle qu'elle : elle catalogue les catégories,
+il donne la méthode pour trouver la bonne — conducteur porté ou non, la machine
+élève-t-elle, que dit la plaque de charge.
+
+**Les liens en plein texte ne se voyaient pas.** Le reset de `style.css`
+(ligne 83) pose `color:inherit; text-decoration:none` sur tout `a` ; hors
+composant stylé, un lien de maillage interne était strictement indiscernable du
+texte qui l'entoure. Constaté à la capture, pas à la lecture du code. La règle
+ajoutée vise `.article p a:not(.btn)` et son équivalent en liste, et laisse les
+boutons intacts. Couleur `--navy-700` : `--spark-500` donne 2,68:1 sur
+`--paper`, sous le seuil AA, quand le navy monte à 8,55:1 ; le soulignement
+porte la distinction sans dépendre de la couleur.
+
+**Le sitemap ignorait les pages formation.** Les cinq pages par recommandation
+— celles qui portent le trafic commercial le plus qualifié — n'y figuraient
+pas. Ajoutées avec les trois articles : neuf URL déclarées, dix-sept.
+
+**Vérifié en navigateur**, l'extension Chrome n'étant toujours pas connectée :
+Chrome en pilotage direct pour les captures, et une mesure
+`scrollWidth`/`innerWidth` en cadre à 320, 390, 768 et 1024 px sur les cinq
+pages du blog — aucun débordement horizontal. Les quatre schémas SVG
+(`chariot-frontal`, `chariot-retractable`, `bt-symbole`, `bt-zones`) se
+dessinent, les six blocs JSON-LD parsent. Feuilles et scripts versionnés en
+`v=20260811f` pour forcer le rechargement.
+
+**Relu et publié le 2026-08-13**, avec la refonte de la page À propos décrite
+ci-dessous. La version d'assets annoncée plus haut, `v=20260811f`, a été
+dépassée avant toute mise en ligne : c'est `v=20260812c` qui part en
+production, les deux chantiers ayant partagé la même feuille.
+
+## 2026-08-13 — La page À propos donne enfin des preuves
+
+Le hero de la page était vide sur sa moitié droite, et la section qui suivait
+consacrait 40 % de la largeur à une plaque portant le picto du logo. Deux
+surfaces coûteuses qui ne disaient rien, sur la page où un client vient
+précisément vérifier à qui il confie ses équipes. Le gabarit des pages
+formation, lui, avait déjà résolu ce problème : texte à gauche, plaque
+signalétique à droite. La page À propos s'y aligne.
+
+**Le hero porte une fiche formateur.** Quatre lignes vérifiables — le nom, les
+cinq référentiels (R482, R485, R486, R489, NF C18-510 A2), les 25 ans
+d'industrie, la zone d'intervention — et le délai de réponse aux demandes de
+devis. Le titre passe de « une expertise reconnue », qui s'auto-décerne, à
+« puis la transmission », qui décrit le parcours. Les deux boutons d'action
+manquaient : la page ne menait nulle part.
+
+**Le bandeau de chiffres arrive avant le discours**, comme sur l'accueil. Les
+mentions légales de l'organisme — SIRET, déclaration d'activité auprès du
+préfet des Hauts-de-France — y tiennent lieu de preuve : ce sont elles qu'un
+service formation vérifie avant de signer, et elles n'étaient nulle part
+ailleurs que dans les mentions légales.
+
+**La plaque au logo cède la place au texte.** Les trois terrains d'origine
+(engins de chantier, chariots de manutention, installations électriques BT)
+étaient déjà énumérés dans le paragraphe : ils passent en liste à droite, où
+ils se lisent, au lieu de rester noyés dans une phrase.
+
+**Un bandeau de références, en gabarit.** Huit emplacements en attente des
+logos clients. Trois décisions s'y jouent : le rail est `aria-hidden` tant
+qu'aucune plaque ne porte de nom — un gabarit vide n'a rien à annoncer à un
+lecteur d'écran, et l'attribut tombera quand les vrais logos arriveront, chacun
+portant le nom de l'entreprise en alternative. Le fondu des bords est un
+`mask-image` et non un `blur` : un flou sur un élément animé en continu se
+recalcule à chaque image, ce que la feuille a justement cessé de faire partout
+ailleurs. Enfin le défilement s'arrête — au survol, au focus clavier, et par un
+bouton dédié, WCAG 2.2.2 exigeant un mécanisme d'arrêt pour tout mouvement
+automatique de plus de cinq secondes ; sous `prefers-reduced-motion` il ne
+démarre pas.
+
+**Vérifié en navigateur** sur le serveur local, extension Chrome connectée
+cette fois : les quatre sections se composent, le compteur du bandeau s'arrête
+sur 25 et 5, le rail défile et le bouton de pause répond. Les dix-huit pages
+répondent en 200.
+
+**Reste à faire** : remplacer les huit plaques par les vrais logos clients
+(SVG sur fond transparent), retirer alors `aria-hidden` du rail et les numéros
+d'emplacement, et donner à chaque image le nom de l'entreprise en alternative.
