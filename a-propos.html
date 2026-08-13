@@ -257,14 +257,29 @@
     </div>
   </section>
 
-  <!-- RÉFÉRENCES — bandeau défilant.
-       Les plaques sont des emplacements en attente des logos clients (SVG sur
-       fond transparent). Le rail est masqué aux lecteurs d'écran tant qu'il
-       ne porte aucun nom : un gabarit vide n'a rien à leur annoncer. Quand les
-       vrais logos arriveront, l'aria-hidden tombe et chaque image porte le nom
-       de l'entreprise en alternative — c'est lui, l'information.
-       La seconde série est un doublon visuel : elle reste masquée dans tous
-       les cas, sans quoi chaque référence serait annoncée deux fois. -->
+  <!-- RÉFÉRENCES — bandeau défilant, DÉSACTIVÉ EN ATTENTE DES LOGOS CLIENTS.
+
+       Le bandeau est complet et fonctionnel, mais ses huit plaques sont vides.
+       Publié tel quel, il annonce à chaque prospect « aucune référence à
+       montrer » : un gabarit visible dit moins que pas de section du tout.
+       Il reste donc en commentaire jusqu'à réception des logos.
+
+       POUR LE REMETTRE EN LIGNE, une fois les logos en main :
+         1. supprimer les deux bornes de commentaire qui encadrent la section
+            ci-dessous : celle qui suit immédiatement ce bloc, et celle qui
+            ferme après le dernier </section>, avant la bande d'appel ;
+         2. remplacer chaque .refs-plaque par <img> du logo, en donnant le nom
+            de l'entreprise en alternative — c'est lui, l'information ;
+         3. retirer aria-hidden du .refs-rail : il n'est là que parce qu'un
+            gabarit sans nom n'a rien à annoncer à un lecteur d'écran ;
+         4. supprimer les .refs-num (repères de maquette) et la .refs-note ;
+         5. incrémenter la version des assets dans les 18 pages.
+
+       La seconde série est un doublon visuel destiné à la boucle : elle doit
+       rester masquée, sans quoi chaque référence serait annoncée deux fois.
+       Le CSS (.refs-*) et le script du bouton de pause restent en place, sans
+       effet tant que la section n'est pas rendue. -->
+  <!--
   <section class="section on-light" id="references">
     <div class="wrap">
       <div class="section-head" data-reveal>
@@ -450,6 +465,7 @@
       </button>
     </div>
   </section>
+  -->
 
   <section class="cta-band">
     <div class="wrap" data-reveal>
